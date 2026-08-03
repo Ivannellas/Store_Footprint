@@ -132,13 +132,13 @@ mysqli_close($conn);
 <body class="bg-light text-dark">
     <?php require __DIR__ . '/../includes/sidebar.php'; ?>
 
-    <nav class="navbar navbar-dark navbar-header px-4 py-3">
+    <div class="header px-4 py-3">
         <div class="d-flex gap-1">
             <a href="../index.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
             <a href="add_user_account.php" class="primary_btn btn-sm btn-light me-1 action-btn" data-permission="<?php echo $canAdd; ?>">Add Account</a>
             <a href="user_accounts.php?action=logout" class="btn btn-sm primary_btn">Log Out</a>
         </div>
-</nav>
+</div>
 
     <div class="text-center my-4">
         <h2 class="title fs-4 text-uppercase mb-1">User Accounts</h2>

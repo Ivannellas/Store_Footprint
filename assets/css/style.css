@@ -63,7 +63,6 @@ figure {
   padding: 40px 25px;
 }
 
-
 .title {
   background: var(--secondaryColor);
   -webkit-background-clip: text;
@@ -595,7 +594,7 @@ footer.footer_intro {
 }
 .login_left_img figure img {
   pointer-events: none;
-  max-width: initial
+  max-width: initial;
 }
 
 .card_box {
@@ -806,7 +805,7 @@ footer.footer_intro {
 
 /* INDEX PAGE */
 
-.main_top_box{
+.main_top_box {
   position: relative;
   padding: 0 10px;
 }
@@ -1078,12 +1077,12 @@ footer.index_footer {
   padding: 35px 15px 15px 0;
 }
 
-.index_title p{
+.index_title p {
   position: relative;
   margin-top: 8px;
 }
 
-.index_title p:before{
+.index_title p:before {
   content: "";
   position: absolute;
   left: 0;
@@ -1092,7 +1091,6 @@ footer.index_footer {
   height: 3px;
   background: #218c3c;
 }
-
 
 .index_top img {
   width: 100%;
@@ -1112,12 +1110,12 @@ footer.index_footer {
   padding-block: 40px;
 }
 
-.index_cards a  {
+.index_cards a {
   position: absolute;
   inset: 0;
 }
 
-.index_cards section:hover{
+.index_cards section:hover {
   transform: scale(1.01);
 }
 
@@ -1377,26 +1375,16 @@ footer.footer_intro {
 /* END OF INDEX */
 
 /* ==========================================
-   USER ACCOUNTS, MY_ACCOUNT NAVBAR
+   USER ACCOUNTS, MY_ACCOUNT header
     ========================================== */
 
-.navbar-header {
+.header {
   background: transparent;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: end;
 }
 
-.navbar-logo {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  max-height: 65px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
 /*==========================================
    INDEX PAGE
 ==========================================*/
@@ -1408,8 +1396,8 @@ footer.footer_intro {
   position: fixed !important;
   width: 280px;
   transition:
-  width 0.3s ease-in-out,
-  padding 0.3s ease-in-out;
+    width 0.3s ease-in-out,
+    padding 0.3s ease-in-out;
   white-space: nowrap;
   top: 0;
   left: 0;
@@ -1517,7 +1505,7 @@ footer.footer_intro {
   letter-spacing: 0.05em;
 }
 
-.sidebar ul li{
+.sidebar ul li {
   cursor: pointer;
 }
 
@@ -1730,14 +1718,7 @@ footer.footer_intro {
 /*==========================================
    ADD USER ACCOUNT, EDIT USER ACCOUNT, MY_ACCOUNT PAGES
 ========================================== */
-.page-body {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
-    url("../images/a-nobg.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
+
 
 .container {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
@@ -1765,120 +1746,6 @@ footer.footer_intro {
   border-color: var(--secondaryColor, #111827);
 }
 
-/*=========================================
-      STORE DASHBOARD MAIN PAGE
-==========================================*/
-.chart-border {
-  position: relative;
-  overflow: hidden;
-}
-.chart-border:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--gradientColor);
-}
-
-/*sales performance*/
-
-.store_top_cards{
-  width: 100%;
-}
-.card-icon-queue {
-  position: relative;
-}
-
-/* queue icon */
-.card-icon-queue:before {
-  content: url(../images/icon/queue.png);
-  position: absolute;
-}
-.card-icon-sales {
-  position: relative;
-}
-
-/* sales icon */
-.card-icon-sales:before {
-  content: url(../images/icon/sales.png);
-  position: absolute;
-}
-
-.card-icon-cashier {
-  position: relative;
-}
-
-.card-icon-cashier:before {
-  content: url(../images/icon/cashier.png);
-  position: absolute;
-}
-
-.card-icon-total {
-  position: relative;
-}
-
-.card-icon-total:before {
-  content: url(../images/icon/total.png);
-  position: absolute;
-}
-
-.card-content {
-  padding-left: 58px;
-  position: relative;
-}
-
-
-.salesman_performance_parent {
-  justify-content: space-between;
-  align-items: stretch !important;
-}
-
-.performance_chart {
-  align-self: end;
-  padding-left: 20px;
-}
-
-.transaction_chart {
-  padding: 0;
-}
-
-.rank_chart_parent{
-  width: 100%;
-  padding: 0;
-}
-
-.salesman_ranking_title {
-  padding-right: 30px;
-}
-
-
-/* end*/
-
-.card-parent {
-  width: 100%;
-  max-width: 350px;
-}
-
-.cal_btn {
-  background: var(--secondaryColor) !important;
-  color: #fff !important;
-}
-.chart-container {
-  position: relative;
-  height: 450px;
-  width: 100%;
-}
-
-.dashboard-card {
-  background-color: #ffffff;
-  border: none;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  padding: 1.5rem;
-}
 
 /* Sidebar Layout Framework */
 /* .wrapper {
@@ -1963,7 +1830,9 @@ footer.footer_intro {
   width: 85px;
   text-align: center;
   background: #e0e5ec;
-  box-shadow: inset 6px 6px 10px #a3b1c6, inset -6px -6px 10px #fff;
+  box-shadow:
+    inset 6px 6px 10px #a3b1c6,
+    inset -6px -6px 10px #fff;
   color: #333;
   outline: none;
   border: none;
@@ -1974,23 +1843,4 @@ footer.footer_intro {
 }
 /* End */
 
-/* Employeee.php */
 
-.eye_btn {
-  display: block;
-  padding: 5px 8px;
-  width: 60px;
-  margin: 0 auto;
-  position: relative;
-  line-height: 100%;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-}
-
-.eye_btn:before {
-content:url(../images//eyeopen.png);
-  inset: 0;
-  display: block;
-}
-
-/* End */

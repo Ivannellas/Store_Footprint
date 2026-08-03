@@ -74,15 +74,15 @@ mysqli_close($conn);
     <script src="<?php echo $base_path; ?>assets/js/sidebar_button.js"></script>
 </head>
 
-<body class="bg-white text-dark page-body">
+<body class="bg-white text-dark ">
     <?php require __DIR__ . '/../includes/sidebar.php'; ?>
 
-    <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
+    <div class="header px-4 py-3 mb-5 ">
         <div>
             <a href="../index.php" class="primary_btn btn-sm btn-outline-light">Back</a>
         </div>
     </div>
-</nav>
+</div>
 
     <div class="text-center mb-4" style="margin-top: -1.5rem;">
         <h2 class="title">My Account</h2>

@@ -126,11 +126,8 @@ $columnsList = ['Main', 'Add', 'Edit', 'View', 'Save', 'Post', 'Cancel', 'Print'
     <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-4 shadow-sm">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
-                <a href="../index.php" class="d-inline-block">
-                    <img src="../assets/images/atlantichardware_logo_with_since1963.png" alt="Logo" class="navbar-logo me-3">
-                </a>
-
-                <div class="border-start ps-3" style="border-color: rgba(255,255,255,0.3);">
+                
+                <div class="">
                     <span class="text-white small opacity-75 ms-2 d-inline-block align-middle">
                         For: <strong><?php echo htmlspecialchars($fullname); ?></strong>
                     </span>

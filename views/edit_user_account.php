@@ -1,7 +1,10 @@
 <?php
 session_start();
+$base_path = '../';
+
 require_once '../config/db.php';
 require_once '../controller/edit_user_account_controller.php';
+require_once __DIR__ . '/../includes/auth_check.php';
 
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     header("Location: login.php");
@@ -47,20 +50,13 @@ if (!$user) {
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
-<body class="bg-white text-dark page-body">
+<body class="bg-white text-dark ">
+    <?php require __DIR__ . '/../includes/sidebar.php'; ?>
 
-    <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
-        <div class="container-fluid">
-            <div class="d-flex align-items-center">
-                <a href="../index.php" class="d-inline-block">
-                    <img src="../assets/images/atlantichardware_logo_with_since1963.png" alt="Logo" class="navbar-logo me-3">
-                </a>
-
-                <div class="border-start ps-3" style="border-color: rgba(255,255,255,0.3);">
-                    <h2 class="navbar-brand mb-0 h1 fs-4 fw-bold text-white d-inline-block align-middle">Edit User Details</h2>
-                    <span class="text-white small opacity-75 ms-2 d-inline-block align-middle">Hi! <strong><?php echo htmlspecialchars($userName); ?></strong></span>
-                </div>
-            </div>
+    <nav class="header px-4 py-3 mb-5 ">
+        <div class="d-flex align-items-center">
+            <h2 class="navbar-brand mb-0 h1 fs-4 fw-bold text-white d-inline-block align-middle">Edit User Details</h2>
+            <span class="text-dark small opacity-75 ms-2 d-inline-block align-middle">Hi! <strong><?php echo htmlspecialchars($userName); ?></strong></span>
         </div>
     </nav>
     <div class="container forms" style="max-width: 500px;">
