@@ -1545,7 +1545,7 @@ footer.footer_intro {
 .sidebar li .store_dashboard:before {
   content: url(../images/icon/dashboard.png);
 }
-.sidebar li .sales_perf:before {
+/* .sidebar li .sales_perf:before {
   content: url(../images/icon/salesperf.png);
 }
 .sidebar li .opp_sales:before {
@@ -1574,7 +1574,7 @@ footer.footer_intro {
 }
 .sidebar li .sold_items:before {
   content: url(../images/icon/solditems.png);
-}
+} */
 .sidebar li .sidebar_logout:before {
   content: url(../images/icon/logout.png);
 }
