@@ -52,7 +52,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(4, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item current_page_item mb-2">
             <a href="<?php echo $base_path; ?>index.php" class="store_dashboard menu-link d-flex align-items-center justify-content-between">
-                Store Dashboard - Main
+                
             </a>
         </li>
         <?php endif; ?>
@@ -61,7 +61,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(5, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="<?php echo $base_path; ?>views/dashboards/store_dashboard_main.php" class="sales_perf menu-link d-flex align-items-center justify-content-between">
-                sales performance
+                
             </a>
         </li>
         <?php endif; ?>
@@ -70,7 +70,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(6, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="opp_sales menu-link d-flex align-items-center justify-content-between">
-                Opportunity Sales
+                
             </a>
         </li>
         <?php endif; ?>
@@ -79,7 +79,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(7, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="stock_out menu-link d-flex align-items-center justify-content-between">
-                Stock Transfer Out
+                
             </a>
         </li>
         <?php endif; ?>
@@ -88,7 +88,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(8, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="stock_in menu-link d-flex align-items-center justify-content-between">
-                Stock Transfer In
+                
             </a>
         </li>
         <?php endif; ?>
@@ -97,7 +97,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(9, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="sales_trans menu-link d-flex align-items-center justify-content-between">
-                Sales Transaction Count
+                
             </a>
         </li>
         <?php endif; ?>
@@ -106,7 +106,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(10, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="delivery_trans menu-link d-flex align-items-center justify-content-between">
-                Delivery Transaction Count
+                
             </a>
         </li>
         <?php endif; ?>
@@ -115,7 +115,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(11, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="cylce_time menu-link d-flex align-items-center justify-content-between">
-                Cycle Time
+               
             </a>
         </li>
         <?php endif; ?>
@@ -124,7 +124,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(12, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="pos_cash menu-link d-flex align-items-center justify-content-between">
-                POS Cashier Performance
+               
             </a>
         </li>
         <?php endif; ?>
@@ -133,7 +133,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(13, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="customer_ret menu-link d-flex align-items-center justify-content-between">
-                Customer Returned
+                
             </a>
         </li>
         <?php endif; ?>
@@ -142,7 +142,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php if (hasAccess(14, $isSuperAdmin, $allowedModules)): ?>
         <li class="menu-item mb-2">
             <a href="#" class="sold_items menu-link d-flex align-items-center justify-content-between">
-                Top 20 Sold Items
+               
             </a>
         </li>
         <?php endif; ?>
