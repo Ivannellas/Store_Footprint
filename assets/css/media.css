@@ -1,0 +1,403 @@
+@media only screen and (max-width :1900px) {
+
+  /* Login CSS */
+.login_left_img {
+  width: 62%;
+  }
+  /* End */
+}
+
+@media only screen and (max-width :1800px) {
+
+    /* Login CSS */
+  .login_left_img {
+  width: 51%;
+  overflow: hidden;
+  left: 0;
+  }
+
+  .login_left_img figure img {
+    max-width: initial;
+    margin-left: 50%;
+    transform: translate(-50%);
+  }
+    /* End */
+}
+
+@media only screen and (max-width :1700px) {
+
+
+  /* Intro */
+  .footer_img_content {
+  max-width: 300px;
+  }
+  .footer_img_content p {
+  font-size: 14px;
+  }
+/* End */
+}
+
+@media only screen and (max-width :1600px) {
+   .footer_values {
+      max-width: 300px;
+  }
+}
+
+@media only screen and (max-width :1500px) {
+   .footer_info {
+  gap: 70px;
+}
+
+.footer_info > div::before {
+  left: -35px;
+}
+
+.footer_container {
+  gap: 70px;
+}
+
+}
+
+@media only screen and (max-width :1400px) {
+  .card_parent {
+  padding: 60px 20px 60px 50px;
+  }
+
+  .login-wrapper::before {
+    left: 0;
+    width: max-content;
+    transform: translateY(-50%) scale(0.8);
+    }
+
+    /* INTRO PAGE */
+
+  .intro_cards{
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        gap: 60px 20px;
+  }
+
+  .intro_top::before {
+  background: linear-gradient( 90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 40%, rgba(255, 255, 255, 0) 60% ), url("../images/intro_top_img.jpg") no-repeat center/cover;
+  background-position-x: -260px;
+  background-position-y: 0;
+  }
+
+  .footer_img_content {
+    max-width: 320px;
+  }
+
+  .footer_img_content p {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .footer_info {
+    width: 100%;
+  }
+  /* END OF INTRO */
+  
+}
+
+@media only screen and (max-width :1300px) {
+
+  /* Login CSS */
+ .login-wrapper::before {
+  left: -110px;
+  transform: translateY(-50%) scale(0.67);
+  top: 50%;
+  }
+
+  /* END */
+
+  /* INTRO PAGE */
+  .footer_container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  .footer_info > div:first-child:before{
+    display: none;
+  }
+
+  .footer_info {
+    justify-content: center;
+  }
+
+  
+.footer_img_content {
+flex-direction: column;
+}
+
+.footer_img_content figure {
+width: 120px;
+}
+
+.footer_img_content p {
+  text-align: center;
+}
+.footer_img_content {
+  max-width: 350px;
+}
+
+  /* END OF INTRO */
+}
+
+@media only screen and (max-width :1200px) {
+  /* Login CSS */
+  .card_box {
+  max-width: 425px;
+  }
+  /* End */
+
+  /* Sales Performance */
+  .performance_chart {
+    width: 70%;
+    }
+    .transaction_chart {
+    width: 30%;
+    }
+
+/* End */
+
+}
+
+@media only screen and (max-width :1100px) {
+  /* Login CSS */
+.login_left_img figure img {
+object-position: 33px 0;
+}
+  /* End */
+
+}
+
+@media only screen and (max-width :1024px) {
+  .animated {
+    animation-name:none!important;
+    transform:none!important;
+    opacity:1!important;
+  }
+
+
+  .intro_btm{background: #fff;}
+
+  .intro_cards section{
+        width: 45%;
+    }
+
+  .intro_btm::before{
+    display: none;
+  }
+
+  .intro_cards {
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 40px 20px;
+    }
+
+    .intro_top{
+        padding: 0 15px;
+    }
+
+    .intro_btm{
+        padding: 40px 15px;
+    }
+   
+}
+
+@media only screen and (max-width: 1000px) {
+/* Index */
+
+.main_top_box {
+padding: 40px 20px;
+}
+footer.footer_intro {
+padding: 0 20px;
+}
+/* End */
+
+
+/* Login CSS */
+  .login-wrapper{
+    height: 100vdh;
+  }
+  .login-wrapper::before {
+      display: none;
+  }
+
+  .card_parent {
+  justify-content: center;
+  align-items: center;
+  padding: 40px 25px;
+  }
+
+  .login-card{
+    padding: 50px 7% 50px 7%;
+    align-items: center;
+    max-width: 750px;
+    width: 100%;
+  }
+
+  .card_box {
+  max-width: 500px;
+  }
+
+  .login_left_img{display: none;}
+
+  .login-wrapper{
+    background: url("../images/login-left-img2.jpg") no-repeat center/cover;
+  }
+
+  .login_left_img figure img {
+  object-position: unset;
+  }
+
+  /* End */
+  
+  /* Intro Page */
+  .intro_top::before { 
+    background: linear-gradient( 90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 70%, rgba(255, 255, 255, 0) 80% ), url("../images/intro_top_img.jpg") no-repeat center/cover; background-position-x: -410px; 
+    background-position-y: 0;
+  }
+  .footer_info {
+    text-align: center;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .footer_container{
+    gap: 30px;
+  }
+
+  .footer_info > div::before {
+    width: 115px;
+    height: 1px;
+    top: -21px;
+    transform: translateX(-50%);
+    left: 50%;
+  }
+
+  .footer_help p::before {
+    position: relative;
+    transform: scale(0.9);
+    inset: 0;
+    display: block;
+    text-align: center;
+  }
+  .footer_help p {
+    padding-left: 0;
+  }
+
+  .footer_soc p {
+    margin: 0 0 20px;
+  }
+  /* End Of Intro */
+
+  /* Sales Of Performance */
+  .store_top_cards {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 15px;
+  }
+  .store_top_cards > div {
+    width: 48%;
+    max-width: 400px;
+  }
+
+   .transaction_chart {
+    width: 99%;
+  }
+   .rank_chart_parent {
+    width: 99%;
+  }
+  .performance_chart {
+    width: 99%;
+    padding: 0 !important;
+  }
+  .salesman_performance_parent {
+    gap: 30px 0;
+  }
+  /* End */
+}
+
+@media only screen and (max-width: 800px) {
+
+   /* INTRO PAGE */
+  .top_intro_info h1 {
+  font-size: 60px;
+  }
+  /* END OF INTRO */
+}
+
+@media only screen and (max-width: 600px) {
+
+
+  /* Index */
+  .index_cards section {
+  width: 100%;
+  max-width: 100%;
+  }
+  .index_cards {
+  gap: 30px 15px;
+  }
+
+  .top_index_info h2{
+  font-size: 40px;
+  }
+  .top_index_info p {
+font-size: 13px;
+}
+.top_index_info h2 {
+padding: 70px 0 0 50px;
+}
+/* End */
+
+
+  /* INTRO */
+  .intro_cards section{
+  width: 100%;
+  max-width: 400px;
+  }
+.intro_card_title h2 { font-size: 21px; }
+
+.top_intro_info h1 {
+  font-size: 50px;
+}
+.top_intro_info p {
+font-size: 15px;
+}
+
+.intro_logo {
+margin-bottom: 34px;
+}
+
+/* End */
+
+/* Sales Performance */
+.store_top_cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  .store_top_cards > div {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* End */
+
+
+  /* Salesman Trend */
+.salesman_trend_top{
+align-items: start;
+gap: 0;
+flex-direction: column;
+}
+
+.trend_buttons{
+  margin-bottom: 15px !important;
+}
+  /* End */
+}
