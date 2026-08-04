@@ -88,6 +88,28 @@ ul li::marker {
   -webkit-text-fill-color: unset;
 }
 
+
+.flex_box_center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+}
+
+.flex_box_start{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 13px;
+}
+
+.flex_box_end{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 13px;
+}
+
 /* Global Buttons */
 
 .primary_btn {
@@ -1628,7 +1650,19 @@ footer.footer_intro {
 
 .top-navbar {
   height: 60px;
+  background-color: var(--headingTxt);
+}
+
+.navbar{
   background-color: var(--primaryColor);
+}
+
+.navbar_title h1{
+  color: #fff;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 100%;
+  font-family: var(--headingTxt);
 }
 
 .btn-logout {
@@ -1667,7 +1701,9 @@ footer.footer_intro {
    USER_ACCOUNT PAGE
 ==========================================*/
 .search-bar {
-  margin-left: 4.5%;
+  display: block;
+  width: 450px;
+  max-width: 100%;
 }
 
 .table-wrapper {
@@ -1731,6 +1767,16 @@ footer.footer_intro {
   padding: 0;
   margin: 0 auto;
 }
+
+.card-footer button{
+ display: block;
+ width: 150px;
+}
+
+.card-footer .cancel_btn{
+  background: red !important;
+}
+
 
 /*=========================================
       USER ACCOUNTS BUTTON STYLES

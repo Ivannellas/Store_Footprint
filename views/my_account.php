@@ -63,6 +63,7 @@ mysqli_close($conn);
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account Profile</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
@@ -74,22 +75,20 @@ mysqli_close($conn);
     <script src="<?php echo $base_path; ?>assets/js/sidebar_button.js"></script>
 </head>
 
-<body class="bg-white text-dark ">
+<body class="bg-white text-dark page-body">
     <?php require __DIR__ . '/../includes/sidebar.php'; ?>
 
-    <div class="header px-4 py-3 mb-5 ">
+    <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
+        <div class="navbar_title">
+            <h1 class="h1 text-uppercase mb-0">My Account Profile</h1>
+        </div>
         <div>
             <a href="../index.php" class="primary_btn btn-sm btn-outline-light">Back</a>
         </div>
     </div>
-</div>
+</nav>
 
-    <div class="text-center mb-4" style="margin-top: -1.5rem;">
-        <h2 class="title">My Account</h2>
-    </div>
-
-    <div class="account_info" style="max-width: 600px;">
-
+    <div class="account_info" style="width: 100%; max-width: 800px;">
         <?php if (!empty($message)): ?>
             <div class="<?php echo $messageClass; ?>" role="alert">
                 <?php echo htmlspecialchars($message); ?>
@@ -158,9 +157,9 @@ mysqli_close($conn);
                     </div>
                 </div>
 
-                <div id="edit-actions-footer" class="card-footer bg-light border-top py-2 text-end d-none">
-                    <button type="button" id="btn-cancel-edit" class="btn btn-sm btn-outline-secondary me-2">Cancel</button>
-                    <button type="submit" class="btn btn-sm custom-btn bg-dark-slate text-white px-3 fw-bold border-0 shadow-sm">Save Changes</button>
+                <div id="edit-actions-footer" class="card-footer flex_box_center bg-light border-top py-2 text-end d-none">
+                    <button type="button" id="btn-cancel-edit" class="primary_btn cancel_btn">Cancel</button>
+                    <button type="submit" class="primary_btn">Save Changes</button>
                 </div>
             </div>
         </form>

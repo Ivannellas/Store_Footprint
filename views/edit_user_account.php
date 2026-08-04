@@ -48,17 +48,29 @@ if (!$user) {
     <title>Edit User Configuration</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/user_permission_sync.js" defer></script>
+     <script>
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.documentElement.classList.add('sidebar-collapsed-preload');
+        }
+    </script>
+    <script src="<?php echo $base_path; ?>assets/js/sidebar_button.js"></script>
 </head>
 
 <body class="bg-white text-dark ">
     <?php require __DIR__ . '/../includes/sidebar.php'; ?>
 
-    <nav class="header px-4 py-3 mb-5 ">
-        <div class="d-flex align-items-center">
-            <h2 class="navbar-brand mb-0 h1 fs-4 fw-bold text-white d-inline-block align-middle">Edit User Details</h2>
-            <span class="text-dark small opacity-75 ms-2 d-inline-block align-middle">Hi! <strong><?php echo htmlspecialchars($userName); ?></strong></span>
+   <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
+
+        <div class="navbar_title">
+            <h1 class="h1 text-uppercase mb-0">Edit User Account</h1>
+        </div>
+        
+        <div class="d-flex">
+             <a href="user_accounts.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
         </div>
     </nav>
+
     <div class="container forms" style="max-width: 500px;">
 
         <?php if (!empty($message)): ?>

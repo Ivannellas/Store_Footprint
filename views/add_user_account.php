@@ -62,16 +62,31 @@ mysqli_close($conn);
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New User Account</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <script>
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.documentElement.classList.add('sidebar-collapsed-preload');
+        }
+    </script>
+    <script src="<?php echo $base_path; ?>assets/js/sidebar_button.js"></script>
 </head>
 
 <body class="bg-white text-dark ">
     <?php require __DIR__ . '/../includes/sidebar.php'; ?>
-    <div class="header px-4 py-3 mb-5 ">
-        <span class="text-dark small opacity-75 ">Hi! <strong><?php echo htmlspecialchars($userName); ?></strong></span>
-    </div>
+    
+     <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
+
+        <div class="navbar_title">
+            <h1 class="h1 text-uppercase mb-0">Create User Account</h1>
+        </div>
+        
+        <div class="d-flex">
+             <a href="user_accounts.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
+        </div>
+    </nav>
 
     <div class="container forms" style="max-width: 600px;">
 
@@ -79,7 +94,7 @@ mysqli_close($conn);
             <p class="fw-bold mb-3 alert alert-info py-2 px-3 small"><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
 
-        <form action="" method="POST">
+        <form action="add_user_account.php" method="POST">
             <div class="text-center mb-4" style="margin-top: -1.5rem;">
                 <h2 class="fs-4 fw-bold text-dark mb-1">Create User Account</h2>
             </div>
