@@ -1,6 +1,8 @@
 <?php
 session_start();
+$base_path = '../';
 require_once '../config/db.php';
+require_once __DIR__ . '/../includes/auth_check.php';
 
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     header("Location: login.php");
@@ -115,41 +117,33 @@ $columnsList = ['Main', 'Add', 'Edit', 'View', 'Save', 'Post', 'Cancel', 'Print'
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Permissions</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/user_permission_sync.js" defer></script>
+     <script>
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.documentElement.classList.add('sidebar-collapsed-preload');
+        }
+    </script>
+    <script src="<?php echo $base_path; ?>assets/js/sidebar_button.js"></script>
 </head>
 
 <body class="bg-white text-dark">
+    <?php require __DIR__ . '/../includes/sidebar.php'; ?>
+   <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
 
-    <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-4 shadow-sm">
-        <div class="container-fluid">
-            <div class="d-flex align-items-center">
-                
-                <div class="">
-                    <span class="text-white small opacity-75 ms-2 d-inline-block align-middle">
-                        For: <strong><?php echo htmlspecialchars($fullname); ?></strong>
-                    </span>
-                </div>
-            </div>
-
-            <div class="text-end text-white small d-flex align-items-center gap-2">
-                <span><i class="opacity-75"></i> <?php echo date('l, F j, Y'); ?></span>
-                 <div class="user_btn">
-                    <a href="user_accounts.php" class="btn btn-sm back_btn px-3 fw-normal ">Back</a>
-                </div>
-                <a href="user_accounts.php?action=logout" class="btn btn-sm primary_btn">Logout</a>
-            </div>
+        <div class="navbar_title">
+            <h1 class="h1 text-uppercase mb-0">User Permissions</h1>
+        </div>
+        
+        <div class="d-flex">
+             <a href="user_accounts.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
         </div>
     </nav>
 
     <div class="container-fluid px-4 user_perm_con">
-
-        <div class="user_perm_title">
-             <h2 class="navbar-brand mb-0 h1 fs-4 fw-bold text-black d-inline-block align-middle">User Permissions</h2>
-        </div>
-
 
             <div class="table-responsive border rounded custom-table-shadow table-wrapper table_parent">
             <div class="user_saved">
