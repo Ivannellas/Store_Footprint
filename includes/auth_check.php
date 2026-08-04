@@ -16,21 +16,14 @@ if (!$isLoggedIn) {
     exit(); 
 }
 
-//Force Branch Selection Rule
-$current_page = basename($_SERVER['PHP_SELF']);
-if (!isset($_SESSION['active_store']) && $current_page === 'index.php') {
-    header('Location: ' . $base_path . 'intro_page.php');
-    exit();
-}
-
-$userName = $isLoggedIn ? ($_SESSION['user_name'] ?? 'User') : 'Guest';
-$userId = $_SESSION['user_id'] ?? '';
-$isSuperAdmin = $isLoggedIn && isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] === true;
-$currentDate = date("F d, Y");
+$userName      = $_SESSION['user_name'] ?? 'User';
+$userId        = $_SESSION['user_id'] ?? '';
+$isSuperAdmin  = isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] === true;
+$currentDate   = date("F d, Y");
 
 $conn = getDBConnection();
 
-// Get the current user's allowed module IDs
+// Fetch current user's allowed module IDs
 $allowedModules = [];
 if ($isLoggedIn && !$isSuperAdmin) {
     $queryAllowed = "SELECT oModuleid 

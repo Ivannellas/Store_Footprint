@@ -14,7 +14,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 
 
 <div class="sidebar bg-dark-slate text-white flex-shrink-0 p-3 shadow">
-    <a href="<?php echo $base_path; ?>intro_page.php">
+    <a href="<?php echo $base_path; ?>index.php">
     <div class="pb-3 mb-4 text-center main_logo">
         <img src="<?php echo $base_path; ?>assets/images/atlantichardware_logo_with_since1963.png" alt="Logo" class="sidebar-logo mb-2">
     </div>
