@@ -116,6 +116,7 @@ mysqli_close($conn);
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Accounts Management</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
@@ -132,33 +133,38 @@ mysqli_close($conn);
 <body class="bg-light text-dark">
     <?php require __DIR__ . '/../includes/sidebar.php'; ?>
 
-    <div class="header px-4 py-3">
-        <div class="d-flex gap-1">
-            <a href="../index.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
-            <a href="add_user_account.php" class="primary_btn btn-sm btn-light me-1 action-btn" data-permission="<?php echo $canAdd; ?>">Add Account</a>
-            <a href="user_accounts.php?action=logout" class="btn btn-sm primary_btn">Log Out</a>
-        </div>
-</div>
+     <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
 
-    <div class="text-center my-4">
-        <h2 class="title fs-4 text-uppercase mb-1">User Accounts</h2>
-    </div>
+        <div class="navbar_title">
+            <h1 class="h1 text-uppercase mb-0">User Accounts</h1>
+        </div>
+        
+        <div class="d-flex">
+             <a href="../index.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
+        </div>
+    </nav>
 
     <div class="container-fluid py-4 px-4">
 
-        <div class="row mb-3 search-bar">
-            <div class="col-md-4 col-sm-6">
-                <input type="text"
-                    id="searchInput"
-                    name="search"
-                    class="form-control"
-                    placeholder="Search users..."
-                    value="<?php echo htmlspecialchars($searchTerm); ?>"
-                    autocomplete="off">
+    <div class="wrapper">
+
+         <div class="d-flex gap-2 justify-content-between mb-3">
+            <div class="search-bar">
+                <div class="">
+                    <input type="text"
+                        id="searchInput"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search users..."
+                        value="<?php echo htmlspecialchars($searchTerm); ?>"
+                        autocomplete="off">
+                </div>
             </div>
+            <a href="add_user_account.php" class="primary_btn btn-sm btn-light me-1 action-btn" data-permission="<?php echo $canAdd; ?>">Add Account</a>
         </div>
 
-        <div class="table-responsive bg-white border rounded custom-table-shadow table-wrapper">
+
+        <div class="table-responsive bg-white border rounded custom-table-shadow">
             <table class="table table-hover align-middle m-0">
                 <thead>
                     <tr>
@@ -211,6 +217,7 @@ mysqli_close($conn);
                 </tbody>
             </table>
         </div>
+    </div>
     </div>
 
     <div class="modal fade" id="viewUserModal" tabindex="-1" aria-hidden="true">
