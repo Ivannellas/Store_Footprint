@@ -9,7 +9,6 @@ function getDBConnection() {
     $username = "root";
     $password = "atlantic123";
 
-    // Set standard/default database target directly
     $dbname   = "db_store_dashboard_tdiy"; 
 
     $conn = mysqli_connect($host, $username, $password, $dbname);
