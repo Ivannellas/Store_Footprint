@@ -1798,3 +1798,53 @@ footer.footer_intro {
 /* End */
 
 
+/* Custom Compact Floating Toast Alert */
+.toast-container-custom {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.custom-toast-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 250px;
+    max-width: 380px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease-in-out;
+    background-color: #fff;
+}
+
+.custom-toast-alert.toast-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-left: 4px solid #198754;
+}
+
+.custom-toast-alert.toast-danger {
+    background-color: #f8d7da;
+    color: #842029;
+    border-left: 4px solid #dc3545;
+}
+
+.btn-close-toast {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: inherit;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0 0 0 8px;
+    line-height: 1;
+    opacity: 0.6;
+}
+
+.btn-close-toast:hover {
+    opacity: 1;
+}
