@@ -1148,9 +1148,19 @@ footer.index_footer {
   padding: 35px 15px 15px 0;
 }
 
+.index_title h1{
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 100%;
+}
+
 .index_title p {
   position: relative;
   margin-top: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  display: block;
+  color: #111;
 }
 
 .index_title p:before {
