@@ -2,15 +2,23 @@
 
 class FootprintModel
 {
-    private mysqli $dbConn;
+    private mysqli $db;
     private array $allowedTables = ['tbl_store_footprint', 'tbl_parking_footprint'];
+
+    public ?string $oPersonnel = null;
+    public ?string $oDate = null;
+    public ?string $oTime = null;
+    public ?int $oCount = null;
 
     public function __construct(mysqli $conn)
     {
-        $this->dbConn = $conn;
+        $this->db = $conn;
     }
 
-    public function addFootprint(string $tableName, string $personnel, string $date, string $time, int $count): bool
+/*==============================================================
+//   Add a new footprint record                               //
+=============================================================*/
+    public function AddFootprint(string $tableName): bool
     {
         $tableName = trim($tableName);
 
@@ -21,17 +29,21 @@ class FootprintModel
         $query = "INSERT INTO {$tableName} (opersonnel, odate, otime, ocount) 
                   VALUES (?, ?, ?, ?)";
 
-        if ($stmt = mysqli_prepare($this->dbConn, $query)) {
-            mysqli_stmt_bind_param($stmt, "sssi", $personnel, $date, $time, $count);
-            $success = mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
-            return $success;
+        if ($stmt = $this->db->prepare($query)) {
+            $stmt->bind_param("sssi", $this->oPersonnel, $this->oDate, $this->oTime, $this->oCount);
+            $result = $stmt->execute();
+            $stmt->close();
+            return $result;
+        } else {
+            error_log("Failed to add footprint: " . $this->db->error);
+            return false;
         }
-
-        return false;
     }
-  
-    public function getFootprints(string $tableName): array
+
+/*==============================================================
+//   Retrieve footprints                                       //
+=============================================================*/
+    public function GetFootprints(string $tableName): array
     {
         $tableName = trim($tableName);
 
@@ -44,13 +56,13 @@ class FootprintModel
                   FROM {$tableName} 
                   ORDER BY odate DESC, otime DESC";
 
-        $result = mysqli_query($this->dbConn, $query);
+        $result = mysqli_query($this->db, $query);
 
         if ($result) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $records[] = $row;
             }
-            mysqli_free_result($result); 
+            mysqli_free_result($result);
         }
 
         return $records;

@@ -4,31 +4,47 @@ require_once '../entity/footprint_model.php';
 
 class FootprintController
 {
-    private FootprintModel $model;
+    private mysqli $dbConn;
+    private FootprintModel $footprintModel;
 
     public function __construct(mysqli $conn)
     {
-        $this->model = new FootprintModel($conn);
+        $this->dbConn = $conn;
+        $this->footprintModel = new FootprintModel($conn);
     }
 
- 
-    public function renderStoreFootprints(): array
-    {
-        return $this->model->getFootprints('tbl_store_footprint');
-    }
-
-   
-    public function renderParkingFootprints(): array
-    {
-        return $this->model->getFootprints('tbl_parking_footprint');
-    }
-
-    
-    public function handleAddFootprint(string $type, string $personnel, string $date, string $time, int $count): bool
+/*===========================================================
+// Add a new footprint entry                                //
+===========================================================*/
+    public function HandleAddFootprint(string $type, array $formData): bool
     {
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
-        return $this->model->addFootprint($tableName, $personnel, $date, $time, $count);
+
+        $this->footprintModel->oPersonnel = $formData['opersonnel'] ?? '';
+        $this->footprintModel->oDate      = $formData['odate'] ?? '';
+        $this->footprintModel->oTime      = $formData['otime'] ?? '';
+        $this->footprintModel->oCount     = isset($formData['ocount']) ? (int)$formData['ocount'] : 0;
+
+        if (empty($this->footprintModel->oPersonnel) || empty($this->footprintModel->oDate)) {
+            return false;
+        }
+
+        return $this->footprintModel->AddFootprint($tableName);
     }
 
-   
+/*===========================================================
+// Load store footprints                                   //
+===========================================================*/
+    public function RenderStoreFootprints(): array
+    {
+        return $this->footprintModel->GetFootprints('tbl_store_footprint');
+    }
+
+/*===========================================================
+// Load parking footprints                                 //
+===========================================================*/
+    public function RenderParkingFootprints(): array
+    {
+        return $this->footprintModel->GetFootprints('tbl_parking_footprint');
+    }
 }
