@@ -1,6 +1,6 @@
 <?php
 
-require_once '../entity/footprint_model.php';
+require_once __DIR__ . '/../entity/footprint_model.php';
 
 class FootprintController
 {
@@ -19,10 +19,11 @@ class FootprintController
     public function HandleAddFootprint(string $type, array $formData): bool
     {
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
-
+        
         $this->footprintModel->oPersonnel = $formData['opersonnel'] ?? '';
         $this->footprintModel->oDate      = $formData['odate'] ?? '';
-        $this->footprintModel->oTime      = $formData['otime'] ?? '';
+        $this->footprintModel->oStartTime      = $formData['ostarttime'] ?? '';
+        $this->footprintModel->oEndTime      = $formData['oendtime'] ?? '';
         $this->footprintModel->oCount     = isset($formData['ocount']) ? (int)$formData['ocount'] : 0;
 
         if (empty($this->footprintModel->oPersonnel) || empty($this->footprintModel->oDate)) {
