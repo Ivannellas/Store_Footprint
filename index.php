@@ -62,14 +62,13 @@ $errorMessage = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type      = $_POST['type'] ?? 'store';
     $name      = trim($_POST['name'] ?? '');
-    $startTime = $_POST['starttime'] ?? '';
-    $endTime   = $_POST['endtime'] ?? '';
+    $startTime = $_POST['startTime'] ?? '';
+    $endTime   = $_POST['endTime'] ?? '';
     $count     = (int)($_POST['count'] ?? 0);
 
     // Format time range (e.g. 8:00 AM - 9:00 AM)
     $formattedStart = !empty($startTime) ? date('g:i A', strtotime($startTime)) : null; // e.g. "1:00 PM"
     $formattedEnd   = !empty($endTime)   ? date('g:i A', strtotime($endTime))   : null; // e.g. "2:00 PM"
-
 
     $formData = [
         'opersonnel' => $name,
@@ -146,20 +145,22 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         <div class="wrapper flex-grow-1 d-flex flex-column bg-light">
 
             <div class="main_con">
-                <!-- Status Alerts -->
-                <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
-                    <div class="alert alert-success alert-dismissible fade show my-2" role="alert">
-                        <strong>Success!</strong> Footprint record successfully added.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
+                <!-- Status Alerts (Compact Floating Toast) -->
+                <div class="toast-container-custom">
+                    <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
+                        <div class="custom-toast-alert toast-success" role="alert">
+                            <span><strong>Success!</strong> Footprint added.</span>
+                            <button type="button" class="btn-close-toast" aria-label="Close">&times;</button>
+                        </div>
+                    <?php endif; ?>
 
-                <?php if (!empty($errorMessage)): ?>
-                    <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
-                        <strong>Error!</strong> <?php echo htmlspecialchars($errorMessage); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
+                    <?php if (!empty($errorMessage)): ?>
+                        <div class="custom-toast-alert toast-danger" role="alert">
+                            <span><strong>Error!</strong> <?php echo htmlspecialchars($errorMessage); ?></span>
+                            <button type="button" class="btn-close-toast" aria-label="Close">&times;</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
                 <!-- Title & Greeting -->
                 <div class="index_flexbox">
@@ -167,9 +168,9 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                         <h1>
                             Atlantic <?php echo $timeContext; ?>, <?php echo htmlspecialchars($userName); ?>
                         </h1>
-                          <p class="mb-1 text-muted">
-                                     <?php echo date('l, F j, Y'); ?>
-                            </p>
+                        <p class="mb-1 text-muted">
+                            <?php echo date('l, F j, Y'); ?>
+                        </p>
                     </div>
                 </div>
 
@@ -304,26 +305,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const now = new Date();
-
-            let currentHour = now.getHours();
-
-            let startHour = currentHour - 1;
-            if (startHour < 0) {
-                startHour = 23;
-            }
-
-            function formatTimeInput(hour) {
-                return String(hour).padStart(2, '0') + ':00';
-            }
-
-            // Set sa default values sa input
-            document.getElementById('startTime').value = formatTimeInput(startHour);
-            document.getElementById('endTime').value = formatTimeInput(currentHour);
-        });
-    </script>
+    <!-- External script para sa time autofill ug alert dismissal -->
+    <script src="assets/js/footprint.js"></script>
 
 </body>
 
