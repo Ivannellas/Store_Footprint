@@ -9,7 +9,7 @@ function getDBConnection() {
     $username = "root";
     $password = "atlantic123";
 
-    $dbname   = "db_store_dashboard_tdiy"; 
+    $dbname   = "db_store_footprint_tdiy"; 
 
     $conn = mysqli_connect($host, $username, $password, $dbname);
 
