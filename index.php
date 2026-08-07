@@ -164,26 +164,25 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                 <!-- Title & Greeting -->
                 <div class="index_flexbox">
                     <div class="landing_date_info index_title">
-                        <h1 class="text-capitalize">
+                        <h1>
                             Atlantic <?php echo $timeContext; ?>, <?php echo htmlspecialchars($userName); ?>
                         </h1>
-                        <p>Here's what's happening with your dashboards.</p>
+                          <p class="mb-1 text-muted">
+                                     <?php echo date('l, F j, Y'); ?>
+                            </p>
                     </div>
                 </div>
 
                 <!-- Tabs For Parking and Store Foot Traffic -->
                 <div class="tab_parent">
                     <div class="tab">
-                        <button class="tablinks" onclick="openCity(event, 'Store')" <?php echo ($activeTab === 'Store') ? 'id="defaultOpen"' : ''; ?>>Store Foot Traffic</button>
-                        <button class="tablinks" onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Parking Foot Traffic</button>
+                        <button class="tablinks" onclick="openCity(event, 'Store')" <?php echo ($activeTab === 'Store') ? 'id="defaultOpen"' : ''; ?>>Foot Traffic</button>
+                        <button class="tablinks" disabled onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Vehicle Traffic</button>
                     </div>
 
                     <div id="Store" class="tabcontent">
                         <div class="tab_flex">
                             <div class="form_store">
-                                <p class="mb-1 text-muted">
-                                     <?php echo date('l, F j, Y'); ?>
-                                </p>
                                 <h2>Foot Traffic</h2>
                                 <form class="traffic_form" action="index.php" method="POST">
                                     <input type="hidden" name="type" value="store">
@@ -191,12 +190,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     <div class="oTime">
                                         <!-- Start Time Field -->
                                         <div class="oTime_start">
-                                            <label for="startTime">Start Time:</label>
+                                            <label for="startTime">ST:</label>
                                             <input type="time" id="startTime" name="startTime" required>
                                         </div>
                                         <!-- End Time Field -->
                                         <div class="oTime_end">
-                                            <label for="endTime">End Time:</label>
+                                            <label for="endTime">ET:</label>
                                             <input type="time" id="endTime" name="endTime" required>
                                         </div>
                                     </div>
@@ -213,7 +212,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                             </div>
 
                             <div class="form_store_history">
-                                <h2>History</h2>
+                                <h2>Traffic History</h2>
                                 <div class="form_history_table">
                                     <table>
                                         <thead>
