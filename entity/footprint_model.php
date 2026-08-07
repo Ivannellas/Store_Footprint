@@ -7,7 +7,8 @@ class FootprintModel
 
     public ?string $oPersonnel = null;
     public ?string $oDate = null;
-    public ?string $oTime = null;
+    public ?string $oStartTime = null;
+    public ?string $oEndTime = null;
     public ?int $oCount = null;
 
     public function __construct(mysqli $conn)
@@ -15,7 +16,7 @@ class FootprintModel
         $this->db = $conn;
     }
 
-/*==============================================================
+    /*==============================================================
 //   Add a new footprint record                               //
 =============================================================*/
     public function AddFootprint(string $tableName): bool
@@ -26,11 +27,11 @@ class FootprintModel
             return false;
         }
 
-        $query = "INSERT INTO {$tableName} (opersonnel, odate, otime, ocount) 
-                  VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO {$tableName} (opersonnel, odate, ostarttime, oendtime, ocount) 
+                  VALUES (?, ?, ?, ?, ?)";
 
         if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("sssi", $this->oPersonnel, $this->oDate, $this->oTime, $this->oCount);
+            $stmt->bind_param("sssss", $this->oPersonnel, $this->oDate, $this->oStartTime, $this->oEndTime, $this->oCount);
             $result = $stmt->execute();
             $stmt->close();
             return $result;
@@ -40,7 +41,7 @@ class FootprintModel
         }
     }
 
-/*==============================================================
+    /*==============================================================
 //   Retrieve footprints                                       //
 =============================================================*/
     public function GetFootprints(string $tableName): array
@@ -52,9 +53,15 @@ class FootprintModel
         }
 
         $records = [];
-        $query = "SELECT otableid, opersonnel, odate, otime, ocount 
-                  FROM {$tableName} 
-                  ORDER BY odate DESC, otime DESC";
+        $query = "SELECT 
+                otableid, 
+                opersonnel, 
+                odate, 
+                TIME_FORMAT(ostarttime, '%h:%i %p') AS ostarttime, 
+                TIME_FORMAT(oendtime, '%h:%i %p') AS oendtime, 
+                ocount 
+              FROM {$tableName} 
+              ORDER BY odate DESC, ostarttime DESC";
 
         $result = mysqli_query($this->db, $query);
 
