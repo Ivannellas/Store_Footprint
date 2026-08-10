@@ -581,17 +581,6 @@ footer.footer_intro {
   overflow: hidden;
 }
 
-/* .login-wrapper::before {
- content: url(../images/atoy_transparent.png);
-  position: absolute;
-  top: 46%;
-  left: 40px;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
- transform: translateY(-50%) scale(0.9);
-} */
-
 .card_parent {
   position: relative;
   width: 100%;
@@ -1141,78 +1130,187 @@ footer.index_footer {
   border-radius: 100px 100px 0 0;
 }
 
-.index_card_title {
-  position: relative;
-  z-index: 1;
-}
-.index_card_title:before,
-.index_card_title:after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 300px;
-  height: 4px;
-}
-
-.index_card_title:before {
-  background: #218c3c;
-  left: 110%;
-}
-
-.index_card_title:after {
-  background: #04235a;
-  right: 110%;
-}
-
-.index_card_title h2 {
-  font-size: 27px;
-  font-weight: 700;
-  line-height: 100%;
+.modal_btn a{
+  width:  max-content;
   display: block;
-  color: var(--secondaryColor);
-  text-transform: uppercase;
-  margin: 0;
+  margin: 25px auto 0;
 }
 
-.index_title {
-  text-align: left;
-  padding: 35px 15px 15px 0;
-}
-
-.index_title h1{
-  font-size: 35px;
-  font-weight: 700;
-  line-height: 100%;
-}
-
-.index_title p {
-  position: relative;
-  margin-top: 8px;
-  font-size: 18px;
-  font-weight: 500;
+.submit_btn button{
+  width:  max-content;
   display: block;
-  color: #111;
+  margin: 15px auto 0;
 }
 
-.index_title p:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -12px;
-  width: 35px;
-  height: 3px;
-  background: #218c3c;
-}
+/* MODAL */
 
-.card_info figure {
-  background: rgba(4, 35, 90, 0.2);
-  width: fit-content;
-  margin: 0 auto 17px;
-  border-radius: 100vw;
-  padding: 15px;
-  transition: all 0.3s ease-in-out;
-}
+/* ----------------------------------
+       2. Modal Backdrop (Overlay)
+    ---------------------------------- */
+    .modal-overlay {
+      display: none;             /* Hidden by default */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Class added via JS to display modal */
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* ----------------------------------
+       3. Modal Window Container
+    ---------------------------------- */
+    .modal-content {
+      background-color: #ffffff;
+      width: 90%;
+      max-width: 1000px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 85vh; /* Keep modal fitting within viewport */
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header Bar */
+    .modal-header {
+      background-color: #1e8e3e;
+      color: #ffffff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* ----------------------------------
+       4. Filter Bar Controls
+    ---------------------------------- */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 24px;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #e0e0e0;
+      font-family: Arial, sans-serif;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .filter-group input[type="date"] {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+
+    .filter-btn {
+      padding: 7px 16px;
+      background-color: #1e8e3e;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .filter-btn:hover {
+      background-color: #166b2e;
+    }
+
+    /* ----------------------------------
+       5. Scrollable Table Inside Modal
+    ---------------------------------- */
+    .modal-body {
+      padding: 20px 24px;
+      overflow: hidden; /* Prevent body overflow, let container scroll */
+    }
+
+    .table-container {
+      max-height: 350px; /* Limits table height inside modal */
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+    }
+
+    .personnel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    .personnel-table th {
+      position: sticky;
+      top: 0;
+      background-color: #1e8e3e;
+      color: #ffffff;
+      padding: 12px 16px;
+      text-align: left;
+      z-index: 5;
+    }
+
+    .personnel-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #333;
+    }
+
+    .personnel-table tbody tr:nth-child(even) {
+      background-color: #fcfcfc;
+    }
+
+    /* Scrollbar Styling */
+    .table-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .table-container::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+
+/* END OF MODAL */
 
 .index_btn:hover {
   transform: scale(0.9);
