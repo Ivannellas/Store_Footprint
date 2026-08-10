@@ -88,22 +88,21 @@ ul li::marker {
   -webkit-text-fill-color: unset;
 }
 
-
-.flex_box_center{
+.flex_box_center {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 13px;
 }
 
-.flex_box_start{
+.flex_box_start {
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 13px;
 }
 
-.flex_box_end{
+.flex_box_end {
   display: flex;
   justify-content: end;
   align-items: center;
@@ -832,7 +831,6 @@ footer.footer_intro {
   gap: 20px;
 }
 
-
 .tab_parent {
   padding: 40px 15px;
   background: #eee;
@@ -842,14 +840,56 @@ footer.footer_intro {
   margin-top: 50px;
 }
 
-.tab {display: flex; justify-content: center; width: 100%; margin-top: -68px; gap: 15px;}
-.tab button {float: left; border: none; outline: 0; cursor: pointer; padding: 15px; transition: .3s; color: #fff; background: var(--primaryColor); width: 230px; font: 600 18px/25px var(--headingTxt); border-radius: 10px;}
-.tab button:hover { cursor: pointer; }
-.tab button.active { background: var(--secondaryColor); color: #fff;}
-.tabcontent { display: none; padding: 40px 25px;  margin: 10px 0 0; }
-.tabcontent p{text-align: center;}
+.tab {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: -68px;
+  gap: 15px;
+}
+.tab button {
+  float: left;
+  border: none;
+  outline: 0;
+  cursor: pointer;
+  padding: 15px;
+  transition: 0.3s;
+  color: #fff;
+  background: var(--primaryColor);
+  width: 230px;
+  font: 600 18px/25px var(--headingTxt);
+  border-radius: 10px;
+  opacity: 0.8;
+}
+.tab button:hover {
+  cursor: pointer;
+}
+.tab button.active { background: var(--secondaryColor); color: #fff; opacity: 1;}
 
-.form_store, .form_store_history {
+
+.tabcontent {
+  display: none;
+  padding: 40px 25px;
+  margin: 10px 0 0;
+}
+.tabcontent p {
+  text-align: center;
+}
+
+.form_store,
+.form_store_history {
+  position: relative;
+  width: 49%;
+  max-width: 100%;
+  text-align: center;
+  background: #fff;
+  padding: 40px 25px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 5px rgba(0 0 0/0.2);
+}
+
+.form_parking,
+.form_parking_history {
   position: relative;
   width: 49%;
   max-width: 100%;
@@ -897,17 +937,16 @@ footer.footer_intro {
   gap: 10px;
 }
 
-
 /* Container styling to handle overflow on smaller screens */
 .form_history_table {
-width: 100%;
-max-height: 250px; 
-overflow-y: auto;
-overflow-x: auto;
-border-radius: 8px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-background-color: #ffffff;
-margin: 1rem 0;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  margin: 1rem 0;
 }
 
 /* Alternating Row Colors (Optional for clean look) */
@@ -926,28 +965,27 @@ margin: 1rem 0;
   border-radius: 4px;
 }
 
-
 /* Base table styling */
 .form_history_table table {
-width: 100%;
-border-collapse: collapse;
-font-family: var(--parag);
-font-size: 0.95rem;
-color: #333333;
-text-align: left;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--parag);
+  font-size: 0.95rem;
+  color: #333333;
+  text-align: left;
 }
 
 /* Header row styling using primary color #218c3c */
 .form_history_table th {
-background-color: #218c3c;
-color: #ffffff;
-font-weight: 600;
-letter-spacing: 0.5px;
-padding: 12px 16px;
-border: none;
-position: sticky;
-top: 0;
-z-index: 10;
+  background-color: #218c3c;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  border: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 /* Right-align numeric columns like "Count" for better readability */
@@ -1130,14 +1168,14 @@ footer.index_footer {
   border-radius: 100px 100px 0 0;
 }
 
-.modal_btn a{
-  width:  max-content;
+.modal_btn a {
+  width: max-content;
   display: block;
   margin: 25px auto 0;
 }
 
-.submit_btn button{
-  width:  max-content;
+.submit_btn button {
+  width: max-content;
   display: block;
   margin: 15px auto 0;
 }
@@ -1147,168 +1185,173 @@ footer.index_footer {
 /* ----------------------------------
        2. Modal Backdrop (Overlay)
     ---------------------------------- */
-    .modal-overlay {
-      display: none;             /* Hidden by default */
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
+.modal-overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
 
-    /* Class added via JS to display modal */
-    .modal-overlay.active {
-      display: flex;
-    }
+/* Class added via JS to display modal */
+.modal-overlay.active {
+  display: flex;
+}
 
-    /* ----------------------------------
+/* ----------------------------------
        3. Modal Window Container
     ---------------------------------- */
-    .modal-content {
-      background-color: #ffffff;
-      width: 90%;
-      max-width: 1000px;
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      max-height: 85vh; /* Keep modal fitting within viewport */
-      animation: fadeIn 0.25s ease-out;
-    }
+.modal-content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 1000px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh; /* Keep modal fitting within viewport */
+  animation: fadeIn 0.25s ease-out;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    /* Header Bar */
-    .modal-header {
-      background-color: #1e8e3e;
-      color: #ffffff;
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+/* Header Bar */
+.modal-header {
+  background-color: #1e8e3e;
+  color: #ffffff;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .modal-header h3 {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-    }
+.modal-header h3 {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+}
 
-    .close-btn {
-      background: none;
-      border: none;
-      color: #ffffff;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-      line-height: 1;
-    }
+.close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
 
-    .close-btn:hover {
-      opacity: 0.8;
-    }
+.close-btn:hover {
+  opacity: 0.8;
+}
 
-    /* ----------------------------------
+/* ----------------------------------
        4. Filter Bar Controls
     ---------------------------------- */
-    .filter-bar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 16px 24px;
-      background-color: #f8f9fa;
-      border-bottom: 1px solid #e0e0e0;
-      font-family: Arial, sans-serif;
-    }
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-family: Arial, sans-serif;
+}
 
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      color: #333;
-    }
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #333;
+}
 
-    .filter-group input[type="date"] {
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-family: inherit;
-    }
+.filter-group input[type="date"] {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
 
-    .filter-btn {
-      padding: 7px 16px;
-      background-color: var(--secondaryColor);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-    }
+.filter-btn {
+  padding: 7px 16px;
+  background-color: var(--secondaryColor);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
 
-    .filter-btn:hover {
-      opacity: 0.9;
-    }
+.filter-btn:hover {
+  opacity: 0.9;
+}
 
-    /* ----------------------------------
+/* ----------------------------------
        5. Scrollable Table Inside Modal
     ---------------------------------- */
-    .modal-body {
-      padding: 20px 24px;
-      overflow: hidden; /* Prevent body overflow, let container scroll */
-    }
+.modal-body {
+  padding: 20px 24px;
+  overflow: hidden; /* Prevent body overflow, let container scroll */
+}
 
-    .table-container {
-      max-height: 350px; /* Limits table height inside modal */
-      overflow-y: auto;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-    }
+.table-container {
+  max-height: 350px; /* Limits table height inside modal */
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
 
-    .personnel-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 14px;
-    }
+.personnel-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
 
-    .personnel-table th {
-      position: sticky;
-      top: 0;
-      background-color: #1e8e3e;
-      color: #ffffff;
-      padding: 12px 16px;
-      text-align: left;
-      z-index: 5;
-    }
+.personnel-table th {
+  position: sticky;
+  top: 0;
+  background-color: #1e8e3e;
+  color: #ffffff;
+  padding: 12px 16px;
+  text-align: left;
+  z-index: 5;
+}
 
-    .personnel-table td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #f0f0f0;
-      color: #333;
-    }
+.personnel-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+}
 
-    .personnel-table tbody tr:nth-child(even) {
-      background-color: #fcfcfc;
-    }
+.personnel-table tbody tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
 
-    /* Scrollbar Styling */
-    .table-container::-webkit-scrollbar {
-      width: 6px;
-    }
-    .table-container::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 4px;
-    }
-
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+  width: 6px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
 
 /* END OF MODAL */
 
@@ -1691,11 +1734,11 @@ footer.footer_intro {
   background-color: var(--headingTxt);
 }
 
-.navbar{
+.navbar {
   background-color: var(--primaryColor);
 }
 
-.navbar_title h1{
+.navbar_title h1 {
   color: #fff;
   font-size: 23px;
   font-weight: 800;
@@ -1793,7 +1836,6 @@ footer.footer_intro {
    ADD USER ACCOUNT, EDIT USER ACCOUNT, MY_ACCOUNT PAGES
 ========================================== */
 
-
 .container {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
   border-radius: 8px;
@@ -1806,15 +1848,14 @@ footer.footer_intro {
   margin: 0 auto;
 }
 
-.card-footer button{
- display: block;
- width: 150px;
+.card-footer button {
+  display: block;
+  width: 150px;
 }
 
-.card-footer .cancel_btn{
+.card-footer .cancel_btn {
   background: red !important;
 }
-
 
 /*=========================================
       USER ACCOUNTS BUTTON STYLES
@@ -1829,7 +1870,6 @@ footer.footer_intro {
   color: #ffffff;
   border-color: var(--secondaryColor, #111827);
 }
-
 
 /* Sidebar Layout Framework */
 /* .wrapper {
@@ -1927,54 +1967,53 @@ footer.footer_intro {
 }
 /* End */
 
-
 /* Custom Compact Floating Toast Alert */
 .toast-container-custom {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
 }
 
 .custom-toast-alert {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 250px;
-    max-width: 380px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 13.5px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: all 0.3s ease-in-out;
-    background-color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+  max-width: 380px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+  background-color: #fff;
 }
 
 .custom-toast-alert.toast-success {
-    background-color: #d1e7dd;
-    color: #0f5132;
-    border-left: 4px solid #198754;
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border-left: 4px solid #198754;
 }
 
 .custom-toast-alert.toast-danger {
-    background-color: #f8d7da;
-    color: #842029;
-    border-left: 4px solid #dc3545;
+  background-color: #f8d7da;
+  color: #842029;
+  border-left: 4px solid #dc3545;
 }
 
 .btn-close-toast {
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    font-weight: bold;
-    color: inherit;
-    cursor: pointer;
-    margin-left: auto;
-    padding: 0 0 0 8px;
-    line-height: 1;
-    opacity: 0.6;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: inherit;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 0 0 0 8px;
+  line-height: 1;
+  opacity: 0.6;
 }
 
 .btn-close-toast:hover {
-    opacity: 1;
+  opacity: 1;
 }
