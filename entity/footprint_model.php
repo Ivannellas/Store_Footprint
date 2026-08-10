@@ -52,11 +52,11 @@ class FootprintModel
             return [];
         }
 
-        // Default to today's date if no specific date is passed
-        $targetDate = $date ?? date('m-d-Y');
-
         $records = [];
-        $query = "SELECT 
+
+        // Kung naa'y gi-pass nga date, i-filter base sa date. Kung NULL, kuhaon tanan history.
+        if ($date !== null && $date !== '') {
+            $query = "SELECT 
                     otableid, 
                     opersonnel, 
                     odate, 
@@ -65,19 +65,43 @@ class FootprintModel
                     ocount 
                   FROM {$tableName} 
                   WHERE odate = ? 
-                  ORDER BY ostarttime DESC";
+                  ORDER BY odate DESC, ostarttime DESC";
 
-        if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("s", $targetDate);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            if ($stmt = $this->db->prepare($query)) {
+                $stmt->bind_param("s", $date);
+                $stmt->execute();
+                $result = $stmt->get_result();
 
-            while ($row = $result->fetch_assoc()) {
-                $records[] = $row;
+                while ($row = $result->fetch_assoc()) {
+                    $records[] = $row;
+                }
+                $stmt->close();
+            } else {
+                error_log("Failed to fetch footprints: " . $this->db->error);
             }
-            $stmt->close();
         } else {
-            error_log("Failed to fetch footprints: " . $this->db->error);
+            // WALAY WHERE clause para makuha ang tanang history
+            $query = "SELECT 
+                    otableid, 
+                    opersonnel, 
+                    odate, 
+                    TIME_FORMAT(ostarttime, '%h:%i %p') AS ostarttime, 
+                    TIME_FORMAT(oendtime, '%h:%i %p') AS oendtime, 
+                    ocount 
+                  FROM {$tableName} 
+                  ORDER BY odate DESC, ostarttime DESC";
+
+            if ($stmt = $this->db->prepare($query)) {
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                while ($row = $result->fetch_assoc()) {
+                    $records[] = $row;
+                }
+                $stmt->close();
+            } else {
+                error_log("Failed to fetch footprints: " . $this->db->error);
+            }
         }
 
         return $records;
