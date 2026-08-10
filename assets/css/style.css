@@ -1246,16 +1246,16 @@ footer.index_footer {
 
     .filter-btn {
       padding: 7px 16px;
-      background-color: #1e8e3e;
+      background-color: var(--secondaryColor);
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .filter-btn:hover {
-      background-color: #166b2e;
+      opacity: 0.9;
     }
 
     /* ----------------------------------
@@ -1276,7 +1276,7 @@ footer.index_footer {
     .personnel-table {
       width: 100%;
       border-collapse: collapse;
-      font-family: Arial, sans-serif;
+      text-align: left;
       font-size: 14px;
     }
 

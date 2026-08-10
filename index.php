@@ -182,7 +182,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                 <div class="tab_parent">
                     <div class="tab">
                         <button class="tablinks" onclick="openCity(event, 'Store')" <?php echo ($activeTab === 'Store') ? 'id="defaultOpen"' : ''; ?>>Foot Traffic</button>
-                        <button class="tablinks" disabled onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Vehicle Traffic</button>
+                        <button class="tablinks" onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Vehicle Traffic</button>
                     </div>
 
                     <div id="Store" class="tabcontent">
@@ -211,13 +211,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     </div>
 
                                     <div class="submit_btn">
-                                        <button type="submit" name="submit">Submit</button>
+                                        <button class="primary_btn" type="submit" name="submit">Submit</button>
                                     </div>
                                 </form>
                             </div>
 
                             <div class="form_store_history">
-                                <h2>Traffic History</h2>
+                                <h2>Daily Traffic History</h2>
                                 <div class="form_history_table">
                                     <table>
                                         <thead>
@@ -264,12 +264,195 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         </tbody>
                                     </table>
                                 </div>
+
+                    <div class="modal_btn" id="footModalBtn">
+                        <a class="primary_btn" href="#">Foot Traffic History</a>
+                    </div>
+
+                    <!-- Modal Overlay Window -->
+                    <div class="modal-overlay" id="footTrafficModal">
+                        <div class="modal-content">
+                        
+                        <!-- Header -->
+                        <div class="modal-header">
+                            <h3>Foot Traffic History Log</h3>
+                            <button class="close-btn" id="closeFootTrafficModal">&times;</button>
+                        </div>
+
+                        <!-- Filter Controls -->
+                        <div class="filter-bar">
+                            <div class="filter-group">
+                            <label for="Date">Date</label>
+                            <input type="date" id="date" />
+                            </div>
+                            <button class="filter-btn" onclick="applyFilter()">Filter</button>
+                        </div>
+
+                        <!-- Modal Body / Table -->
+                        <div class="modal-body">
+                            <div class="table-container">
+                            <table class="personnel-table">
+                                <thead>
+                                <tr>
+                                    <th>Personnel Name</th>
+                                    <th>Date</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Count</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                <tr>
+                                    <td>gaa</td>
+                                    <td>2026-08-07</td>
+                                    <td>12:00 PM</td>
+                                    <td>1:00 AM</td>
+                                    <td>331</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
                             </div>
                         </div>
                     </div>
 
                     <div id="Parking" class="tabcontent">
-                        <p class="upcoming">Companies Forms...</p>
+                        <div class="tab_flex">
+                            <div class="form_store">
+                                <h2>Vehicle Traffic</h2>
+                                <form class="traffic_form" action="index.php" method="POST">
+                                    <input type="hidden" name="type" value="store">
+
+                                    <div class="oTime">
+                                        <!-- Start Time Field -->
+                                        <div class="oTime_start">
+                                            <label for="startTime">ST:</label>
+                                            <input type="time" id="startTime" name="startTime" required>
+                                        </div>
+                                        <!-- End Time Field -->
+                                        <div class="oTime_end">
+                                            <label for="endTime">ET:</label>
+                                            <input type="time" id="endTime" name="endTime" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex_box_between">
+                                        <input type="text" id="name" name="name" placeholder="Personnel Name" required>
+                                        <input type="number" id="count" name="count" placeholder="Input Traffic" required>
+                                    </div>
+
+                                    <div class="submit_btn">
+                                        <button class="primary_btn" type="submit" name="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="form_store_history">
+                                <h2>Daily Traffic History</h2>
+                                <div class="form_history_table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Personnel Name</th>
+                                                <th>Date</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                                <th>Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (!empty($storeFootprints)): ?>
+                                                <?php foreach ($storeFootprints as $row): ?>
+                                                    <tr>
+                                                        <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
+                                                        <td><?php echo htmlspecialchars($row['odate']); ?></td>
+                                                        <td>
+                                                            <?php
+                                                            if (!empty($row['ostarttime'])) {
+                                                                echo date('g:i A', strtotime($row['ostarttime']));
+                                                            } else {
+                                                                echo '-';
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if (!empty($row['oendtime'])) {
+                                                                echo date('g:i A', strtotime($row['oendtime']));
+                                                            } else {
+                                                                echo '-';
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No data available for today</td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                    <div class="modal_btn" id="vehicleModalBtn">
+                        <a class="primary_btn" href="#">Vehicle History</a>
+                    </div>
+
+                    <!-- Modal Overlay Window -->
+                    <div class="modal-overlay" id="vehicleTrafficModal">
+                        <div class="modal-content">
+                        
+                        <!-- Header -->
+                        <div class="modal-header">
+                            <h3>Vehicle Traffic History Log</h3>
+                            <button class="close-btn" id="closevehicleTrafficModal">&times;</button>
+                        </div>
+
+                        <!-- Filter Controls -->
+                        <div class="filter-bar">
+                            <div class="filter-group">
+                            <label for="Date">Date</label>
+                            <input type="date" id="date" />
+                            </div>
+                            <button class="filter-btn" onclick="applyFilter()">Filter</button>
+                        </div>
+
+                        <!-- Modal Body / Table -->
+                        <div class="modal-body">
+                            <div class="table-container">
+                            <table class="personnel-table">
+                                <thead>
+                                <tr>
+                                    <th>Personnel Name</th>
+                                    <th>Date</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Count</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                <tr>
+                                    <td>gaard1</td>
+                                    <td>2026-08-07</td>
+                                    <td>12:00 PM</td>
+                                    <td>1:00 AM</td>
+                                    <td>331</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -325,6 +508,54 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
     <!-- External script para sa time autofill ug alert dismissal -->
     <script src="assets/js/footprint.js"></script>
+
+    <!-- MODAL JAVASCRIPT -->
+    <script>
+    const footModalBtn = document.getElementById('footModalBtn');
+    const closeFootTrafficModal = document.getElementById('closeFootTrafficModal');
+    const footmodalOverlay = document.getElementById('footTrafficModal');
+
+    const vehicleModalBtn = document.getElementById('vehicleModalBtn');
+    const closevehicleTrafficModal = document.getElementById('closevehicleTrafficModal');
+    const vehiclemodalOverlay = document.getElementById('vehicleTrafficModal');
+
+    // Open modal when button is clicked
+    footModalBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevents link default anchor behavior
+        footmodalOverlay.classList.add('active');
+    });
+
+    // Close modal when 'X' is clicked
+    closeFootTrafficModal.addEventListener('click', () => {
+        footmodalOverlay.classList.remove('active');
+    });
+
+    // Close modal when user clicks outside the modal box
+    window.addEventListener('click', (e) => {
+        if (e.target === footmodalOverlay) {
+        footmodalOverlay.classList.remove('active');
+        }
+    });
+
+
+    // Open modal when button is clicked
+    vehicleModalBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevents link default anchor behavior
+        vehiclemodalOverlay.classList.add('active');
+    });
+
+    // Close modal when 'X' is clicked
+    closevehicleTrafficModal.addEventListener('click', () => {
+        vehiclemodalOverlay.classList.remove('active');
+    });
+
+    // Close modal when user clicks outside the modal box
+    window.addEventListener('click', (e) => {
+        if (e.target === vehiclemodalOverlay) {
+        vehiclemodalOverlay.classList.remove('active');
+        }
+    });
+</script>
 </body>
 
 </body>
