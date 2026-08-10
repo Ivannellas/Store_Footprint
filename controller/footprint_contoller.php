@@ -30,7 +30,7 @@ class FootprintController
         )) {
             return [
                 'success' => false,
-                'message' => "Personnel '" . htmlspecialchars($data['opersonnel']) . "' has already logged traffic for this time range (" . $data['ostarttime'] . " - " . $data['oendtime'] . ")."
+                'message' => "'" . htmlspecialchars($data['opersonnel']) . "' has already logged for this time range (" . $data['ostarttime'] . " - " . $data['oendtime'] . ")."
             ];
         }
 
