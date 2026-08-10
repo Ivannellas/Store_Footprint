@@ -218,7 +218,9 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     </div>
 
                                     <div class="flex_box_between">
-                                        <input type="text" id="name" name="name" placeholder="Personnel Name" required>
+                                        <input type="text" id="name" name="name" placeholder="Personnel Name" 
+                                            oninput="this.value = this.value.toUpperCase()"
+                                            style="text-transform: uppercase;" required>
                                         <input type="number" id="count" name="count" placeholder="Input Traffic" required>
                                     </div>
 
