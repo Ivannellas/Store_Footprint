@@ -13,39 +13,56 @@ class FootprintController
         $this->footprintModel = new FootprintModel($conn);
     }
 
-/*===========================================================
+    /*===========================================================
 // Add a new footprint entry                                //
 ===========================================================*/
-    public function HandleAddFootprint(string $type, array $formData): bool
+    public function HandleAddFootprint(string $type, array $data): array
     {
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
-        
-        $this->footprintModel->oPersonnel = $formData['opersonnel'] ?? '';
-        $this->footprintModel->oDate      = $formData['odate'] ?? '';
-        $this->footprintModel->oStartTime      = $formData['ostarttime'] ?? '';
-        $this->footprintModel->oEndTime      = $formData['oendtime'] ?? '';
-        $this->footprintModel->oCount     = isset($formData['ocount']) ? (int)$formData['ocount'] : 0;
 
-        if (empty($this->footprintModel->oPersonnel) || empty($this->footprintModel->oDate)) {
-            return false;
+        // Check if this specific personnel already logged for this time range today
+        if ($this->footprintModel->HasExistingLog(
+            $tableName,
+            $data['opersonnel'],
+            $data['odate'],
+            $data['ostarttime'],
+            $data['oendtime']
+        )) {
+            return [
+                'success' => false,
+                'message' => "Personnel '" . htmlspecialchars($data['opersonnel']) . "' has already logged traffic for this time range (" . $data['ostarttime'] . " - " . $data['oendtime'] . ")."
+            ];
         }
 
-        return $this->footprintModel->AddFootprint($tableName);
+        // Assign data to model
+        $this->footprintModel->oPersonnel = $data['opersonnel'];
+        $this->footprintModel->oDate      = $data['odate'];
+        $this->footprintModel->oStartTime = $data['ostarttime'];
+        $this->footprintModel->oEndTime   = $data['oendtime'];
+        $this->footprintModel->oCount     = $data['ocount'];
+
+        $isSaved = $this->footprintModel->AddFootprint($tableName);
+
+        if ($isSaved) {
+            return ['success' => true, 'message' => 'Footprint added successfully.'];
+        }
+
+        return ['success' => false, 'message' => 'Failed to save footprint record due to a database error.'];
     }
 
-/*===========================================================
+    /*===========================================================
 // Load store footprints                                   //
 ===========================================================*/
-    public function RenderStoreFootprints(): array
+    public function RenderStoreFootprints(?string $date = null): array
     {
-        return $this->footprintModel->GetFootprints('tbl_store_footprint');
+        return $this->footprintModel->GetFootprints('tbl_store_footprint', $date);
     }
 
-/*===========================================================
+    /*===========================================================
 // Load parking footprints                                 //
 ===========================================================*/
-    public function RenderParkingFootprints(): array
+    public function RenderParkingFootprints(?string $date = null): array
     {
-        return $this->footprintModel->GetFootprints('tbl_parking_footprint');
+        return $this->footprintModel->GetFootprints('tbl_parking_footprint', $date);
     }
 }
