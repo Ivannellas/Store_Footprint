@@ -169,7 +169,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                 <!-- Title & Greeting -->
                 <div class="index_flexbox">
                     <div class="landing_date_info index_title">
-                        <h1>
+                        <h1 class="text-capitalize">
                             Atlantic <?php echo $timeContext; ?>, <?php echo htmlspecialchars($userName); ?>
                         </h1>
                         <p class="mb-1 text-muted">
@@ -182,7 +182,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                 <div class="tab_parent">
                     <div class="tab">
                         <button class="tablinks" onclick="openCity(event, 'Store')" <?php echo ($activeTab === 'Store') ? 'id="defaultOpen"' : ''; ?>>Foot Traffic</button>
-                        <button class="tablinks" onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Vehicle Traffic</button>
+                        <button class="tablinks" disabled  onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Vehicle Traffic</button>
                     </div>
 
                     <div id="Store" class="tabcontent">
@@ -322,10 +322,10 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                     <div id="Parking" class="tabcontent">
                         <div class="tab_flex">
-                            <div class="form_store">
+                            <div class="form_parking">
                                 <h2>Vehicle Traffic</h2>
                                 <form class="traffic_form" action="index.php" method="POST">
-                                    <input type="hidden" name="type" value="store">
+                                    <input type="hidden" name="type" value="parking">
 
                                     <div class="oTime">
                                         <!-- Start Time Field -->
@@ -351,7 +351,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 </form>
                             </div>
 
-                            <div class="form_store_history">
+                            <div class="form_parking_history">
                                 <h2>Daily Traffic History</h2>
                                 <div class="form_history_table">
                                     <table>
@@ -365,8 +365,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if (!empty($storeFootprints)): ?>
-                                                <?php foreach ($storeFootprints as $row): ?>
+                                            <?php if (!empty($parkingFootprints)): ?>
+                                                <?php foreach ($parkingFootprints as $row): ?>
                                                     <tr>
                                                         <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
