@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Auto-fill Time Inputs (Start Time & End Time)
+    // 1. Auto-fill Time Inputs (Start Time & End Time) for all forms
     const now = new Date();
     let currentHour = now.getHours();
 
@@ -12,11 +12,20 @@ document.addEventListener('DOMContentLoaded', function () {
         return String(hour).padStart(2, '0') + ':00';
     }
 
-    const startTimeElem = document.getElementById('startTime');
-    const endTimeElem = document.getElementById('endTime');
+    const formattedStart = formatTimeInput(startHour);
+    const formattedEnd = formatTimeInput(currentHour);
 
-    if (startTimeElem) startTimeElem.value = formatTimeInput(startHour);
-    if (endTimeElem) endTimeElem.value = formatTimeInput(currentHour);
+    // Target all inputs matching name="startTime" and name="endTime"
+    const startTimeElems = document.querySelectorAll('input[name="startTime"]');
+    const endTimeElems = document.querySelectorAll('input[name="endTime"]');
+
+    startTimeElems.forEach(function (elem) {
+        if (!elem.value) elem.value = formattedStart;
+    });
+
+    endTimeElems.forEach(function (elem) {
+        if (!elem.value) elem.value = formattedEnd;
+    });
 
     // 2. Alert Dismissal (Toast Style)
     const alertBox = document.querySelector('.custom-toast-alert');
@@ -40,9 +49,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Auto hide human sa 3 seconds
         setTimeout(function () {
             removeAlert();
         }, 500);
+    }
+    // Clean URL query parameters so reloading won't trigger the success message again
+    if (window.location.search.includes('status=') || window.location.search.includes('success')) {
+        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
     }
 });
