@@ -175,6 +175,29 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                     <?php endif; ?>
                 </div>
 
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <div class="carousel-content">
+                            <p>
+                                Please Make Sure The Information And Spelling You Input Is Correct !!!
+                            </p>
+                        </div>
+
+                        <div class="carousel-content" aria-hidden="true">
+                            <p>
+                                Please Make Sure The Information And Spelling You Input Is Correct !!!
+                            </p>
+                        </div>
+
+                         <div class="carousel-content" aria-hidden="true">
+                            <p>
+                                Please Make Sure The Information And Spelling You Input Is Correct !!!
+                            </p>
+                        </div>
+                        
+                    </div>
+                </div>
+
                 <!-- Title & Greeting -->
                 <div class="index_flexbox">
                     <div class="landing_date_info index_title">

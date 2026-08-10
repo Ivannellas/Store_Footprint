@@ -820,7 +820,7 @@ footer.footer_intro {
 }
 
 .main_con {
-  padding: 40px 0 90px;
+  padding: 0 0 90px;
 }
 
 .index_flexbox {
@@ -2104,3 +2104,77 @@ footer.footer_intro {
 .btn-close-toast:hover {
   opacity: 1;
 }
+
+
+/* CAROUSEL TEXT */
+
+.carousel-container {
+  overflow: hidden;
+  background: var(--secondaryColor);
+  padding: 15px 0;
+  width: 1920px;
+  margin-left: 50%;
+  margin-bottom: 50px;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-track {
+    display: flex;
+    width: max-content;
+    animation: infiniteCarousel 20s linear infinite;
+}
+
+.carousel-content {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.carousel-track p {
+    flex-shrink: 0;
+    margin: 0;
+    padding-right: 150px;
+    white-space: nowrap;
+    padding: 0 40px;
+    font-size: 28px;
+    line-height: 100%;
+    color: #fff;
+    font-weight: 800;
+    position: relative;
+}
+
+.carousel-track p:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 18px;
+  background: #fff;
+  opacity: 0.5;
+}
+
+.carousel-track .carousel-content:last-child p:before{
+  display: none;
+}
+
+/* Optional: pause when hovering */
+.carousel-container:hover .carousel-track {
+    animation-play-state: paused;
+}
+
+/* Infinite seamless movement */
+@keyframes infiniteCarousel {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
