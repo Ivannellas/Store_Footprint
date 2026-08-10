@@ -95,15 +95,18 @@ $storeFootprints   = $footprintController->RenderStoreFootprints($todayDate);
 $parkingFootprints = $footprintController->RenderParkingFootprints($todayDate);
 
 // Footprints history
+$storeFootprintsHistory   = $footprintController->RenderStoreFootprints(null);
+$parkingFootprintsHistory = $footprintController->RenderParkingFootprints(null);
+
 $storeFootprintsHistory = array_map(function ($record) {
     $record['odate'] = date('Y-m-d', strtotime($record['odate']));
     return $record;
-}, $storeFootprints);
+}, $storeFootprintsHistory);
 
 $parkingFootprintsHistory = array_map(function ($record) {
     $record['odate'] = date('Y-m-d', strtotime($record['odate']));
     return $record;
-}, $parkingFootprints);
+}, $parkingFootprintsHistory);
 
 mysqli_close($conn);
 
@@ -340,7 +343,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
                                                     <tr>
-                                                        <td colspan="5" class="text-center">No data available for today</td>
+                                                        <td colspan="5" class="text-center">No data available </td>
                                                     </tr>
                                                 <?php endif; ?>
                                                 </tr>
