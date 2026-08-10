@@ -860,11 +860,12 @@ footer.footer_intro {
   font: 600 18px/25px var(--headingTxt);
   border-radius: 10px;
   opacity: 0.8;
+  transform: scale(0.95);
 }
 .tab button:hover {
   cursor: pointer;
 }
-.tab button.active { background: var(--secondaryColor); color: #fff; opacity: 1;}
+.tab button.active { background: var(--secondaryColor); color: #fff; opacity: 1; transform: scale(1);}
 
 
 .tabcontent {
@@ -904,7 +905,7 @@ footer.footer_intro {
   box-shadow: 5px 5px 5px rgba(0 0 0/0.2);
 }
 
-.form_store {
+.form_store, .form_parking {
   display: grid;
   place-items: center;
 }
@@ -935,7 +936,7 @@ footer.footer_intro {
   border-radius: 10px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: Arial, sans-serif;
+  font-family: var(--parag);
   display: flex;
   flex-direction: column;
   gap: 16px; /* Uniform spacing between form rows */
@@ -1280,7 +1281,6 @@ footer.index_footer {
   transform: scale(0.95);
 }
 
-
 /* MODAL */
 
 /* ----------------------------------
@@ -1316,7 +1316,6 @@ footer.index_footer {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 85vh; /* Keep modal fitting within viewport */
   animation: fadeIn 0.25s ease-out;
 }
 
@@ -1343,7 +1342,7 @@ footer.index_footer {
 
 .modal-header h3 {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: var(--parag);
   font-size: 18px;
 }
 
@@ -1371,7 +1370,7 @@ footer.index_footer {
   padding: 16px 24px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #e0e0e0;
-  font-family: Arial, sans-serif;
+  font-family: var(--parag);
 }
 
 .filter-group {
@@ -1407,7 +1406,7 @@ footer.index_footer {
        5. Scrollable Table Inside Modal
     ---------------------------------- */
 .modal-body {
-  padding: 20px 24px;
+  padding: 40px 24px;
   overflow: hidden; /* Prevent body overflow, let container scroll */
 }
 
