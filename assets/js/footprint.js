@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         setTimeout(function () {
             removeAlert();
-        }, 500);
+        }, 2000);
     }
     // Clean URL query parameters so reloading won't trigger the success message again
     if (window.location.search.includes('status=') || window.location.search.includes('success')) {
