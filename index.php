@@ -52,6 +52,7 @@ $activeTab = $_GET['tab'] ?? 'Store';
 $errorMessage = "";
 
 // Handle Form Submission
+// Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type      = $_POST['type'] ?? 'store';
     $name      = trim($_POST['name'] ?? '');
@@ -59,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $endTime   = $_POST['endTime'] ?? '';
     $count     = (int)($_POST['count'] ?? 0);
 
-    // Format time range (e.g. 8:00 AM - 9:00 AM)
-    $formattedStart = !empty($startTime) ? date('g:i A', strtotime($startTime)) : null; // e.g. "1:00 PM"
-    $formattedEnd   = !empty($endTime)   ? date('g:i A', strtotime($endTime))   : null; // e.g. "2:00 PM"
+    // Format time range (e.g., 8:00 AM - 9:00 AM)
+    $formattedStart = !empty($startTime) ? date('g:i A', strtotime($startTime)) : null;
+    $formattedEnd   = !empty($endTime)   ? date('g:i A', strtotime($endTime))   : null;
 
     $formData = [
         'opersonnel' => $name,
@@ -72,19 +73,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'ocount'     => $count
     ];
 
-    $success = $footprintController->HandleAddFootprint($type, $formData);
+    $result = $footprintController->HandleAddFootprint($type, $formData);
 
-    if ($success) {
+    if ($result['success']) {
         $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
         header("Location: index.php?tab=$redirectTab&status=success");
         exit;
     } else {
-        $errorMessage = "Failed to save footprint record. Please check input data or database parameters.";
+        $errorMessage = $result['message'];
     }
 }
 
-$storeFootprints   = $footprintController->RenderStoreFootprints();
-$parkingFootprints = $footprintController->RenderParkingFootprints();
+// Fetch history data filtered by current date only
+$todayDate         = date('Y-m-d');
+$storeFootprints   = $footprintController->RenderStoreFootprints($todayDate);
+$parkingFootprints = $footprintController->RenderParkingFootprints($todayDate);
 
 mysqli_close($conn);
 
@@ -105,8 +108,16 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/media.css">
     <link rel="icon" href="assets/images/favicon.png">
+    <script src="assets/js/sweetalert2.all.min.js"></script>
 
+    <!-- Prevent Back-Button Cache View on Logout -->
     <script>
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.getEntriesByType("navigation")[0]?.type === 'back_forward')) {
+                window.location.reload();
+            }
+        });
+
         if (localStorage.getItem('sidebarCollapsed') === 'true') {
             document.documentElement.classList.add('sidebar-collapsed-preload');
         }
@@ -247,7 +258,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="5" class="text-center">No data available</td>
+                                                    <td colspan="5" class="text-center">No data available for today</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>
@@ -300,6 +311,21 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
     <!-- External script para sa time autofill ug alert dismissal -->
     <script src="assets/js/footprint.js"></script>
+    <?php if (!empty($errorMessage)): ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Duplicate Log',
+                text: <?php echo json_encode($errorMessage); ?>,
+                confirmButtonColor: '#003366',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    <?php endif; ?>
+
+    <!-- External script para sa time autofill ug alert dismissal -->
+    <script src="assets/js/footprint.js"></script>
+</body>
 
 </body>
 
