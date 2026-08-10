@@ -8,13 +8,6 @@ require_once $base_path . 'config/db.php';
 require_once $base_path . 'controller/login_controller.php';
 require_once $base_path . 'controller/footprint_contoller.php';
 
-// Handle logout action 
-if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-    session_destroy();
-    header("Location: views/login.php");
-    exit;
-}
-
 // Track authentication states cleanly
 $isLoggedIn   = isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true;
 $userName     = $isLoggedIn ? ($_SESSION['user_name'] ?? 'User') : 'Guest';
@@ -254,7 +247,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="4" class="text-center">No data available</td>
+                                                    <td colspan="5" class="text-center">No data available</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>
