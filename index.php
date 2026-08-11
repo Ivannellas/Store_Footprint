@@ -192,12 +192,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                             </p>
                         </div>
 
-                         <div class="carousel-content" aria-hidden="true">
+                        <div class="carousel-content" aria-hidden="true">
                             <p>
                                 Please Make Sure The Information And Spelling You Input Is Correct !!!
                             </p>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -241,7 +241,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     </div>
 
                                     <div class="flex_box_between">
-                                        <input type="text" id="name" name="name" placeholder="Personnel Name" 
+                                        <input type="text" id="name" name="name" placeholder="Personnel Name"
                                             oninput="this.value = this.value.toUpperCase()"
                                             style="text-transform: uppercase;" required>
                                         <input type="number" id="count" name="count" placeholder="Input Traffic" required>
@@ -319,10 +319,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         <!-- Filter Controls -->
                                         <div class="filter-bar">
                                             <div class="filter-group">
-                                                <label for="Date">Date</label>
-                                                <input type="date" id="date" />
+                                                <label for="footDate">Date</label>
+                                                <input type="date" id="footDate" />
                                             </div>
-                                            <button class="filter-btn" onclick="applyFilter()">Filter</button>
+                                            <button class="filter-btn" onclick="applyFilter('foot')">Filter</button>
+                                            <button class="filter-btn" onclick="clearFilter('foot')" type="button">Clear</button>
                                         </div>
 
                                         <!-- Modal Body / Table -->
@@ -338,11 +339,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th>Count</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id="tableBody">
+                                                    <tbody id="footTableBody">
                                                         <tr>
                                                             <?php if (!empty($storeFootprintsHistory)): ?>
                                                                 <?php foreach ($storeFootprintsHistory as $row): ?>
-                                                        <tr>
+                                                        <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
                                                             <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                             <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                             <td>
@@ -404,7 +405,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     </div>
 
                                     <div class="flex_box_between">
-                                        <input type="text" id="name" name="name" placeholder="Personnel Name" 
+                                        <input type="text" id="name" name="name" placeholder="Personnel Name"
                                             oninput="this.value = this.value.toUpperCase()"
                                             style="text-transform: uppercase;" required>
                                         <input type="number" id="count" name="count" placeholder="Input Traffic" required>
@@ -482,10 +483,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         <!-- Filter Controls -->
                                         <div class="filter-bar">
                                             <div class="filter-group">
-                                                <label for="Date">Date</label>
-                                                <input type="date" id="date" />
+                                                <label for="vehicleDate">Date</label>
+                                                <input type="date" id="vehicleDate" />
                                             </div>
-                                            <button class="filter-btn" onclick="applyFilter()">Filter</button>
+                                            <button class="filter-btn" onclick="applyFilter('vehicle')">Filter</button>
+                                            <button class="filter-btn" onclick="clearFilter('vehicle')" type="button">Clear</button>
                                         </div>
 
                                         <!-- Modal Body / Table -->
@@ -501,11 +503,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th>Count</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id="tableBody">
+                                                    <tbody id="vehicleTableBody">
                                                         <tr>
                                                             <?php if (!empty($parkingFootprintsHistory)): ?>
                                                                 <?php foreach ($parkingFootprintsHistory as $row): ?>
-                                                        <tr>
+                                                        <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
                                                             <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                             <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                             <td>
