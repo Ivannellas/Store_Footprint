@@ -1759,8 +1759,9 @@ footer.footer_intro {
 .sidebar li .sold_items:before {
   content: url(../images/icon/solditems.png);
 } */
-.sidebar li .sidebar_logout:before {
-  content: url(../images/icon/foot.png);
+.sidebar li .foot_traffic:before {
+  content: url(../images/icon/foot-30px.png);
+  left: 2px;
 }
 .sidebar li .sidebar_logout:before {
   content: url(../images/icon/logout.png);
