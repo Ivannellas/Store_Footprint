@@ -306,9 +306,15 @@ padding: 0 20px;
 @media only screen and (max-width: 600px) {
   .tab_parent { padding: 40px 20px; }
 
-  .oTime {
-  flex-direction: column;
-  }
+ .traffic_form_row {
+        display: flex;
+        gap: 16px;
+    }
+    
+    .traffic_form_row .oDate_range,
+    .traffic_form_row .oTime_range {
+        flex: 1;
+    }
 
 .tab button {
   font: 600 16px/25px var(--headingTxt);
