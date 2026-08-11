@@ -40,6 +40,29 @@ $timeRanges = [
     "6:01 PM - 8:00 PM"
 ];
 
+// default time range for form selection
+function getDefaultTimeRange(): string {
+    $targetTime = strtotime('-1 hour'); // Minus 1 hour sa kasamtangang oras
+    $targetHour = (int)date('G', $targetTime); // 0 - 23 format
+
+    if ($targetHour >= 6 && $targetHour < 8)   return "6:00 AM - 8:00 AM";
+    if ($targetHour == 8)                       return "8:01 AM - 9:00 AM";
+    if ($targetHour == 9)                       return "9:01 AM - 10:00 AM";
+    if ($targetHour == 10)                      return "10:01 AM - 11:00 AM";
+    if ($targetHour == 11)                      return "11:01 AM - 12:00 PM";
+    if ($targetHour == 12)                      return "12:01 PM - 1:00 PM";
+    if ($targetHour == 13)                      return "1:01 PM - 2:00 PM";
+    if ($targetHour == 14)                      return "2:01 PM - 3:00 PM";
+    if ($targetHour == 15)                      return "3:01 PM - 4:00 PM";
+    if ($targetHour == 16)                      return "4:01 PM - 5:00 PM";
+    if ($targetHour == 17)                      return "5:01 PM - 6:00 PM";
+    if ($targetHour >= 18 && $targetHour < 20) return "6:01 PM - 8:00 PM";
+
+    return "";
+}
+
+$defaultTimeRange = getDefaultTimeRange();
+
 // Get allowed module IDs for non-superadmin
 $conn = getDBConnection();
 $allowedModules = [];
@@ -215,9 +238,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     <div class="oTime_range">
                                         <label for="timeRangeStore">Time Range:</label>
                                         <select id="timeRangeStore" name="timeRange" class="form-select" required>
-                                            <option value="" disabled selected>Select Time Range</option>
                                             <?php foreach ($timeRanges as $range): ?>
-                                                <option value="<?php echo htmlspecialchars($range); ?>">
+                                                <option value="<?php echo htmlspecialchars($range); ?>" <?php echo ($range === $defaultTimeRange) ? 'selected' : ''; ?>>
                                                     <?php echo htmlspecialchars($range); ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -342,9 +364,9 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     <div class="oTime_range">
                                         <label for="timeRangeParking">Time Range:</label>
                                         <select id="timeRangeParking" name="timeRange" class="form-select" required>
-                                            <option value="" disabled selected>Select Time Range</option>
+                                            <option value="" disabled <?php echo empty($defaultTimeRange) ? 'selected' : ''; ?>>Select Time Range</option>
                                             <?php foreach ($timeRanges as $range): ?>
-                                                <option value="<?php echo htmlspecialchars($range); ?>">
+                                                <option value="<?php echo htmlspecialchars($range); ?>" <?php echo ($range === $defaultTimeRange) ? 'selected' : ''; ?>>
                                                     <?php echo htmlspecialchars($range); ?>
                                                 </option>
                                             <?php endforeach; ?>
