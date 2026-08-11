@@ -817,6 +817,7 @@ footer.footer_intro {
 .main_top_box {
   position: relative;
   padding: 0 10px;
+  overflow: hidden;
 }
 
 .main_con {
@@ -832,7 +833,7 @@ footer.footer_intro {
 
 
 .tab_parent {
-  padding: 40px 15px;
+  padding: 40px 35px;
   background: #eee;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(0 0 0/0.2);
@@ -871,7 +872,7 @@ footer.footer_intro {
 
 .tabcontent {
   display: none;
-  padding: 40px 25px;
+  padding: 40px 0;
   margin: 10px 0 0;
 }
 .tabcontent p {
