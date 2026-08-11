@@ -38,13 +38,13 @@
 }
 
 @media only screen and (max-width :1600px) {
-   .footer_values {
+  .footer_values {
       max-width: 300px;
   }
 }
 
 @media only screen and (max-width :1500px) {
-   .footer_info {
+  .footer_info {
   gap: 70px;
 }
 
@@ -70,19 +70,6 @@
     }
 
     /* INTRO PAGE */
-
-  .intro_cards{
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-        gap: 60px 20px;
-  }
-
-  .intro_top::before {
-  background: linear-gradient( 90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 40%, rgba(255, 255, 255, 0) 60% ), url("../images/intro_top_img.jpg") no-repeat center/cover;
-  background-position-x: -260px;
-  background-position-y: 0;
-  }
-
   .footer_img_content {
     max-width: 320px;
   }
@@ -204,12 +191,31 @@ object-position: 33px 0;
     .intro_btm{
         padding: 40px 15px;
     }
-   
+
 }
 
 @media only screen and (max-width: 1000px) {
-/* Index */
+.main_con { padding: 0 0 40px; }
 
+.tab_flex {
+  flex-direction: column;
+  gap: 30px;
+}
+
+.form_parking, .form_parking_history {
+  width: 100%;
+}
+
+.form_store, .form_store_history {
+  width: 100%;
+}
+
+.tabcontent {
+  padding: 40px 0 0;
+}
+
+
+/* Index */
 .main_top_box {
 padding: 0 20px 40px;
 }
@@ -257,10 +263,6 @@ padding: 0 20px;
   /* End */
   
   /* Intro Page */
-  .intro_top::before { 
-    background: linear-gradient( 90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 70%, rgba(255, 255, 255, 0) 80% ), url("../images/intro_top_img.jpg") no-repeat center/cover; background-position-x: -410px; 
-    background-position-y: 0;
-  }
   .footer_info {
     text-align: center;
     flex-direction: column;
@@ -296,43 +298,28 @@ padding: 0 20px;
   }
   /* End Of Intro */
 
-  /* Sales Of Performance */
-  .store_top_cards {
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    gap: 15px;
-  }
-  .store_top_cards > div {
-    width: 48%;
-    max-width: 400px;
-  }
-
-   .transaction_chart {
-    width: 99%;
-  }
-   .rank_chart_parent {
-    width: 99%;
-  }
-  .performance_chart {
-    width: 99%;
-    padding: 0 !important;
-  }
-  .salesman_performance_parent {
-    gap: 30px 0;
-  }
-  /* End */
 }
 
 @media only screen and (max-width: 800px) {
-
-   /* INTRO PAGE */
-  .top_intro_info h1 {
-  font-size: 60px;
-  }
-  /* END OF INTRO */
 }
 
 @media only screen and (max-width: 600px) {
+  .tab_parent { padding: 40px 20px; }
+
+  .oTime {
+  flex-direction: column;
+  }
+
+.tab button {
+  font: 600 16px/25px var(--headingTxt);
+}
+
+.tabcontent h2 {
+
+  font: 700 25px/100% var(--parag);
+}
+
   .flex_box_between {
     flex-direction: column;
+  }
 }
