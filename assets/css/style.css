@@ -861,6 +861,7 @@ footer.footer_intro {
   border-radius: 10px;
   opacity: 0.8;
   transform: scale(0.95);
+  text-transform: uppercase;
 }
 .tab button:hover {
   cursor: pointer;
@@ -889,10 +890,6 @@ footer.footer_intro {
   box-shadow: 5px 5px 5px rgba(0 0 0/0.2);
 }
 
-/* #Parking {
-    visibility: hidden;
-} */
-
 .form_parking,
 .form_parking_history {
   position: relative;
@@ -908,9 +905,6 @@ footer.footer_intro {
 .form_store, .form_parking {
   display: grid;
   place-items: center;
-}
-.form_store h2 {
-  margin: 0 !important;
 }
 
 
@@ -1000,7 +994,7 @@ footer.footer_intro {
 
 .submit_btn .primary_btn:hover {
   background-color: #166b2e;
-   transform: scale(0.95);
+  transform: scale(0.95);
 }
 
 .tabcontent h2 {
@@ -1765,6 +1759,9 @@ footer.footer_intro {
 .sidebar li .sold_items:before {
   content: url(../images/icon/solditems.png);
 } */
+.sidebar li .sidebar_logout:before {
+  content: url(../images/icon/foot.png);
+}
 .sidebar li .sidebar_logout:before {
   content: url(../images/icon/logout.png);
 }
