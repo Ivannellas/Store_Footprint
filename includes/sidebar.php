@@ -57,18 +57,18 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                 </a>
             </li>
         <?php endif; ?>
+        <!-- Module 14: FOOT TRAFFIC -->
+        <?php if (hasAccess(14, $isSuperAdmin, $allowedModules)): ?>
+            <li class="menu-item current_page_item mb-2">
+                <a href="<?php echo $base_path; ?>index.php" class="foot_traffic menu-link d-flex align-items-center justify-content-between">
+                    Foot Traffic
+                </a>
+            </li>
+        <?php endif; ?>
         <li class="menu-item mb-2">
             <a href="<?php echo $base_path; ?>logout.php" class="sidebar_logout menu-link d-flex align-items-center justify-content-between">
                 Logout
             </a>
         </li>
-         <!-- Module 14: FOOT TRAFFIC -->
-        <?php if (hasAccess(14, $isSuperAdmin, $allowedModules)): ?>
-            <li class="menu-item current_page_item mb-2">
-                <a href="<?php echo $base_path; ?>index.php" class="store_dashboard menu-link d-flex align-items-center justify-content-between">
-                    Foot Traffic
-                </a>
-            </li>
-        <?php endif; ?>
     </ul>
 </div>
