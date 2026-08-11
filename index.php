@@ -72,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'ostarttime' => $formattedStart,
         'oendtime'   => $formattedEnd,
         'otype'      => $type,
-        'ocount'     => $count
+        'ocount'     => $count,
+        'added_by'   => $userName
     ];
 
     $result = $footprintController->HandleAddFootprint($type, $formData);
@@ -254,7 +255,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                             </div>
 
                             <div class="form_store_history">
-                                <h2>Daily Foot Traffic</h2>
+                                <h2>Today's Foot Traffic</h2>
                                 <div class="form_history_table">
                                     <table>
                                         <thead>
@@ -418,7 +419,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                             </div>
 
                             <div class="form_parking_history">
-                                <h2>Daily Vehicle Traffic</h2>
+                                <h2>Today's Vehicle Traffic</h2>
                                 <div class="form_history_table">
                                     <table>
                                         <thead>
