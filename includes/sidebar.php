@@ -62,5 +62,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                 Logout
             </a>
         </li>
+         <!-- Module 14: FOOT TRAFFIC -->
+        <?php if (hasAccess(14, $isSuperAdmin, $allowedModules)): ?>
+            <li class="menu-item current_page_item mb-2">
+                <a href="<?php echo $base_path; ?>index.php" class="store_dashboard menu-link d-flex align-items-center justify-content-between">
+                    Foot Traffic
+                </a>
+            </li>
+        <?php endif; ?>
     </ul>
 </div>
