@@ -14,54 +14,61 @@ class FootprintController
     }
 
     /*===========================================================
-// Add a new footprint entry                                //
-===========================================================*/
+    // Add a new footprint entry                                //
+    ===========================================================*/
     public function HandleAddFootprint(string $type, array $data): array
     {
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
 
-        // Check if this specific personnel already logged for this time range today
-        if ($this->footprintModel->HasExistingLog(
-            $tableName,
-            $data['opersonnel'],
-            $data['odate'],
-            $data['ostarttime'],
-            $data['oendtime']
-        )) {
+        $personnel = trim($data['opersonnel'] ?? '');
+        $date      = trim($data['odate'] ?? date('Y-m-d'));
+        $timeRange = trim($data['otimerange'] ?? '');
+        $count     = (int)($data['ocount'] ?? 0);
+        $addedBy   = trim($data['added_by'] ?? '');
+
+        if (empty($personnel) || empty($timeRange) || $count <= 0) {
             return [
                 'success' => false,
-                'message' => "'" . htmlspecialchars($data['opersonnel']) . "' has already logged for this time range (" . $data['ostarttime'] . " - " . $data['oendtime'] . ")."
+                'message' => 'Please fill in all required fields.'
             ];
         }
 
-        // Assign data to model
-        $this->footprintModel->oPersonnel = $data['opersonnel'];
-        $this->footprintModel->oDate      = $data['odate'];
-        $this->footprintModel->oStartTime = $data['ostarttime'];
-        $this->footprintModel->oEndTime   = $data['oendtime'];
-        $this->footprintModel->oCount     = $data['ocount'];
-        $this->footprintModel->oAddedby   = $data['added_by'] ?? null;
+        // Duplicate log check for exact personnel, date, and time range
+        if ($this->footprintModel->HasExistingLog($tableName, $personnel, $date, $timeRange)) {
+            return [
+                'success' => false,
+                'message' => "'" . htmlspecialchars($personnel) . "' has already logged for time range: " . htmlspecialchars($timeRange) . "."
+            ];
+        }
 
-        $isSaved = $this->footprintModel->AddFootprint($tableName);
+        $payload = [
+            'added_by'   => $addedBy,
+            'opersonnel' => $personnel,
+            'odate'      => $date,
+            'otimerange' => $timeRange,
+            'ocount'     => $count
+        ];
+
+        $isSaved = $this->footprintModel->AddFootprint($tableName, $payload);
 
         if ($isSaved) {
             return ['success' => true, 'message' => 'Foot Traffic added successfully.'];
         }
 
-        return ['success' => false, 'message' => 'Failed to save foot traffic record due to a database error.'];
+        return ['success' => false, 'message' => 'Failed to save record due to a database error.'];
     }
 
     /*===========================================================
-// Load store footprints                                   //
-===========================================================*/
+    // Load store footprints                                   //
+    ===========================================================*/
     public function RenderStoreFootprints(?string $date = null): array
     {
         return $this->footprintModel->GetFootprints('tbl_store_footprint', $date);
     }
 
     /*===========================================================
-// Load parking footprints                                 //
-===========================================================*/
+    // Load parking footprints                                 //
+    ===========================================================*/
     public function RenderParkingFootprints(?string $date = null): array
     {
         return $this->footprintModel->GetFootprints('tbl_parking_footprint', $date);

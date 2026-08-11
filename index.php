@@ -17,22 +17,35 @@ $isSuperAdmin = $isLoggedIn && isset($_SESSION['is_super_admin']) && $_SESSION['
 date_default_timezone_set('Asia/Manila');
 $hour = (int)date('G');
 if ($hour >= 5 && $hour < 12) {
-    $timeContext = "Morning";
+    $timeContext = "Good Morning";
 } elseif ($hour >= 12 && $hour < 18) {
-    $timeContext = "Afternoon";
+    $timeContext = "Good Afternoon";
 } else {
-    $timeContext = "Evening";
+    $timeContext = "Good Evening";
 }
 
-// Get the current user's allowed module IDs from tbl_access
+// Fixed time ranges list
+$timeRanges = [
+    "6:00 AM - 8:00 AM",
+    "8:01 AM - 9:00 AM",
+    "9:01 AM - 10:00 AM",
+    "10:01 AM - 11:00 AM",
+    "11:01 AM - 12:00 PM",
+    "12:01 PM - 1:00 PM",
+    "1:01 PM - 2:00 PM",
+    "2:01 PM - 3:00 PM",
+    "3:01 PM - 4:00 PM",
+    "4:01 PM - 5:00 PM",
+    "5:01 PM - 6:00 PM",
+    "6:01 PM - 8:00 PM"
+];
+
+// Get allowed module IDs for non-superadmin
 $conn = getDBConnection();
 $allowedModules = [];
 
 if ($isLoggedIn && !$isSuperAdmin) {
-    $queryAllowed = "SELECT oModuleid 
-                    FROM tbl_access 
-                    WHERE oUserid = ? 
-                    AND oMain = 1";
+    $queryAllowed = "SELECT oModuleid FROM tbl_access WHERE oUserid = ? AND oMain = 1";
     if ($stmt = $conn->prepare($queryAllowed)) {
         $stmt->bind_param("s", $userId);
         $stmt->execute();
@@ -49,7 +62,7 @@ $footprintController = new FootprintController($conn);
 // Track active tab dynamically
 $activeTab = $_GET['tab'] ?? 'Store';
 
-// Retrieve and clear session error message if present (PRG Pattern)
+// Retrieve and clear session error message (PRG Pattern)
 $errorMessage = $_SESSION['error_message'] ?? "";
 unset($_SESSION['error_message']);
 
@@ -57,22 +70,15 @@ unset($_SESSION['error_message']);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type      = $_POST['type'] ?? 'store';
     $name      = trim($_POST['name'] ?? '');
-    $startTime = $_POST['startTime'] ?? '';
-    $endTime   = $_POST['endTime'] ?? '';
+    $timeRange = trim($_POST['timeRange'] ?? '');
     $count     = (int)($_POST['count'] ?? 0);
 
-    // Format time range
-    $formattedStart = !empty($startTime) ? date('g:i A', strtotime($startTime)) : null;
-    $formattedEnd   = !empty($endTime)   ? date('g:i A', strtotime($endTime))   : null;
-
     $formData = [
-        'opersonnel' => $name,
-        'odate'      => date('Y-m-d'),
-        'ostarttime' => $formattedStart,
-        'oendtime'   => $formattedEnd,
-        'otype'      => $type,
-        'ocount'     => $count,
-        'added_by'   => $userName
+        'opersonnel'  => $name,
+        'odate'       => date('Y-m-d'),
+        'otimerange'  => $timeRange,
+        'ocount'      => $count,
+        'added_by'    => $userName
     ];
 
     $result = $footprintController->HandleAddFootprint($type, $formData);
@@ -82,35 +88,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php?tab=$redirectTab&status=success");
         exit;
     } else {
-        // Redirect back on error so reloads don't prompt form resubmission
         $_SESSION['error_message'] = $result['message'];
         header("Location: index.php?tab=$redirectTab");
         exit;
     }
 }
 
-// Fetch history data filtered by current date only
+// Fetch today's footprints
 $todayDate         = date('Y-m-d');
 $storeFootprints   = $footprintController->RenderStoreFootprints($todayDate);
 $parkingFootprints = $footprintController->RenderParkingFootprints($todayDate);
 
-// Footprints history
-$storeFootprintsHistory   = $footprintController->RenderStoreFootprints(null);
-$parkingFootprintsHistory = $footprintController->RenderParkingFootprints(null);
-
-$storeFootprintsHistory = array_map(function ($record) {
-    $record['odate'] = date('Y-m-d', strtotime($record['odate']));
-    return $record;
-}, $storeFootprintsHistory);
-
-$parkingFootprintsHistory = array_map(function ($record) {
-    $record['odate'] = date('Y-m-d', strtotime($record['odate']));
-    return $record;
-}, $parkingFootprintsHistory);
+// Fetch overall footprints history
+$storeFootprintsHistory   = $footprintController->RenderStoreFootprints(null) ?? [];
+$parkingFootprintsHistory = $footprintController->RenderParkingFootprints(null) ?? [];
 
 mysqli_close($conn);
 
-// Helper function to verify module permissions
 function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bool
 {
     return $isSuperAdmin || in_array($moduleId, $allowedModules);
@@ -166,38 +160,37 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         <?php include $base_path . 'includes/sidebar.php'; ?>
 
         <div class="wrapper flex-grow-1 d-flex flex-column bg-light">
-
             <div class="main_con">
-                <!-- Status Alerts (Compact Floating Toast) -->
+
+                <!-- Status Alerts -->
                 <div class="toast-container-custom">
                     <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
                         <div class="custom-toast-alert toast-success" role="alert">
-                            <span><strong>Success!</strong> Footprint added.</span>
+                            <span><strong>Success!</strong> Footprint added successfully.</span>
+                            <button type="button" class="btn-close-toast" aria-label="Close">&times;</button>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($errorMessage)): ?>
+                        <div class="custom-toast-alert toast-danger" role="alert">
+                            <span><strong>Error!</strong> <?php echo htmlspecialchars($errorMessage); ?></span>
                             <button type="button" class="btn-close-toast" aria-label="Close">&times;</button>
                         </div>
                     <?php endif; ?>
                 </div>
 
+                <!-- Notice Carousel -->
                 <div class="carousel-container">
                     <div class="carousel-track">
                         <div class="carousel-content">
-                            <p>
-                                Please Make Sure The Information And Spelling You Input Is Correct !!!
-                            </p>
+                            <p>Please Make Sure The Information And Spelling You Input Is Correct !!!</p>
                         </div>
-
                         <div class="carousel-content" aria-hidden="true">
-                            <p>
-                                Please Make Sure The Information And Spelling You Input Is Correct !!!
-                            </p>
+                            <p>Please Make Sure The Information And Spelling You Input Is Correct !!!</p>
                         </div>
-
                         <div class="carousel-content" aria-hidden="true">
-                            <p>
-                                Please Make Sure The Information And Spelling You Input Is Correct !!!
-                            </p>
+                            <p>Please Make Sure The Information And Spelling You Input Is Correct !!!</p>
                         </div>
-
                     </div>
                 </div>
 
@@ -205,7 +198,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                 <div class="index_flexbox">
                     <div class="landing_date_info index_title">
                         <h1 class="text-capitalize">
-                            Atlantic <?php echo $timeContext; ?>, <?php echo htmlspecialchars($userName); ?>
+                            Atlantic, <?php echo $timeContext; ?>, <?php echo htmlspecialchars($userName); ?>
                         </h1>
                         <p class="mb-1 text-muted">
                             <?php echo date('l, F j, Y'); ?>
@@ -213,13 +206,14 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                     </div>
                 </div>
 
-                <!-- Tabs For Parking and Store Foot Traffic -->
+                <!-- Tabs For Store & Parking Traffic -->
                 <div class="tab_parent">
                     <div class="tab">
-                        <button class="tablinks" onclick="openCity(event, 'Store')" <?php echo ($activeTab === 'Store') ? 'id="defaultOpen"' : ''; ?>>Foot Traffic</button>
-                        <button class="tablinks" onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Vehicle Traffic</button>
+                        <button class="tablinks <?php echo ($activeTab === 'Store') ? 'active' : ''; ?>" onclick="openCity(event, 'Store')" <?php echo ($activeTab === 'Store') ? 'id="defaultOpen"' : ''; ?>>Foot Traffic</button>
+                        <button class="tablinks <?php echo ($activeTab === 'Parking') ? 'active' : ''; ?>" onclick="openCity(event, 'Parking')" <?php echo ($activeTab === 'Parking') ? 'id="defaultOpen"' : ''; ?>>Vehicle Traffic</button>
                     </div>
 
+                    <!-- STORE TAB -->
                     <div id="Store" class="tabcontent">
                         <div class="tab_flex">
                             <div class="form_store">
@@ -227,24 +221,23 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <form class="traffic_form" action="index.php" method="POST">
                                     <input type="hidden" name="type" value="store">
 
-                                    <div class="oTime">
-                                        <!-- Start Time Field -->
-                                        <div class="oTime_start">
-                                            <label for="startTime">ST:</label>
-                                            <input type="time" id="startTime" name="startTime" required>
-                                        </div>
-                                        <!-- End Time Field -->
-                                        <div class="oTime_end">
-                                            <label for="endTime">ET:</label>
-                                            <input type="time" id="endTime" name="endTime" required>
-                                        </div>
+                                    <div class="oTime_range">
+                                        <label for="timeRangeStore">Time Range:</label>
+                                        <select id="timeRangeStore" name="timeRange" class="form-select" required>
+                                            <option value="" disabled selected>Select Time Range</option>
+                                            <?php foreach ($timeRanges as $range): ?>
+                                                <option value="<?php echo htmlspecialchars($range); ?>">
+                                                    <?php echo htmlspecialchars($range); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
 
                                     <div class="flex_box_between">
-                                        <input type="text" id="name" name="name" placeholder="Personnel Name"
+                                        <input type="text" id="nameStore" name="name" placeholder="Personnel Name"
                                             oninput="this.value = this.value.toUpperCase()"
                                             style="text-transform: uppercase;" required>
-                                        <input type="number" id="count" name="count" placeholder="Input Traffic" required>
+                                        <input type="number" id="countStore" name="count" placeholder="Input Traffic" min="1" required>
                                     </div>
 
                                     <div class="submit_btn">
@@ -261,8 +254,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Start Time</th>
-                                                <th>End Time</th>
+                                                <th>Time Range</th>
                                                 <th>Count</th>
                                             </tr>
                                         </thead>
@@ -272,30 +264,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                     <tr>
                                                         <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
-                                                        <td>
-                                                            <?php
-                                                            if (!empty($row['ostarttime'])) {
-                                                                echo date('g:i A', strtotime($row['ostarttime']));
-                                                            } else {
-                                                                echo '-';
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php
-                                                            if (!empty($row['oendtime'])) {
-                                                                echo date('g:i A', strtotime($row['oendtime']));
-                                                            } else {
-                                                                echo '-';
-                                                            }
-                                                            ?>
-                                                        </td>
+                                                        <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['ocount']); ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="5" class="text-center">No data available for today</td>
+                                                    <td colspan="4" class="text-center">No data available for today</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>
@@ -309,14 +284,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <!-- Modal Overlay Window -->
                                 <div class="modal-overlay" id="footTrafficModal">
                                     <div class="modal-content">
-
-                                        <!-- Header -->
                                         <div class="modal-header">
                                             <h3>Foot Traffic History Log</h3>
                                             <button class="close-btn" id="closeFootTrafficModal">&times;</button>
                                         </div>
 
-                                        <!-- Filter Controls -->
                                         <div class="filter-bar">
                                             <div class="filter-group">
                                                 <label for="footDate">Date</label>
@@ -326,7 +298,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <button class="filter-btn" onclick="clearFilter('foot')" type="button">Clear</button>
                                         </div>
 
-                                        <!-- Modal Body / Table -->
                                         <div class="modal-body">
                                             <div class="table-container">
                                                 <table class="personnel-table">
@@ -334,56 +305,36 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <tr>
                                                             <th>Personnel Name</th>
                                                             <th>Date</th>
-                                                            <th>Start Time</th>
-                                                            <th>End Time</th>
+                                                            <th>Time Range</th>
                                                             <th>Count</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
-                                                        <tr>
-                                                            <?php if (!empty($storeFootprintsHistory)): ?>
-                                                                <?php foreach ($storeFootprintsHistory as $row): ?>
-                                                        <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
-                                                            <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
-                                                            <td><?php echo htmlspecialchars($row['odate']); ?></td>
-                                                            <td>
-                                                                <?php
-                                                                    if (!empty($row['ostarttime'])) {
-                                                                        echo date('g:i A', strtotime($row['ostarttime']));
-                                                                    } else {
-                                                                        echo '-';
-                                                                    }
-                                                                ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php
-                                                                    if (!empty($row['oendtime'])) {
-                                                                        echo date('g:i A', strtotime($row['oendtime']));
-                                                                    } else {
-                                                                        echo '-';
-                                                                    }
-                                                                ?>
-                                                            </td>
-                                                            <td><?php echo htmlspecialchars($row['ocount']); ?></td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                <?php else: ?>
-                                                    <tr>
-                                                        <td colspan="5" class="text-center">No data available </td>
-                                                    </tr>
-                                                <?php endif; ?>
-                                                </tr>
+                                                        <?php if (!empty($storeFootprintsHistory)): ?>
+                                                            <?php foreach ($storeFootprintsHistory as $row): ?>
+                                                                <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
+                                                                    <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['odate']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                                </tr>
+                                                            <?php endforeach; ?>
+                                                        <?php else: ?>
+                                                            <tr>
+                                                                <td colspan="4" class="text-center">No data available</td>
+                                                            </tr>
+                                                        <?php endif; ?>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- PARKING TAB -->
                     <div id="Parking" class="tabcontent">
                         <div class="tab_flex">
                             <div class="form_parking">
@@ -391,24 +342,23 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <form class="traffic_form" action="index.php" method="POST">
                                     <input type="hidden" name="type" value="parking">
 
-                                    <div class="oTime">
-                                        <!-- Start Time Field -->
-                                        <div class="oTime_start">
-                                            <label for="startTime">ST:</label>
-                                            <input type="time" id="startTime" name="startTime" required>
-                                        </div>
-                                        <!-- End Time Field -->
-                                        <div class="oTime_end">
-                                            <label for="endTime">ET:</label>
-                                            <input type="time" id="endTime" name="endTime" required>
-                                        </div>
+                                    <div class="oTime_range">
+                                        <label for="timeRangeParking">Time Range:</label>
+                                        <select id="timeRangeParking" name="timeRange" class="form-select" required>
+                                            <option value="" disabled selected>Select Time Range</option>
+                                            <?php foreach ($timeRanges as $range): ?>
+                                                <option value="<?php echo htmlspecialchars($range); ?>">
+                                                    <?php echo htmlspecialchars($range); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
 
                                     <div class="flex_box_between">
-                                        <input type="text" id="name" name="name" placeholder="Personnel Name"
+                                        <input type="text" id="nameParking" name="name" placeholder="Personnel Name"
                                             oninput="this.value = this.value.toUpperCase()"
                                             style="text-transform: uppercase;" required>
-                                        <input type="number" id="count" name="count" placeholder="Input Traffic" required>
+                                        <input type="number" id="countParking" name="count" placeholder="Input Traffic" min="1" required>
                                     </div>
 
                                     <div class="submit_btn">
@@ -425,8 +375,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Start Time</th>
-                                                <th>End Time</th>
+                                                <th>Time Range</th>
                                                 <th>Count</th>
                                             </tr>
                                         </thead>
@@ -436,30 +385,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                     <tr>
                                                         <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
-                                                        <td>
-                                                            <?php
-                                                            if (!empty($row['ostarttime'])) {
-                                                                echo date('g:i A', strtotime($row['ostarttime']));
-                                                            } else {
-                                                                echo '-';
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php
-                                                            if (!empty($row['oendtime'])) {
-                                                                echo date('g:i A', strtotime($row['oendtime']));
-                                                            } else {
-                                                                echo '-';
-                                                            }
-                                                            ?>
-                                                        </td>
+                                                        <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['ocount']); ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="5" class="text-center">No data available for today</td>
+                                                    <td colspan="4" class="text-center">No data available for today</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>
@@ -473,14 +405,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <!-- Modal Overlay Window -->
                                 <div class="modal-overlay" id="vehicleTrafficModal">
                                     <div class="modal-content">
-
-                                        <!-- Header -->
                                         <div class="modal-header">
                                             <h3>Vehicle Traffic History Log</h3>
                                             <button class="close-btn" id="closevehicleTrafficModal">&times;</button>
                                         </div>
 
-                                        <!-- Filter Controls -->
                                         <div class="filter-bar">
                                             <div class="filter-group">
                                                 <label for="vehicleDate">Date</label>
@@ -490,7 +419,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <button class="filter-btn" onclick="clearFilter('vehicle')" type="button">Clear</button>
                                         </div>
 
-                                        <!-- Modal Body / Table -->
                                         <div class="modal-body">
                                             <div class="table-container">
                                                 <table class="personnel-table">
@@ -498,95 +426,43 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <tr>
                                                             <th>Personnel Name</th>
                                                             <th>Date</th>
-                                                            <th>Start Time</th>
-                                                            <th>End Time</th>
+                                                            <th>Time Range</th>
                                                             <th>Count</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
-                                                        <tr>
-                                                            <?php if (!empty($parkingFootprintsHistory)): ?>
-                                                                <?php foreach ($parkingFootprintsHistory as $row): ?>
-                                                        <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
-                                                            <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
-                                                            <td><?php echo htmlspecialchars($row['odate']); ?></td>
-                                                            <td>
-                                                                <?php
-                                                                    if (!empty($row['ostarttime'])) {
-                                                                        echo date('g:i A', strtotime($row['ostarttime']));
-                                                                    } else {
-                                                                        echo '-';
-                                                                    }
-                                                                ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php
-                                                                    if (!empty($row['oendtime'])) {
-                                                                        echo date('g:i A', strtotime($row['oendtime']));
-                                                                    } else {
-                                                                        echo '-';
-                                                                    }
-                                                                ?>
-                                                            </td>
-                                                            <td><?php echo htmlspecialchars($row['ocount']); ?></td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                <?php else: ?>
-                                                    <tr>
-                                                        <td colspan="5" class="text-center">No data available for today</td>
-                                                    </tr>
-                                                <?php endif; ?>
-                                                </tr>
+                                                        <?php if (!empty($parkingFootprintsHistory)): ?>
+                                                            <?php foreach ($parkingFootprintsHistory as $row): ?>
+                                                                <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
+                                                                    <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['odate']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                                </tr>
+                                                            <?php endforeach; ?>
+                                                        <?php else: ?>
+                                                            <tr>
+                                                                <td colspan="4" class="text-center">No data available</td>
+                                                            </tr>
+                                                        <?php endif; ?>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer_intro">
-        <div class="footer_content">
-            <div class="wrapper">
-                <div class="footer_container">
-                    <div class="footer_img_content">
-                        <figure><img src="assets/images/nong_atoy_head.png" alt="Footer Logo"></figure>
-                        <p>To become the customer's TOP OF MIND for building materials and home improvement needs in Cebu in 2027</p>
-                    </div>
-
-                    <div class="footer_info">
-                        <div class="footer_help">
-                            <p>Need Help? <span><a href="#">Contact IT Support</a></span></p>
-                        </div>
-                        <div class="footer_values">
-                            <figure><img src="assets/images/footer-img.png" alt="Values"></figure>
-                        </div>
-                        <div class="copyright">
-                            &copy; Copyright
-                            <?php
-                            $start_year = '2026';
-                            $current_year = date('Y');
-                            $copyright = ($current_year == $start_year) ? $start_year : $current_year;
-                            echo $copyright; ?>
-                            <span class="company_name">Atlantic Hardware.</span>
-                            <span><br> All rights reserved.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- External script para sa time autofill ug alert dismissal -->
+    <!-- External script for time autofill and alert dismissal -->
     <script src="assets/js/footprint.js"></script>
+
     <?php if (!empty($errorMessage)): ?>
         <script>
             Swal.fire({
@@ -599,9 +475,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         </script>
     <?php endif; ?>
 
-    <!-- External script para sa time autofill ug alert dismissal -->
-    <script src="assets/js/footprint.js"></script>
-
     <!-- MODAL JAVASCRIPT -->
     <script>
         const footModalBtn = document.getElementById('footModalBtn');
@@ -613,14 +486,25 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         const vehiclemodalOverlay = document.getElementById('vehicleTrafficModal');
 
         // Open modal when button is clicked
-        footModalBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevents link default anchor behavior
+        footModalBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
             footmodalOverlay.classList.add('active');
         });
 
         // Close modal when 'X' is clicked
-        closeFootTrafficModal.addEventListener('click', () => {
+        closeFootTrafficModal?.addEventListener('click', () => {
             footmodalOverlay.classList.remove('active');
+        });
+
+        // Open modal when button is clicked
+        vehicleModalBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            vehiclemodalOverlay.classList.add('active');
+        });
+
+        // Close modal when 'X' is clicked
+        closevehicleTrafficModal?.addEventListener('click', () => {
+            vehiclemodalOverlay.classList.remove('active');
         });
 
         // Close modal when user clicks outside the modal box
@@ -628,29 +512,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
             if (e.target === footmodalOverlay) {
                 footmodalOverlay.classList.remove('active');
             }
-        });
-
-
-        // Open modal when button is clicked
-        vehicleModalBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevents link default anchor behavior
-            vehiclemodalOverlay.classList.add('active');
-        });
-
-        // Close modal when 'X' is clicked
-        closevehicleTrafficModal.addEventListener('click', () => {
-            vehiclemodalOverlay.classList.remove('active');
-        });
-
-        // Close modal when user clicks outside the modal box
-        window.addEventListener('click', (e) => {
             if (e.target === vehiclemodalOverlay) {
                 vehiclemodalOverlay.classList.remove('active');
             }
         });
     </script>
-</body>
-
 </body>
 
 </html>

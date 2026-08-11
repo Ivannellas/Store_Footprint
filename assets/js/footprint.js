@@ -1,33 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Auto-fill Time Inputs (Start Time & End Time) for all forms
-  const now = new Date();
-  let currentHour = now.getHours();
-
-  let startHour = currentHour - 1;
-  if (startHour < 0) {
-    startHour = 23;
-  }
-
-  function formatTimeInput(hour) {
-    return String(hour).padStart(2, "0") + ":00";
-  }
-
-  const formattedStart = formatTimeInput(startHour);
-  const formattedEnd = formatTimeInput(currentHour);
-
-  // Target all inputs matching name="startTime" and name="endTime"
-  const startTimeElems = document.querySelectorAll('input[name="startTime"]');
-  const endTimeElems = document.querySelectorAll('input[name="endTime"]');
-
-  startTimeElems.forEach(function (elem) {
-    if (!elem.value) elem.value = formattedStart;
-  });
-
-  endTimeElems.forEach(function (elem) {
-    if (!elem.value) elem.value = formattedEnd;
-  });
-
-  //  Alert Dismissal (Toast Style)
+  // Toast Alert Dismissal
   const alertBox = document.querySelector(".custom-toast-alert");
 
   if (alertBox) {
@@ -44,71 +16,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const closeBtn = alertBox.querySelector(".btn-close-toast");
     if (closeBtn) {
-      closeBtn.addEventListener("click", function () {
-        removeAlert();
-      });
+      closeBtn.addEventListener("click", removeAlert);
     }
 
-    setTimeout(function () {
-      removeAlert();
-    }, 2000);
+    setTimeout(removeAlert, 2500);
   }
-  // Clean URL query parameters so reloading won't trigger the success message again
-  if (
-    window.location.search.includes("status=") ||
-    window.location.search.includes("success")
-  ) {
-    const cleanUrl =
-      window.location.protocol +
-      "//" +
-      window.location.host +
-      window.location.pathname;
+
+  // Preserve 'tab' parameter while stripping 'status' from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("status") || urlParams.has("success")) {
+    urlParams.delete("status");
+    urlParams.delete("success");
+
+    const newQuery = urlParams.toString() ? "?" + urlParams.toString() : "";
+    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + newQuery;
     window.history.replaceState({ path: cleanUrl }, "", cleanUrl);
   }
 
   // Confirmation Modal Before Submitting Traffic Log
-  function formatTimeDisplay(timeValue) {
-    if (!timeValue) return "-";
-    const [h, m] = timeValue.split(":");
-    const d = new Date();
-    d.setHours(h, m);
-    return d.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  }
-
   const trafficForms = document.querySelectorAll(".traffic_form");
 
   trafficForms.forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const type = form.querySelector('input[name="type"]').value;
-      const name = form.querySelector('input[name="name"]').value;
-      const startTime = form.querySelector('input[name="startTime"]').value;
-      const endTime = form.querySelector('input[name="endTime"]').value;
-      const count = form.querySelector('input[name="count"]').value;
+      const type = form.querySelector('input[name="type"]')?.value || "store";
+      const name = form.querySelector('input[name="name"]')?.value || "";
+      const timeRangeElem = form.querySelector('select[name="timeRange"]');
+      const timeRange = timeRangeElem ? timeRangeElem.value : "";
+      const count = form.querySelector('input[name="count"]')?.value || "0";
 
       const label = type === "parking" ? "Vehicle Traffic" : "Foot Traffic";
 
       Swal.fire({
         title: "Confirm " + label + " Entry",
         html:
-          '<div style="text-align:left; font-size:14px;">' +
-          "<p><strong>Personnel:</strong> " +
-          name +
-          "</p>" +
-          "<p><strong>Start Time:</strong> " +
-          formatTimeDisplay(startTime) +
-          "</p>" +
-          "<p><strong>End Time:</strong> " +
-          formatTimeDisplay(endTime) +
-          "</p>" +
-          "<p><strong>Count:</strong> " +
-          count +
-          "</p>" +
+          '<div style="text-align:left; font-size:14px; line-height:1.6;">' +
+          "<p><strong>Personnel:</strong> " + name + "</p>" +
+          "<p><strong>Time Range:</strong> " + timeRange + "</p>" +
+          "<p><strong>Count:</strong> " + count + "</p>" +
           "</div>",
         icon: "question",
         showCancelButton: true,
@@ -124,51 +70,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // History Modal Filter
-    window.applyFilter = function (context) {
-        const dateInputId  = context === 'foot' ? 'footDate' : 'vehicleDate';
-        const tableBodyId  = context === 'foot' ? 'footTableBody' : 'vehicleTableBody';
+  // History Modal Filters
+  window.applyFilter = function (context) {
+    const dateInputId = context === "foot" ? "footDate" : "vehicleDate";
+    const tableBodyId = context === "foot" ? "footTableBody" : "vehicleTableBody";
 
-        const selectedDate = document.getElementById(dateInputId).value;
-        const tableBody     = document.getElementById(tableBodyId);
-        const rows           = tableBody.querySelectorAll('tr');
+    const dateElem = document.getElementById(dateInputId);
+    if (!dateElem) return;
 
-        rows.forEach(function (row) {
-            if (!row.dataset.date) return; // skip "no data" placeholder row
+    const selectedDate = dateElem.value;
+    const tableBody = document.getElementById(tableBodyId);
+    if (!tableBody) return;
 
-            if (!selectedDate || row.dataset.date === selectedDate) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+    const rows = tableBody.querySelectorAll("tr");
 
-        // Show "no results" message if all rows are hidden
-        const visibleRows = Array.from(rows).filter(r => r.style.display !== 'none' && r.dataset.date);
-        let noResultRow = tableBody.querySelector('.no-filter-result');
+    rows.forEach(function (row) {
+      if (!row.dataset.date) return;
 
-        if (visibleRows.length === 0) {
-            if (!noResultRow) {
-                noResultRow = document.createElement('tr');
-                noResultRow.className = 'no-filter-result';
-                noResultRow.innerHTML = '<td colspan="5" class="text-center">No records found for selected date</td>';
-                tableBody.appendChild(noResultRow);
-            }
-            noResultRow.style.display = '';
-        } else if (noResultRow) {
-            noResultRow.style.display = 'none';
-        }
-    };
+      if (!selectedDate || row.dataset.date === selectedDate) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
 
-    window.clearFilter = function (context) {
-        const dateInputId = context === 'foot' ? 'footDate' : 'vehicleDate';
-        const tableBodyId = context === 'foot' ? 'footTableBody' : 'vehicleTableBody';
+    const visibleRows = Array.from(rows).filter((r) => r.style.display !== "none" && r.dataset.date);
+    let noResultRow = tableBody.querySelector(".no-filter-result");
 
-        document.getElementById(dateInputId).value = '';
+    if (visibleRows.length === 0) {
+      if (!noResultRow) {
+        noResultRow = document.createElement("tr");
+        noResultRow.className = "no-filter-result";
+        noResultRow.innerHTML = '<td colspan="4" class="text-center text-muted">No records found for selected date</td>';
+        tableBody.appendChild(noResultRow);
+      }
+      noResultRow.style.display = "";
+    } else if (noResultRow) {
+      noResultRow.style.display = "none";
+    }
+  };
 
-        const tableBody = document.getElementById(tableBodyId);
-        tableBody.querySelectorAll('tr').forEach(function (row) {
-            row.style.display = '';
-        });
-    };
+  window.clearFilter = function (context) {
+    const dateInputId = context === "foot" ? "footDate" : "vehicleDate";
+    const tableBodyId = context === "foot" ? "footTableBody" : "vehicleTableBody";
+
+    const dateElem = document.getElementById(dateInputId);
+    if (dateElem) dateElem.value = "";
+
+    const tableBody = document.getElementById(tableBodyId);
+    if (tableBody) {
+      tableBody.querySelectorAll("tr").forEach(function (row) {
+        row.style.display = "";
+      });
+    }
+  };
 });
