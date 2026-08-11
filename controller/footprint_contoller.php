@@ -40,6 +40,7 @@ class FootprintController
         $this->footprintModel->oStartTime = $data['ostarttime'];
         $this->footprintModel->oEndTime   = $data['oendtime'];
         $this->footprintModel->oCount     = $data['ocount'];
+        $this->footprintModel->oAddedby   = $data['added_by'] ?? null;
 
         $isSaved = $this->footprintModel->AddFootprint($tableName);
 

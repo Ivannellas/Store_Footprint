@@ -4,7 +4,8 @@ class FootprintModel
 {
     private mysqli $db;
     private array $allowedTables = ['tbl_store_footprint', 'tbl_parking_footprint'];
-
+    
+    public ?string $oAddedby = null;
     public ?string $oPersonnel = null;
     public ?string $oDate = null;
     public ?string $oStartTime = null;
@@ -27,11 +28,11 @@ class FootprintModel
             return false;
         }
 
-        $query = "INSERT INTO {$tableName} (opersonnel, odate, ostarttime, oendtime, ocount) 
-                  VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO {$tableName} (added_by, opersonnel, odate, ostarttime, oendtime, ocount) 
+                  VALUES (?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("ssssi", $this->oPersonnel, $this->oDate, $this->oStartTime, $this->oEndTime, $this->oCount);
+            $stmt->bind_param("sssssi",$this->oAddedby, $this->oPersonnel, $this->oDate, $this->oStartTime, $this->oEndTime, $this->oCount);
             $result = $stmt->execute();
             $stmt->close();
             return $result;
