@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 $base_path = "./";
 
 require_once $base_path . 'includes/auth_check.php';
