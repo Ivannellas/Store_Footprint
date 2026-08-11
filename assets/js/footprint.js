@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Auto-fill Time Inputs (Start Time & End Time) for all forms
+    // Auto-fill Time Inputs (Start Time & End Time) for all forms
     const now = new Date();
     let currentHour = now.getHours();
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!elem.value) elem.value = formattedEnd;
     });
 
-    // 2. Alert Dismissal (Toast Style)
+    //  Alert Dismissal (Toast Style)
     const alertBox = document.querySelector('.custom-toast-alert');
 
     if (alertBox) {

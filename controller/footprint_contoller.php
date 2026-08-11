@@ -44,10 +44,10 @@ class FootprintController
         $isSaved = $this->footprintModel->AddFootprint($tableName);
 
         if ($isSaved) {
-            return ['success' => true, 'message' => 'Footprint added successfully.'];
+            return ['success' => true, 'message' => 'Foot Traffic added successfully.'];
         }
 
-        return ['success' => false, 'message' => 'Failed to save footprint record due to a database error.'];
+        return ['success' => false, 'message' => 'Failed to save foot traffic record due to a database error.'];
     }
 
     /*===========================================================
