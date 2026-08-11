@@ -179,21 +179,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                     <?php endif; ?>
                 </div>
 
-                <!-- Notice Carousel -->
-                <div class="carousel-container">
-                    <div class="carousel-track">
-                        <div class="carousel-content">
-                            <p>Please Make Sure The Information And Spelling You Input Is Correct !!!</p>
-                        </div>
-                        <div class="carousel-content" aria-hidden="true">
-                            <p>Please Make Sure The Information And Spelling You Input Is Correct !!!</p>
-                        </div>
-                        <div class="carousel-content" aria-hidden="true">
-                            <p>Please Make Sure The Information And Spelling You Input Is Correct !!!</p>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Title & Greeting -->
                 <div class="index_flexbox">
                     <div class="landing_date_info index_title">
@@ -220,6 +205,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <h2>Foot Traffic</h2>
                                 <form class="traffic_form" action="index.php" method="POST">
                                     <input type="hidden" name="type" value="store">
+
+                                    <!-- ADDED: Date Field -->
+                                    <div class="oDate_range">
+                                        <label for="dateStore">Select Date:</label>
+                                        <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                    </div>
 
                                     <div class="oTime_range">
                                         <label for="timeRangeStore">Time Range:</label>
@@ -254,7 +245,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Time Range</th>
+                                                <th>Start - End (Time)</th>
                                                 <th>Count</th>
                                             </tr>
                                         </thead>
@@ -305,7 +296,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <tr>
                                                             <th>Personnel Name</th>
                                                             <th>Date</th>
-                                                            <th>Time Range</th>
+                                                            <th>Start - End (Time)</th>
                                                             <th>Count</th>
                                                         </tr>
                                                     </thead>
@@ -342,6 +333,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <form class="traffic_form" action="index.php" method="POST">
                                     <input type="hidden" name="type" value="parking">
 
+                                    <!-- ADDED: Date Field -->
+                                    <div class="oDate_range">
+                                        <label for="dateStore">Select Date:</label>
+                                        <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                    </div>
+
                                     <div class="oTime_range">
                                         <label for="timeRangeParking">Time Range:</label>
                                         <select id="timeRangeParking" name="timeRange" class="form-select" required>
@@ -375,7 +372,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Time Range</th>
+                                                <th>Start - End (Time)</th>
                                                 <th>Count</th>
                                             </tr>
                                         </thead>
@@ -426,7 +423,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <tr>
                                                             <th>Personnel Name</th>
                                                             <th>Date</th>
-                                                            <th>Time Range</th>
+                                                            <th>Start - End (Time)</th>
                                                             <th>Count</th>
                                                         </tr>
                                                     </thead>

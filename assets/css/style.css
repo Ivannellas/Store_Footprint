@@ -921,7 +921,7 @@ footer.footer_intro {
   font-family: var(--parag);
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Uniform spacing between form rows */
+  gap: 15px; /* Uniform spacing between form rows */
 }
 
 /* Base Input & Field Styling */
@@ -933,7 +933,8 @@ footer.footer_intro {
   border: 1px solid #cccccc;
   border-radius: 6px;
   font-size: 14px;
-  color: #333333;
+  color: #2b2b2b;
+  font-weight: 500;
   box-sizing: border-box; /* Ensures padding doesn't break input widths */
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
@@ -944,25 +945,70 @@ footer.footer_intro {
   box-shadow: 0 0 0 3px rgba(30, 142, 62, 0.2);
 }
 
-.oTime {
-  display: flex;
-  gap: 12px;
+/* Container styling - uniform spacing */
+.oDate_range,
+.oTime_range {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
 }
 
-.oTime_start,
-.oTime_end {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Label styling - gamit ang Heading font & Secondary color */
+.oDate_range label,
+.oTime_range label {
+    font-family: var(--headingTxt);
+    font-size: 0.875rem; /* 14px */
+    font-weight: 600;
+    color: var(--secondaryColor);
+    letter-spacing: 0.02em;
 }
 
-.oTime label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #1e8e3e;
-  min-width: 24px;
+/* Input (Date) ug Select (Time Range) styling - gamit ang Paragraph font */
+.oDate_range .form-control,
+.oTime_range .form-select {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: var(--parag);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2b2b2b;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    box-sizing: border-box;
 }
+
+/* Hover State - slight accent using primary color border */
+.oDate_range .form-control:hover,
+.oTime_range .form-select:hover {
+    border-color: var(--primaryColor);
+}
+
+/* Focus State - Primary Color ring/glow when active */
+.oDate_range .form-control:focus,
+.oTime_range .form-select:focus {
+    border-color: var(--primaryColor);
+    /* Converting primary green (#218c3c) to RGBA glow (33, 140, 60) */
+    box-shadow: 0 0 0 3px rgba(33, 140, 60, 0.18); 
+}
+
+/* Custom icon styling for Date picker calendar */
+.oDate_range .form-control::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(30%) sepia(85%) saturate(450%) hue-rotate(95deg) brightness(90%); /* Colors calendar icon to match Primary Green */
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.oDate_range .form-control::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+
 .flex_box_between {
   display: flex;
   gap: 12px;
@@ -972,7 +1018,8 @@ footer.footer_intro {
   flex: 1;
 }
 .traffic_form input::placeholder {
-  color: #a0a0a0;
+  color: #2b2b2b;
+  font-weight: 500;
   font-size: 13px;
 }
 
@@ -2103,77 +2150,3 @@ footer.footer_intro {
 .btn-close-toast:hover {
   opacity: 1;
 }
-
-
-/* CAROUSEL TEXT */
-
-.carousel-container {
-  overflow: hidden;
-  background: var(--secondaryColor);
-  padding: 15px 0;
-  width: 1920px;
-  margin-left: 50%;
-  margin-bottom: 50px;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel-track {
-    display: flex;
-    width: max-content;
-    animation: infiniteCarousel 20s linear infinite;
-}
-
-.carousel-content {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-}
-
-.carousel-track p {
-    flex-shrink: 0;
-    margin: 0;
-    padding-right: 150px;
-    white-space: nowrap;
-    padding: 0 40px;
-    font-size: 28px;
-    line-height: 100%;
-    color: #fff;
-    font-weight: 800;
-    position: relative;
-}
-
-.carousel-track p:before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 0px;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 18px;
-  background: #fff;
-  opacity: 0.5;
-}
-
-.carousel-track .carousel-content:last-child p:before{
-  display: none;
-}
-
-/* Optional: pause when hovering */
-.carousel-container:hover .carousel-track {
-    animation-play-state: paused;
-}
-
-/* Infinite seamless movement */
-@keyframes infiniteCarousel {
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(-50%);
-    }
-}
-
