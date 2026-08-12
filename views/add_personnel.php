@@ -169,8 +169,8 @@ mysqli_close($conn);
                     <div class="modal-body p-4 text-dark">
                         <input type="hidden" name="action" value="add">
                         <div class="mb-3">
-                            <label class="form-label fw-bold small text-muted">FULL NAME / PERSONNEL NAME</label>
-                            <input type="text" name="personnel_name" class="form-control" placeholder="e.g. Juan Dela Cruz" required autocomplete="off">
+                            <label class="form-label fw-bold small text-muted">PERSONNEL NAME</label>
+                            <input type="text" name="personnel_name" class="form-control" required autocomplete="off">
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
