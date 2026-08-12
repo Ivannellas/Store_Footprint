@@ -43,7 +43,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <!-- Module 3: USER ACCOUNTS -->
         <?php if (hasAccess(3, $isSuperAdmin, $allowedModules)): ?>
             <li class="menu-item mb-2">
-                <a href="<?php echo $base_path; ?>views/user_accounts.php" class="user_acc menu-link d-flex align-items-center justify-content-between">
+                <a href="<?php echo $base_path; ?>views/user_accounts.php"
+                    data-subpages="add_user_account.php, edit_user_account.php"
+                    class="user_acc menu-link d-flex align-items-center justify-content-between">
                     User Accounts
                 </a>
             </li>
@@ -58,7 +60,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
             </li>
         <?php endif; ?> -->
 
-        
+
         <!-- Module 14: FOOT TRAFFIC -->
         <?php if (hasAccess(14, $isSuperAdmin, $allowedModules)): ?>
             <li class="menu-item current_page_item mb-2">
