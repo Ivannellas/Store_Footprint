@@ -50,6 +50,7 @@ if (!$user) {
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/media.css">
+    <link rel="icon" href="<?php echo $base_path; ?>assets/images/favicon.png">
     <script src="../assets/js/user_permission_sync.js" defer></script>
     <script>
         if (localStorage.getItem('sidebarCollapsed') === 'true') {

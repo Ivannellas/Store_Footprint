@@ -75,6 +75,7 @@ mysqli_close($conn);
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/media.css">
+    <link rel="icon" href="<?php echo $base_path; ?>assets/images/favicon.png">
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
     <script>
         if (localStorage.getItem('sidebarCollapsed') === 'true') {
