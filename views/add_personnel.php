@@ -6,6 +6,7 @@ $base_path = "../";
 require_once $base_path . 'includes/auth_check.php';
 require_once $base_path . 'config/db.php';
 require_once $base_path . 'controller/personnel_controller.php';
+require_once __DIR__ . '/../includes/auth_check.php';
 
 $conn = getDBConnection();
 
@@ -68,25 +69,45 @@ mysqli_close($conn);
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personnel Management</title>
     <!-- Local CSS Files -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/media.css">
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.documentElement.classList.add('sidebar-collapsed-preload');
+        }
+    </script>
+    <script src="<?php echo $base_path; ?>assets/js/sidebar_button.js"></script>
 </head>
 
 <body class="bg-light text-dark">
+    <?php require __DIR__ . '/../includes/sidebar.php'; ?>
 
-    <div class="container mt-5" style="max-width: 700px;">
+    <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
+
+        <div class="navbar_title">
+            <h1 class="h1 text-uppercase mb-0">Add Personnel</h1>
+        </div>
+
+        <div class="d-flex">
+            <a href="../index.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
+        </div>
+    </nav>
+
+    <div class="main_parent">
+
+    <div class="wrapper">
         <!-- Header Controls -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="header_controls">
             <h3 class="m-0">Personnel Management</h3>
             <div>
-                <button type="button" class="btn btn-primary btn-sm me-1" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
+                <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
                     + Add Personnel
                 </button>
-                <a href="../index.php" class="btn btn-secondary btn-sm">Back</a>
             </div>
         </div>
 
@@ -114,8 +135,8 @@ mysqli_close($conn);
                         </tr>
                     <?php else: ?>
                         <?php foreach ($personnelList as $index => $person): ?>
-                            <?php 
-                                $isActive = ($person['status'] === '1' || $person['status'] === 1 || $person['status'] === 'Active');
+                            <?php
+                            $isActive = ($person['status'] === '1' || $person['status'] === 1 || $person['status'] === 'Active');
                             ?>
                             <tr>
                                 <td class="text-center text-secondary font-monospace"><?= $index + 1 ?></td>
@@ -161,13 +182,15 @@ mysqli_close($conn);
         </div>
     </div>
 
+    </div>
+
     <!-- Real-time Status Toggle Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const tableBody = document.getElementById('personnelTableBody');
 
             if (tableBody) {
-                tableBody.addEventListener('click', function (e) {
+                tableBody.addEventListener('click', function(e) {
                     const btn = e.target.closest('.btn-toggle-status');
                     if (!btn) return;
 
@@ -182,7 +205,7 @@ mysqli_close($conn);
                             if (data.success) {
                                 const isNowActive = (data.newStatus === '1' || data.newStatus === 1);
                                 btn.textContent = isNowActive ? 'Active' : 'Inactive';
-                                
+
                                 if (isNowActive) {
                                     btn.classList.remove('text-danger');
                                     btn.classList.add('text-success');
