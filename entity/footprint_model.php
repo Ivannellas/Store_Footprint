@@ -57,6 +57,8 @@ class FootprintModel
         $hasDateFilter = !empty($date);
 
         $query = "SELECT 
+                    added_by,
+                    created_at,
                     otableid, 
                     opersonnel, 
                     odate, 

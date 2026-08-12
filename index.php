@@ -296,6 +296,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Date</th>
                                                 <th>Start - End (Time)</th>
                                                 <th>Count</th>
+                                                <th>Created By</th>
+                                                <th>Created Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -306,6 +308,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                        <td><?php echo htmlspecialchars($row['added_by']); ?></td>
+                                                        <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
@@ -347,6 +351,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th>Date</th>
                                                             <th>Start - End (Time)</th>
                                                             <th>Count</th>
+                                                            <th>Created By</th>
+                                                            <th>Created Date</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
@@ -357,6 +363,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['added_by']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
@@ -435,6 +443,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Date</th>
                                                 <th>Start - End (Time)</th>
                                                 <th>Count</th>
+                                                <th>Created By</th>
+                                                <th>Created Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -445,6 +455,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                        <td><?php echo htmlspecialchars($row['added_by']); ?></td>
+                                                        <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
@@ -486,6 +498,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th>Date</th>
                                                             <th>Start - End (Time)</th>
                                                             <th>Count</th>
+                                                            <th>Created By</th>
+                                                            <th>Created Date</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
@@ -496,6 +510,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['added_by']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
