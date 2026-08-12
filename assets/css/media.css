@@ -304,6 +304,19 @@ padding: 0 20px;
     max-width: 100%;
   }
 
+.form_history_table {
+  max-height: 450px;
+}
+
+.form_history_table table {
+  font-size: 0.75rem;
+}
+
+.form_history_table th {
+  padding: 12px 8px;
+}
+
+
 }
 
 @media only screen and (max-width: 800px) {

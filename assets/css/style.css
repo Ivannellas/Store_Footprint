@@ -1181,7 +1181,7 @@ footer.footer_intro {
 /* Container styling to handle overflow on smaller screens */
 .form_history_table {
   width: 100%;
-  max-height: 250px;
+  max-height: 300px;
   overflow-y: auto;
   overflow-x: auto;
   border-radius: 8px;
