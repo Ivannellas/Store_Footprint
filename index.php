@@ -321,8 +321,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     </table>
                                 </div>
 
-                                <div class="modal_btn" id="footModalBtn">
-                                    <a class="primary_btn" href="#">Foot Traffic History</a>
+                                <div class="modal_btn" >
+                                    <a id="footModalBtn" class="primary_btn" href="#">Foot Traffic History</a>
                                 </div>
 
                                 <!-- Modal Overlay Window -->
@@ -468,8 +468,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     </table>
                                 </div>
 
-                                <div class="modal_btn" id="vehicleModalBtn">
-                                    <a class="primary_btn" href="#">Vehicle History</a>
+                                <div class="modal_btn">
+                                    <a  id="vehicleModalBtn" class="primary_btn" href="#">Vehicle History</a>
                                 </div>
 
                                 <!-- Modal Overlay Window -->
