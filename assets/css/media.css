@@ -216,9 +216,7 @@ object-position: 33px 0;
 
 
 /* Index */
-.main_top_box {
-padding: 0 20px 40px;
-}
+
 footer.footer_intro {
 padding: 0 20px;
 }
@@ -315,6 +313,13 @@ padding: 0 20px;
     .traffic_form_row .oTime_range {
         flex: 1;
     }
+
+  .traffic_form .oDate_range,
+  .traffic_form .oTime_range,
+  .traffic_form .oTraffic,
+  .traffic_form .oPersonnel{
+    width: 100%;
+  }
 
 .tab button {
   font: 600 16px/25px var(--headingTxt);

@@ -816,7 +816,7 @@ footer.footer_intro {
 
 .main_top_box {
   position: relative;
-  padding: 0 10px;
+  padding: 40px 25px 0;
   overflow: hidden;
 }
 
@@ -945,28 +945,41 @@ footer.footer_intro {
   box-shadow: 0 0 0 3px rgba(30, 142, 62, 0.2);
 }
 
+.traffic_form .oDate_range,
+.traffic_form .oTime_range,
+.traffic_form .oTraffic,
+.traffic_form .oPersonnel{
+  width: 49%;
+}
+
 /* Container styling - uniform spacing */
 .oDate_range,
-.oTime_range {
+.oTime_range,
+.oTraffic,
+.oPersonnel{
     display: flex;
     flex-direction: column;
     gap: 6px;
     width: 100%;
+    text-align: left;
 }
 
 /* Label styling - gamit ang Heading font & Secondary color */
-.oDate_range label,
-.oTime_range label {
+.traffic_form label {
     font-family: var(--headingTxt);
     font-size: 0.875rem; /* 14px */
     font-weight: 600;
     color: var(--secondaryColor);
     letter-spacing: 0.02em;
+    text-align: left;
+    width: 100%;
 }
+
 
 /* Input (Date) ug Select (Time Range) styling - gamit ang Paragraph font */
 .oDate_range .form-control,
-.oTime_range .form-select {
+.oTime_range .form-select,
+.oTraffic .form_input{
     width: 100%;
     padding: 10px 14px;
     font-family: var(--parag);
@@ -984,7 +997,8 @@ footer.footer_intro {
 
 /* Hover State - slight accent using primary color border */
 .oDate_range .form-control:hover,
-.oTime_range .form-select:hover {
+.oTime_range .form-select:hover,
+.oTraffic .form_input:hover {
     border-color: var(--primaryColor);
 }
 

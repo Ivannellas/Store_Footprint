@@ -41,7 +41,8 @@ $timeRanges = [
 ];
 
 // default time range for form selection
-function getDefaultTimeRange(): string {
+function getDefaultTimeRange(): string
+{
     $targetTime = strtotime('-1 hour'); // Minus 1 hour sa kasamtangang oras
     $targetHour = (int)date('G', $targetTime); // 0 - 23 format
 
@@ -229,28 +230,36 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <form class="traffic_form" action="index.php" method="POST">
                                     <input type="hidden" name="type" value="store">
 
-                                    <!-- ADDED: Date Field -->
-                                    <div class="oDate_range">
-                                        <label for="dateStore">Select Date:</label>
-                                        <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
-                                    </div>
+                                    <div class="flex_box_between">
+                                        <!-- ADDED: Date Field -->
+                                        <div class="oDate_range">
+                                            <label for="dateStore">Select Date:</label>
+                                            <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                        </div>
 
-                                    <div class="oTime_range">
-                                        <label for="timeRangeStore">Time Range:</label>
-                                        <select id="timeRangeStore" name="timeRange" class="form-select" required>
-                                            <?php foreach ($timeRanges as $range): ?>
-                                                <option value="<?php echo htmlspecialchars($range); ?>" <?php echo ($range === $defaultTimeRange) ? 'selected' : ''; ?>>
-                                                    <?php echo htmlspecialchars($range); ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
+                                        <div class="oTime_range">
+                                            <label for="timeRangeStore">Time Range:</label>
+                                            <select id="timeRangeStore" name="timeRange" class="form-select" required>
+                                                <?php foreach ($timeRanges as $range): ?>
+                                                    <option value="<?php echo htmlspecialchars($range); ?>" <?php echo ($range === $defaultTimeRange) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($range); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div class="flex_box_between">
-                                        <input type="text" id="nameStore" name="name" placeholder="Personnel Name"
-                                            oninput="this.value = this.value.toUpperCase()"
-                                            style="text-transform: uppercase;" required>
-                                        <input type="number" id="countStore" name="count" placeholder="Input Traffic" min="1" required>
+                                        <div class="oPersonnel">
+                                            <label for="oPersonnel">Choose Personnel</label>
+                                            <input type="text" id="nameStore" name="name"
+                                                oninput="this.value = this.value.toUpperCase()"
+                                                style="text-transform: uppercase;" required>
+                                        </div>
+                                        <div class="oTraffic">
+                                            <label for="otraffic">Input Traffic</label>
+                                            <input class="form_input" type="number" id="countStore" name="count" min="1" required>
+                                        </div>
                                     </div>
 
                                     <div class="submit_btn">
@@ -355,29 +364,37 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 <form class="traffic_form" action="index.php" method="POST">
                                     <input type="hidden" name="type" value="parking">
 
-                                    <!-- ADDED: Date Field -->
-                                    <div class="oDate_range">
-                                        <label for="dateStore">Select Date:</label>
-                                        <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
-                                    </div>
+                                    <div class="flex_box_between">
+                                        <!-- ADDED: Date Field -->
+                                        <div class="oDate_range">
+                                            <label for="dateStore">Select Date:</label>
+                                            <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                        </div>
 
-                                    <div class="oTime_range">
-                                        <label for="timeRangeParking">Time Range:</label>
-                                        <select id="timeRangeParking" name="timeRange" class="form-select" required>
-                                            <option value="" disabled <?php echo empty($defaultTimeRange) ? 'selected' : ''; ?>>Select Time Range</option>
-                                            <?php foreach ($timeRanges as $range): ?>
-                                                <option value="<?php echo htmlspecialchars($range); ?>" <?php echo ($range === $defaultTimeRange) ? 'selected' : ''; ?>>
-                                                    <?php echo htmlspecialchars($range); ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
+                                        <div class="oTime_range">
+                                            <label for="timeRangeParking">Time Range:</label>
+                                            <select id="timeRangeParking" name="timeRange" class="form-select" required>
+                                                <option value="" disabled <?php echo empty($defaultTimeRange) ? 'selected' : ''; ?>>Select Time Range</option>
+                                                <?php foreach ($timeRanges as $range): ?>
+                                                    <option value="<?php echo htmlspecialchars($range); ?>" <?php echo ($range === $defaultTimeRange) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($range); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div class="flex_box_between">
-                                        <input type="text" id="nameParking" name="name" placeholder="Personnel Name"
-                                            oninput="this.value = this.value.toUpperCase()"
-                                            style="text-transform: uppercase;" required>
-                                        <input type="number" id="countParking" name="count" placeholder="Input Traffic" min="1" required>
+                                        <div class="oPersonnel">
+                                            <label for="oPersonnel">Choose Personnel</label>
+                                            <input type="text" id="nameParking" name="name"
+                                                oninput="this.value = this.value.toUpperCase()"
+                                                style="text-transform: uppercase;" required>
+                                        </div>
+                                        <div class="oTraffic">
+                                            <label for="otraffic">Input Traffic</label>
+                                            <input type="number" id="countParking" name="count" min="1" required>
+                                        </div>
                                     </div>
 
                                     <div class="submit_btn">
