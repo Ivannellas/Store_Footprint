@@ -63,6 +63,10 @@ figure {
   padding: 40px 25px;
 }
 
+.main_parent_con{
+  min-height: 620px;
+}
+
 .title {
   background: var(--secondaryColor);
   -webkit-background-clip: text;

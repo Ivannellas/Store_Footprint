@@ -146,77 +146,78 @@ mysqli_close($conn);
     </nav>
 
     <div class="main_parent">
-
         <div class="wrapper">
+            <div class="main_parent_con">
 
-            <div class="d-flex gap-2 justify-content-between mb-3">
-                <div class="search-bar">
-                    <div class="">
-                        <input type="text"
-                            id="searchInput"
-                            name="search"
-                            class="form-control"
-                            placeholder="Search users..."
-                            value="<?php echo htmlspecialchars($searchTerm); ?>"
-                            autocomplete="off">
+                <div class="d-flex gap-2 justify-content-between mb-3">
+                    <div class="search-bar">
+                        <div class="">
+                            <input type="text"
+                                id="searchInput"
+                                name="search"
+                                class="form-control"
+                                placeholder="Search users..."
+                                value="<?php echo htmlspecialchars($searchTerm); ?>"
+                                autocomplete="off">
+                        </div>
                     </div>
+                    <a href="add_user_account.php" class="primary_btn btn-sm btn-light me-1 action-btn" data-permission="<?php echo $canAdd; ?>">Add Account</a>
                 </div>
-                <a href="add_user_account.php" class="primary_btn btn-sm btn-light me-1 action-btn" data-permission="<?php echo $canAdd; ?>">Add Account</a>
-            </div>
 
 
-            <div class="table-responsive bg-white border rounded custom-table-shadow">
-                <table class="table table-hover align-middle m-0">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 15%;">User ID</th>
-                            <th style="width: 35%;">Fullname</th>
-                            <th style="width: 20%;">Username</th>
-                            <th class="text-center" style="width: 15%;">Status</th>
-                            <th class="text-center" style="width: 15%;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userTableBody">
-                        <?php if (empty($userList)): ?>
+                <div class="table-responsive bg-white border rounded custom-table-shadow">
+                    <table class="table table-hover align-middle m-0">
+                        <thead>
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-4">No users found.</td>
+                                <th class="text-center" style="width: 15%;">User ID</th>
+                                <th style="width: 35%;">Fullname</th>
+                                <th style="width: 20%;">Username</th>
+                                <th class="text-center" style="width: 15%;">Status</th>
+                                <th class="text-center" style="width: 15%;">Actions</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($userList as $user): ?>
-                                <?php $isActive = ((int)$user['oActive'] === 1); ?>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <?php if (empty($userList)): ?>
                                 <tr>
-                                    <td class="text-center text-secondary font-monospace"><?php echo htmlspecialchars($user['oUserid']); ?></td>
-                                    <td class="fw-bold"><?php echo htmlspecialchars($user['oFullname']); ?></td>
-                                    <td><?php echo htmlspecialchars($user['oUsername']); ?></td>
-                                    <td class="text-center">
-                                        <button type="button"
-                                            class="action-btn border-0 bg-transparent <?php echo $isActive ? 'text-success' : 'text-danger'; ?>"
-                                            data-permission="<?php echo $canEdit; ?>"
-                                            data-id="<?php echo htmlspecialchars($user['oUserid']); ?>"
-                                            id="status-display-<?php echo htmlspecialchars($user['oUserid']); ?>">
-                                            <?php echo $isActive ? 'Active' : 'InActive'; ?>
-                                        </button>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="btn-group gap-1">
-                                            <a href="edit_user_account.php?id=<?php echo urlencode($user['oUserid']); ?>"
-                                                class="btn btn-sm btn-outline-dark action-btn"
-                                                data-permission="<?php echo $canEdit; ?>">Edit</a>
-
-                                            <a href="user_permission_account.php?id=<?php echo urlencode($user['oUserid']); ?>"
-                                                class="btn btn-sm btn-outline-dark">Permissions</a>
-
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-dark btn-view-user action-btn"
-                                                data-permission="<?php echo $canView; ?>"
-                                                data-id="<?php echo htmlspecialchars($user['oUserid']); ?>">View</button>
-                                        </div>
-                                    </td>
+                                    <td colspan="5" class="text-center text-muted py-4">No users found.</td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php else: ?>
+                                <?php foreach ($userList as $user): ?>
+                                    <?php $isActive = ((int)$user['oActive'] === 1); ?>
+                                    <tr>
+                                        <td class="text-center text-secondary font-monospace"><?php echo htmlspecialchars($user['oUserid']); ?></td>
+                                        <td class="fw-bold"><?php echo htmlspecialchars($user['oFullname']); ?></td>
+                                        <td><?php echo htmlspecialchars($user['oUsername']); ?></td>
+                                        <td class="text-center">
+                                            <button type="button"
+                                                class="action-btn border-0 bg-transparent <?php echo $isActive ? 'text-success' : 'text-danger'; ?>"
+                                                data-permission="<?php echo $canEdit; ?>"
+                                                data-id="<?php echo htmlspecialchars($user['oUserid']); ?>"
+                                                id="status-display-<?php echo htmlspecialchars($user['oUserid']); ?>">
+                                                <?php echo $isActive ? 'Active' : 'InActive'; ?>
+                                            </button>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group gap-1">
+                                                <a href="edit_user_account.php?id=<?php echo urlencode($user['oUserid']); ?>"
+                                                    class="btn btn-sm btn-outline-dark action-btn"
+                                                    data-permission="<?php echo $canEdit; ?>">Edit</a>
+
+                                                <a href="user_permission_account.php?id=<?php echo urlencode($user['oUserid']); ?>"
+                                                    class="btn btn-sm btn-outline-dark">Permissions</a>
+
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-dark btn-view-user action-btn"
+                                                    data-permission="<?php echo $canView; ?>"
+                                                    data-id="<?php echo htmlspecialchars($user['oUserid']); ?>">View</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
