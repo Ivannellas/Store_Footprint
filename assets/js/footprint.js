@@ -29,7 +29,12 @@ document.addEventListener("DOMContentLoaded", function () {
     urlParams.delete("success");
 
     const newQuery = urlParams.toString() ? "?" + urlParams.toString() : "";
-    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + newQuery;
+    const cleanUrl =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      window.location.pathname +
+      newQuery;
     window.history.replaceState({ path: cleanUrl }, "", cleanUrl);
   }
 
@@ -41,7 +46,13 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
 
       const type = form.querySelector('input[name="type"]')?.value || "store";
-      const name = form.querySelector('input[name="name"]')?.value || "";
+
+      // Updated Personnel selector to capture select or input elements
+      const nameElem = form.querySelector(
+        '[name="personnel_name"], [name="personnel"], [name="name"]',
+      );
+      const name = nameElem ? nameElem.value : "";
+
       const timeRangeElem = form.querySelector('select[name="timeRange"]');
       const timeRange = timeRangeElem ? timeRangeElem.value : "";
       const count = form.querySelector('input[name="count"]')?.value || "0";
@@ -52,9 +63,15 @@ document.addEventListener("DOMContentLoaded", function () {
         title: "Confirm " + label + " Entry",
         html:
           '<div style="text-align:left; font-size:14px; line-height:1.6;">' +
-          "<p><strong>Personnel:</strong> " + name + "</p>" +
-          "<p><strong>Time Range:</strong> " + timeRange + "</p>" +
-          "<p><strong>Count:</strong> " + count + "</p>" +
+          "<p><strong>Personnel:</strong> " +
+          name +
+          "</p>" +
+          "<p><strong>Time Range:</strong> " +
+          timeRange +
+          "</p>" +
+          "<p><strong>Count:</strong> " +
+          count +
+          "</p>" +
           "</div>",
         icon: "question",
         showCancelButton: true,
@@ -73,7 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // History Modal Filters
   window.applyFilter = function (context) {
     const dateInputId = context === "foot" ? "footDate" : "vehicleDate";
-    const tableBodyId = context === "foot" ? "footTableBody" : "vehicleTableBody";
+    const tableBodyId =
+      context === "foot" ? "footTableBody" : "vehicleTableBody";
 
     const dateElem = document.getElementById(dateInputId);
     if (!dateElem) return;
@@ -94,14 +112,17 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    const visibleRows = Array.from(rows).filter((r) => r.style.display !== "none" && r.dataset.date);
+    const visibleRows = Array.from(rows).filter(
+      (r) => r.style.display !== "none" && r.dataset.date,
+    );
     let noResultRow = tableBody.querySelector(".no-filter-result");
 
     if (visibleRows.length === 0) {
       if (!noResultRow) {
         noResultRow = document.createElement("tr");
         noResultRow.className = "no-filter-result";
-        noResultRow.innerHTML = '<td colspan="4" class="text-center text-muted">No records found for selected date</td>';
+        noResultRow.innerHTML =
+          '<td colspan="4" class="text-center text-muted">No records found for selected date</td>';
         tableBody.appendChild(noResultRow);
       }
       noResultRow.style.display = "";
@@ -112,7 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.clearFilter = function (context) {
     const dateInputId = context === "foot" ? "footDate" : "vehicleDate";
-    const tableBodyId = context === "foot" ? "footTableBody" : "vehicleTableBody";
+    const tableBodyId =
+      context === "foot" ? "footTableBody" : "vehicleTableBody";
 
     const dateElem = document.getElementById(dateInputId);
     if (dateElem) dateElem.value = "";
