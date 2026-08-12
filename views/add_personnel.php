@@ -69,7 +69,7 @@ mysqli_close($conn);
 
 <head>
     <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personnel Management</title>
     <!-- Local CSS Files -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
@@ -100,89 +100,122 @@ mysqli_close($conn);
 
     <div class="main_parent">
 
-    <div class="wrapper">
-        <!-- Header Controls -->
-        <div class="header_controls">
-            <h3 class="m-0">Personnel Management</h3>
-            <div>
-                <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
-                    + Add Personnel
-                </button>
+        <div class="wrapper">
+            <!-- Header Controls -->
+            <div class="header_controls">
+                <h3 class="m-0">Personnel Management</h3>
+                <div>
+                    <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
+                        + Add Personnel
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <?php if (!empty($message)): ?>
-            <div class="alert alert-<?= $msgType ?> alert-dismissible fade show" role="alert">
-                <?= htmlspecialchars($message) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        <?php endif; ?>
+            <?php if (!empty($message)): ?>
+                <div class="alert alert-<?= $msgType ?> alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($message) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
 
-        <!-- Personnel List Table -->
-        <div class="table-responsive bg-white border rounded shadow-sm">
-            <table class="table table-hover align-middle m-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="text-center" style="width: 15%;">#</th>
-                        <th style="width: 55%;">Personnel Name</th>
-                        <th class="text-center" style="width: 30%;">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="personnelTableBody">
-                    <?php if (empty($personnelList)): ?>
+            <!-- Personnel List Table -->
+            <div class="table-responsive bg-white border rounded shadow-sm">
+                <table class="table table-hover align-middle m-0">
+                    <thead class="table-light">
                         <tr>
-                            <td colspan="3" class="text-center text-muted py-4">No personnel found.</td>
+                            <th class="text-center" style="width: 15%;">#</th>
+                            <th style="width: 55%;">Personnel Name</th>
+                            <th class="text-center" style="width: 30%;">Status</th>
                         </tr>
-                    <?php else: ?>
-                        <?php foreach ($personnelList as $index => $person): ?>
-                            <?php
-                            $isActive = ($person['status'] === '1' || $person['status'] === 1 || $person['status'] === 'Active');
-                            ?>
+                    </thead>
+                    <tbody id="personnelTableBody">
+                        <?php if (empty($personnelList)): ?>
                             <tr>
-                                <td class="text-center text-secondary font-monospace"><?= $index + 1 ?></td>
-                                <td class="fw-bold"><?= htmlspecialchars($person['personnel_name']) ?></td>
-                                <td class="text-center">
-                                    <button type="button"
-                                        class="btn-toggle-status border-0 bg-transparent  <?= $isActive ? 'text-success' : 'text-danger'; ?>"
-                                        data-id="<?= htmlspecialchars($person['personnel_id']); ?>"
-                                        id="status-display-<?= htmlspecialchars($person['personnel_id']); ?>">
-                                        <?= $isActive ? 'Active' : 'Inactive'; ?>
-                                    </button>
-                                </td>
+                                <td colspan="3" class="text-center text-muted py-4">No personnel found.</td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                        <?php else: ?>
+                            <?php foreach ($personnelList as $index => $person): ?>
+                                <?php
+                                $isActive = ($person['status'] === '1' || $person['status'] === 1 || $person['status'] === 'Active');
+                                ?>
+                                <tr>
+                                    <td class="text-center text-secondary font-monospace"><?= $index + 1 ?></td>
+                                    <td class="fw-bold"><?= htmlspecialchars($person['personnel_name']) ?></td>
+                                    <td class="text-center">
+                                        <button type="button"
+                                            class="btn-toggle-status border-0 bg-transparent  <?= $isActive ? 'text-success' : 'text-danger'; ?>"
+                                            data-id="<?= htmlspecialchars($person['personnel_id']); ?>"
+                                            id="status-display-<?= htmlspecialchars($person['personnel_id']); ?>">
+                                            <?= $isActive ? 'Active' : 'Inactive'; ?>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <!-- Add Personnel Modal -->
+        <div class="modal fade" id="addPersonnelModal" tabindex="-1" aria-labelledby="addPersonnelModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded border shadow-sm">
+                    <form method="POST" action="">
+                        <div class="modal-header bg-light">
+                            <h5 class="modal-title fs-6 fw-bold text-dark m-0" id="addPersonnelModalLabel">Add New Personnel</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4 text-dark">
+                            <input type="hidden" name="action" value="add">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-muted">PERSONNEL NAME</label>
+                                <input type="text" name="personnel_name" class="form-control" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Save Personnel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Add Personnel Modal -->
-    <div class="modal fade" id="addPersonnelModal" tabindex="-1" aria-labelledby="addPersonnelModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded border shadow-sm">
-                <form method="POST" action="">
-                    <div class="modal-header bg-light">
-                        <h5 class="modal-title fs-6 fw-bold text-dark m-0" id="addPersonnelModalLabel">Add New Personnel</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Footer -->
+    <footer class="footer_intro">
+        <div class="footer_content">
+            <div class="wrapper">
+                <div class="footer_container">
+                    <div class="footer_img_content">
+                        <figure><img src="../assets/images/nong_atoy_head.png" alt="Footer Logo"></figure>
+                        <p>To become the customer's TOP OF MIND for building materials and home improvement needs in Cebu in 2027</p>
                     </div>
-                    <div class="modal-body p-4 text-dark">
-                        <input type="hidden" name="action" value="add">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small text-muted">PERSONNEL NAME</label>
-                            <input type="text" name="personnel_name" class="form-control" required autocomplete="off">
+
+                    <div class="footer_info">
+                        <div class="footer_help">
+                            <p>Need Help? <span><a href="#">Contact IT Support</a></span></p>
+                        </div>
+                        <div class="footer_values">
+                            <figure><img src="../assets/images/footer-img.png" alt="Values"></figure>
+                        </div>
+                        <div class="copyright">
+                            &copy; Copyright
+                            <?php
+                            $start_year = '2026';
+                            $current_year = date('Y');
+                            $copyright = ($current_year == $start_year) ? $start_year : $current_year;
+                            echo $copyright; ?>
+                            <span class="company_name">Atlantic Hardware.</span>
+                            <span><br> All rights reserved.</span>
                         </div>
                     </div>
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Save Personnel</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-
-    </div>
+    </footer>
 
     <!-- Real-time Status Toggle Script -->
     <script>
