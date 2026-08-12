@@ -50,13 +50,15 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <?php endif; ?>
 
         <!-- Module 4: STORE DASHBOARD - MAIN -->
-        <?php if (hasAccess(4, $isSuperAdmin, $allowedModules)): ?>
+        <!-- <?php if (hasAccess(4, $isSuperAdmin, $allowedModules)): ?>
             <li class="menu-item current_page_item mb-2">
                 <a href="<?php echo $base_path; ?>index.php" class="store_dashboard menu-link d-flex align-items-center justify-content-between">
                     Dashboard
                 </a>
             </li>
-        <?php endif; ?>
+        <?php endif; ?> -->
+
+        
         <!-- Module 14: FOOT TRAFFIC -->
         <?php if (hasAccess(14, $isSuperAdmin, $allowedModules)): ?>
             <li class="menu-item current_page_item mb-2">
