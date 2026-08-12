@@ -67,6 +67,8 @@ mysqli_close($conn);
     <title>My Account Profile</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/media.css">
+    <link rel="icon" href="<?php echo $base_path; ?>assets/images/favicon.png">
     <script>
         if (localStorage.getItem('sidebarCollapsed') === 'true') {
             document.documentElement.classList.add('sidebar-collapsed-preload');
@@ -89,82 +91,84 @@ mysqli_close($conn);
     </nav>
     <div class="main_parent">
         <div class="wrapper">
+            <div class="main_parent_con">
 
-            <div class="account_info" style="width: 100%; max-width: 800px;">
-                <?php if (!empty($message)): ?>
-                    <div class="<?php echo $messageClass; ?>" role="alert">
-                        <?php echo htmlspecialchars($message); ?>
-                    </div>
-                <?php endif; ?>
-
-                <form action="" method="POST">
-                    <input type="hidden" name="action" value="update_profile">
-
-                    <div class="card border rounded shadow-sm">
-                        <div class="card-header bg-light border-bottom py-2 d-flex justify-content-between align-items-center">
-                            <span class="small fw-bold text-secondary text-uppercase">Profile Information</span>
-
-                            <?php if ($canUserEdit): ?>
-                                <button type="button" id="btn-toggle-edit" class="btn btn-sm btn-link text-dark text-decoration-none p-0 fw-bold small">Edit Details</button>
-                            <?php endif; ?>
+                <div class="account_info" style="width: 100%; max-width: 800px;">
+                    <?php if (!empty($message)): ?>
+                        <div class="<?php echo $messageClass; ?>" role="alert">
+                            <?php echo htmlspecialchars($message); ?>
                         </div>
+                    <?php endif; ?>
 
-                        <div class="card-body small">
-                            <div class="row mb-3 border-bottom pb-2 align-items-center">
-                                <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Account ID :</div>
-                                <div class="col-8 fw-bold font-monospace text-dark opacity-75">
-                                    <?php echo htmlspecialchars($profileData['oUserid'] ?? $userId); ?>
+                    <form action="" method="POST">
+                        <input type="hidden" name="action" value="update_profile">
+
+                        <div class="card border rounded shadow-sm">
+                            <div class="card-header bg-light border-bottom py-2 d-flex justify-content-between align-items-center">
+                                <span class="small fw-bold text-secondary text-uppercase">Profile Information</span>
+
+                                <?php if ($canUserEdit): ?>
+                                    <button type="button" id="btn-toggle-edit" class="btn btn-sm btn-link text-dark text-decoration-none p-0 fw-bold small">Edit Details</button>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="card-body small">
+                                <div class="row mb-3 border-bottom pb-2 align-items-center">
+                                    <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Account ID :</div>
+                                    <div class="col-8 fw-bold font-monospace text-dark opacity-75">
+                                        <?php echo htmlspecialchars($profileData['oUserid'] ?? $userId); ?>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3 border-bottom pb-2 align-items-center">
+                                    <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Username :</div>
+                                    <div class="col-8">
+                                        <span class="view-mode text-dark fw-semibold"><?php echo htmlspecialchars($profileData['oUsername'] ?? $userName); ?></span>
+                                        <input type="text" name="username" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oUsername'] ?? $userName); ?>" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3 border-bottom pb-2 align-items-center">
+                                    <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Full Name :</div>
+                                    <div class="col-8">
+                                        <span class="view-mode fw-semibold text-dark"><?php echo htmlspecialchars($profileData['oFullname'] ?? 'N/A'); ?></span>
+                                        <input type="text" name="fullname" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oFullname'] ?? ''); ?>" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3 border-bottom pb-2 align-items-center">
+                                    <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Assigned Position :</div>
+                                    <div class="col-8">
+                                        <span class="view-mode text-uppercase fs-7"><?php echo htmlspecialchars($profileData['oPosition'] ?? 'N/A'); ?></span>
+                                        <input type="text" name="position" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oPosition'] ?? 'N/A'); ?>" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3 border-bottom pb-2 align-items-center">
+                                    <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Postcode :</div>
+                                    <div class="col-8">
+                                        <span class="view-mode font-monospace text-secondary fw-bold"><?php echo htmlspecialchars($profileData['oPostcode'] ?? '0000'); ?></span>
+                                        <input type="number" name="postcode" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oPostcode'] ?? '0000'); ?>" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2 align-items-center edit-mode d-none">
+                                    <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">New Password:</div>
+                                    <div class="col-8">
+                                        <input type="password" name="password" class="form-control form-control-sm custom-input">
+                                        <input type="hidden" name="action" value="update_profile">
+                                        <input type="hidden" name="active" value="1">
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row mb-3 border-bottom pb-2 align-items-center">
-                                <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Username :</div>
-                                <div class="col-8">
-                                    <span class="view-mode text-dark fw-semibold"><?php echo htmlspecialchars($profileData['oUsername'] ?? $userName); ?></span>
-                                    <input type="text" name="username" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oUsername'] ?? $userName); ?>" required>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3 border-bottom pb-2 align-items-center">
-                                <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Full Name :</div>
-                                <div class="col-8">
-                                    <span class="view-mode fw-semibold text-dark"><?php echo htmlspecialchars($profileData['oFullname'] ?? 'N/A'); ?></span>
-                                    <input type="text" name="fullname" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oFullname'] ?? ''); ?>" required>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3 border-bottom pb-2 align-items-center">
-                                <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Assigned Position :</div>
-                                <div class="col-8">
-                                    <span class="view-mode text-uppercase fs-7"><?php echo htmlspecialchars($profileData['oPosition'] ?? 'N/A'); ?></span>
-                                    <input type="text" name="position" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oPosition'] ?? 'N/A'); ?>" required>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3 border-bottom pb-2 align-items-center">
-                                <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Postcode :</div>
-                                <div class="col-8">
-                                    <span class="view-mode font-monospace text-secondary fw-bold"><?php echo htmlspecialchars($profileData['oPostcode'] ?? '0000'); ?></span>
-                                    <input type="number" name="postcode" class="form-control form-control-sm edit-mode custom-input d-none" value="<?php echo htmlspecialchars($profileData['oPostcode'] ?? '0000'); ?>" required>
-                                </div>
-                            </div>
-
-                            <div class="row mb-2 align-items-center edit-mode d-none">
-                                <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">New Password:</div>
-                                <div class="col-8">
-                                    <input type="password" name="password" class="form-control form-control-sm custom-input">
-                                    <input type="hidden" name="action" value="update_profile">
-                                    <input type="hidden" name="active" value="1">
-                                </div>
+                            <div id="edit-actions-footer" class="card-footer flex_box_center bg-light border-top py-2 text-end d-none">
+                                <button type="button" id="btn-cancel-edit" class="primary_btn cancel_btn">Cancel</button>
+                                <button type="submit" class="primary_btn">Save Changes</button>
                             </div>
                         </div>
-
-                        <div id="edit-actions-footer" class="card-footer flex_box_center bg-light border-top py-2 text-end d-none">
-                            <button type="button" id="btn-cancel-edit" class="primary_btn cancel_btn">Cancel</button>
-                            <button type="submit" class="primary_btn">Save Changes</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -120,9 +120,11 @@ $columnsList = ['Main', 'Add', 'Edit', 'View', 'Save', 'Post', 'Cancel', 'Print'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Permissions</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/media.css">
+    <link rel="icon" href="<?php echo $base_path; ?>assets/images/favicon.png">
     <script src="../assets/js/user_permission_sync.js" defer></script>
-     <script>
+    <script>
         if (localStorage.getItem('sidebarCollapsed') === 'true') {
             document.documentElement.classList.add('sidebar-collapsed-preload');
         }
@@ -132,80 +134,120 @@ $columnsList = ['Main', 'Add', 'Edit', 'View', 'Save', 'Post', 'Cancel', 'Print'
 
 <body class="bg-white text-dark">
     <?php require __DIR__ . '/../includes/sidebar.php'; ?>
-   <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
+    <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
 
         <div class="navbar_title">
             <h1 class="h1 text-uppercase mb-0">User Permissions</h1>
         </div>
-        
+
         <div class="d-flex">
-             <a href="user_accounts.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
+            <a href="user_accounts.php" class="primary_btn btn-sm btn-outline-light me-1">Back</a>
         </div>
     </nav>
 
-    <div class="container-fluid px-4 user_perm_con">
+    <div class="main_parent">
+        <div class="wrapper">
+            <div class="main_parent_con">
 
-            <div class="table-responsive border rounded custom-table-shadow table-wrapper table_parent">
-            <div class="user_saved">
-                     <span id="syncStatus" class="small text-success-brand ms-2 fw-bold text-uppercase fs-7"></span>
-                </div>
-                <table class="table table-hover table-bordered table-sm align-middle small text-center m-0">
-                    <thead>
-                        <tr class="bg-light text-secondary text-uppercase fs-7" style="border-bottom: 2px solid #cbd5e1;">
-                            <th class="py-2" style="width: 4%;">ID</th>
-                            <th style="text-align: left; width: 22%;" class="ps-3">Module Name</th>
-                            <?php foreach ($columnsList as $col): ?>
-                                <th style="font-weight: 700;"><?php echo $col; ?></th>
-                            <?php endforeach; ?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($modules)): ?>
-                            <tr>
-                                <td colspan="16" class="text-center text-muted py-4 fw-bold">No records found.</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($modules as $mod):
-                                $mId = $mod['oModuleid'];
-                                $rights = $access[$mId] ?? [];
-                            ?>
-                                <tr>
-                                    <td class="font-monospace text-secondary fw-bold"><?php echo htmlspecialchars($mId); ?></td>
-                                    <td class="text-start text-dark fw-bold ps-3"><?php echo htmlspecialchars($mod['oModulename']); ?></td>
+                <div class="container-fluid px-4 user_perm_con">
 
-                                    <?php foreach ($columnsList as $col):
-                                        if ($col === 'Supervisor') {
-                                            $dbKey = 'oSupervisor';
-                                        } elseif ($col === 'Manager') {
-                                            $dbKey = 'oManager';
-                                        } else {
-                                            $dbKey = 'o' . $col;
-                                        }
-
-                                        $checked = (isset($rights[$dbKey]) && (int)$rights[$dbKey] === 1) ? 'checked' : '';
-                                    ?>
-                                        <td>
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <input type="checkbox"
-                                                    class="form-check-input custom-switch permission-checkbox m-0"
-                                                    data-module="<?php echo htmlspecialchars($mId); ?>"
-                                                    data-column="<?php echo htmlspecialchars($col); ?>"
-                                                    value="1"
-                                                    style="cursor: pointer; width: 1.15rem; height: 1.15rem;"
-                                                    <?php echo $checked; ?>>
-                                            </div>
-                                        </td>
+                    <div class="table-responsive border rounded custom-table-shadow table-wrapper table_parent">
+                        <div class="user_saved">
+                            <span id="syncStatus" class="small text-success-brand ms-2 fw-bold text-uppercase fs-7"></span>
+                        </div>
+                        <table class="table table-hover table-bordered table-sm align-middle small text-center m-0">
+                            <thead>
+                                <tr class="bg-light text-secondary text-uppercase fs-7" style="border-bottom: 2px solid #cbd5e1;">
+                                    <th class="py-2" style="width: 4%;">ID</th>
+                                    <th style="text-align: left; width: 22%;" class="ps-3">Module Name</th>
+                                    <?php foreach ($columnsList as $col): ?>
+                                        <th style="font-weight: 700;"><?php echo $col; ?></th>
                                     <?php endforeach; ?>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div> 
+                            </thead>
+                            <tbody>
+                                <?php if (empty($modules)): ?>
+                                    <tr>
+                                        <td colspan="16" class="text-center text-muted py-4 fw-bold">No records found.</td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($modules as $mod):
+                                        $mId = $mod['oModuleid'];
+                                        $rights = $access[$mId] ?? [];
+                                    ?>
+                                        <tr>
+                                            <td class="font-monospace text-secondary fw-bold"><?php echo htmlspecialchars($mId); ?></td>
+                                            <td class="text-start text-dark fw-bold ps-3"><?php echo htmlspecialchars($mod['oModulename']); ?></td>
 
+                                            <?php foreach ($columnsList as $col):
+                                                if ($col === 'Supervisor') {
+                                                    $dbKey = 'oSupervisor';
+                                                } elseif ($col === 'Manager') {
+                                                    $dbKey = 'oManager';
+                                                } else {
+                                                    $dbKey = 'o' . $col;
+                                                }
+
+                                                $checked = (isset($rights[$dbKey]) && (int)$rights[$dbKey] === 1) ? 'checked' : '';
+                                            ?>
+                                                <td>
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <input type="checkbox"
+                                                            class="form-check-input custom-switch permission-checkbox m-0"
+                                                            data-module="<?php echo htmlspecialchars($mId); ?>"
+                                                            data-column="<?php echo htmlspecialchars($col); ?>"
+                                                            value="1"
+                                                            style="cursor: pointer; width: 1.15rem; height: 1.15rem;"
+                                                            <?php echo $checked; ?>>
+                                                    </div>
+                                                </td>
+                                            <?php endforeach; ?>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-    
-    
+
+
+    <!-- Footer -->
+    <footer class=" footer_intro">
+        <div class="footer_content">
+            <div class="wrapper">
+                <div class="footer_container">
+                    <div class="footer_img_content">
+                        <figure><img src="../assets/images/nong_atoy_head.png" alt="Footer Logo"></figure>
+                        <p>To become the customer's TOP OF MIND for building materials and home improvement needs in Cebu in 2027</p>
+                    </div>
+
+                    <div class="footer_info">
+                        <div class="footer_help">
+                            <p>Need Help? <span><a href="#">Contact IT Support</a></span></p>
+                        </div>
+                        <div class="footer_values">
+                            <figure><img src="../assets/images/footer-img.png" alt="Values"></figure>
+                        </div>
+                        <div class="copyright">
+                            &copy; Copyright
+                            <?php
+                            $start_year = '2026';
+                            $current_year = date('Y');
+                            $copyright = ($current_year == $start_year) ? $start_year : $current_year;
+                            echo $copyright; ?>
+                            <span class="company_name">Atlantic Hardware.</span>
+                            <span><br> All rights reserved.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script>
         const targetUserId = "<?php echo urlencode($userId); ?>";
     </script>

@@ -75,6 +75,7 @@ mysqli_close($conn);
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/style.css">
     <link rel="stylesheet" href="<?php echo $base_path; ?>assets/css/media.css">
+    <link rel="icon" href="<?php echo $base_path; ?>assets/images/favicon.png">
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
     <script>
         if (localStorage.getItem('sidebarCollapsed') === 'true') {
@@ -99,61 +100,62 @@ mysqli_close($conn);
     </nav>
 
     <div class="main_parent">
-
         <div class="wrapper">
-            <!-- Header Controls -->
-            <div class="header_controls">
-                <h3 class="m-0">Personnel Management</h3>
-                <div>
-                    <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
-                        + Add Personnel
-                    </button>
+            <div class="main_parent_con">
+                <!-- Header Controls -->
+                <div class="header_controls">
+                    <h3 class="m-0">Personnel Management</h3>
+                    <div>
+                        <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
+                            + Add Personnel
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <?php if (!empty($message)): ?>
-                <div class="alert alert-<?= $msgType ?> alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($message) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+                <?php if (!empty($message)): ?>
+                    <div class="alert alert-<?= $msgType ?> alert-dismissible fade show" role="alert">
+                        <?= htmlspecialchars($message) ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
 
-            <!-- Personnel List Table -->
-            <div class="table-responsive bg-white border rounded shadow-sm">
-                <table class="table table-hover align-middle m-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="text-center" style="width: 15%;">#</th>
-                            <th style="width: 55%;">Personnel Name</th>
-                            <th class="text-center" style="width: 30%;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="personnelTableBody">
-                        <?php if (empty($personnelList)): ?>
+                <!-- Personnel List Table -->
+                <div class="table-responsive bg-white border rounded shadow-sm">
+                    <table class="table table-hover align-middle m-0">
+                        <thead class="table-light">
                             <tr>
-                                <td colspan="3" class="text-center text-muted py-4">No personnel found.</td>
+                                <th class="text-center" style="width: 15%;">#</th>
+                                <th style="width: 55%;">Personnel Name</th>
+                                <th class="text-center" style="width: 30%;">Status</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($personnelList as $index => $person): ?>
-                                <?php
-                                $isActive = ($person['status'] === '1' || $person['status'] === 1 || $person['status'] === 'Active');
-                                ?>
+                        </thead>
+                        <tbody id="personnelTableBody">
+                            <?php if (empty($personnelList)): ?>
                                 <tr>
-                                    <td class="text-center text-secondary font-monospace"><?= $index + 1 ?></td>
-                                    <td class="fw-bold"><?= htmlspecialchars($person['personnel_name']) ?></td>
-                                    <td class="text-center">
-                                        <button type="button"
-                                            class="btn-toggle-status border-0 bg-transparent  <?= $isActive ? 'text-success' : 'text-danger'; ?>"
-                                            data-id="<?= htmlspecialchars($person['personnel_id']); ?>"
-                                            id="status-display-<?= htmlspecialchars($person['personnel_id']); ?>">
-                                            <?= $isActive ? 'Active' : 'Inactive'; ?>
-                                        </button>
-                                    </td>
+                                    <td colspan="3" class="text-center text-muted py-4">No personnel found.</td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php else: ?>
+                                <?php foreach ($personnelList as $index => $person): ?>
+                                    <?php
+                                    $isActive = ($person['status'] === '1' || $person['status'] === 1 || $person['status'] === 'Active');
+                                    ?>
+                                    <tr>
+                                        <td class="text-center text-secondary font-monospace"><?= $index + 1 ?></td>
+                                        <td class="fw-bold"><?= htmlspecialchars($person['personnel_name']) ?></td>
+                                        <td class="text-center">
+                                            <button type="button"
+                                                class="btn-toggle-status border-0 bg-transparent  <?= $isActive ? 'text-success' : 'text-danger'; ?>"
+                                                data-id="<?= htmlspecialchars($person['personnel_id']); ?>"
+                                                id="status-display-<?= htmlspecialchars($person['personnel_id']); ?>">
+                                                <?= $isActive ? 'Active' : 'Inactive'; ?>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
