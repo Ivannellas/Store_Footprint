@@ -2319,6 +2319,9 @@ footer.footer_intro {
   border: 1px solid #e2ebd0 !important;
   box-shadow: 0 4px 12px rgba(33, 140, 60, 0.05) !important;
   overflow: hidden;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 508px;
 }
 
 /* Table Header Overrides (Overrides .table-light) */
