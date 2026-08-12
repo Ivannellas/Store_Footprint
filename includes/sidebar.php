@@ -65,6 +65,16 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                 </a>
             </li>
         <?php endif; ?>
+
+        <!-- Module 15: ADD PERSONNEL -->
+        <?php if (hasAccess(15, $isSuperAdmin, $allowedModules)): ?>
+            <li class="menu-item current_page_item mb-2">
+                <a href="<?php echo $base_path; ?>views/add_personnel.php" class="add_personnel menu-link d-flex align-items-center justify-content-between">
+                    Add Personnel
+                </a>
+            </li>
+        <?php endif; ?>
+
         <li class="menu-item mb-2">
             <a href="<?php echo $base_path; ?>logout.php" class="sidebar_logout menu-link d-flex align-items-center justify-content-between">
                 Logout

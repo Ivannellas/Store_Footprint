@@ -40,10 +40,10 @@ $timeRanges = [
     "6:01 PM - 8:00 PM"
 ];
 
-// default time range for form selection
+// Default time range for form selection
 function getDefaultTimeRange(): string
 {
-    $targetTime = strtotime('-1 hour'); // Minus 1 hour sa kasamtangang oras
+    $targetTime = strtotime('-1 hour'); // Minus 1 hour
     $targetHour = (int)date('G', $targetTime); // 0 - 23 format
 
     if ($targetHour >= 6 && $targetHour < 8)   return "6:00 AM - 8:00 AM";
@@ -53,8 +53,8 @@ function getDefaultTimeRange(): string
     if ($targetHour == 11)                      return "11:01 AM - 12:00 PM";
     if ($targetHour == 12)                      return "12:01 PM - 1:00 PM";
     if ($targetHour == 13)                      return "1:01 PM - 2:00 PM";
-    if ($targetHour == 14)                      return "2:01 PM - 3:00 PM";
-    if ($targetHour == 15)                      return "3:01 PM - 4:00 PM";
+    if ($targetHour == 14)                      return "3:01 PM - 4:00 PM";
+    if ($targetHour == 15)                      return "4:01 PM - 5:00 PM";
     if ($targetHour == 16)                      return "4:01 PM - 5:00 PM";
     if ($targetHour == 17)                      return "5:01 PM - 6:00 PM";
     if ($targetHour >= 18 && $targetHour < 20) return "6:01 PM - 8:00 PM";
@@ -64,7 +64,7 @@ function getDefaultTimeRange(): string
 
 $defaultTimeRange = getDefaultTimeRange();
 
-// Get allowed module IDs for non-superadmin
+// Open DB Connection
 $conn = getDBConnection();
 $allowedModules = [];
 
@@ -81,6 +81,16 @@ if ($isLoggedIn && !$isSuperAdmin) {
     }
 }
 
+// Fetch Active Personnel List early before controller calls or connection changes
+$activePersonnelList = [];
+$queryPersonnel = "SELECT personnel_name FROM tbl_footprint_personnel WHERE status = 1 ORDER BY personnel_name ASC";
+if ($resultPersonnel = $conn->query($queryPersonnel)) {
+    while ($row = $resultPersonnel->fetch_assoc()) {
+        $activePersonnelList[] = $row['personnel_name'];
+    }
+    $resultPersonnel->free();
+}
+
 $footprintController = new FootprintController($conn);
 
 // Track active tab dynamically
@@ -92,14 +102,15 @@ unset($_SESSION['error_message']);
 
 // Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $type      = $_POST['type'] ?? 'store';
-    $name      = trim($_POST['name'] ?? '');
-    $timeRange = trim($_POST['timeRange'] ?? '');
-    $count     = (int)($_POST['count'] ?? 0);
+    $type         = $_POST['type'] ?? 'store';
+    $name         = trim($_POST['name'] ?? '');
+    $selectedDate = trim($_POST['date'] ?? date('Y-m-d'));
+    $timeRange    = trim($_POST['timeRange'] ?? '');
+    $count        = (int)($_POST['count'] ?? 0);
 
     $formData = [
         'opersonnel'  => $name,
-        'odate'       => date('Y-m-d'),
+        'odate'       => $selectedDate,
         'otimerange'  => $timeRange,
         'ocount'      => $count,
         'added_by'    => $userName
@@ -127,7 +138,9 @@ $parkingFootprints = $footprintController->RenderParkingFootprints($todayDate);
 $storeFootprintsHistory   = $footprintController->RenderStoreFootprints(null) ?? [];
 $parkingFootprintsHistory = $footprintController->RenderParkingFootprints(null) ?? [];
 
-mysqli_close($conn);
+if ($conn) {
+    mysqli_close($conn);
+}
 
 function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bool
 {
@@ -231,7 +244,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     <input type="hidden" name="type" value="store">
 
                                     <div class="flex_box_between">
-                                        <!-- ADDED: Date Field -->
                                         <div class="oDate_range">
                                             <label for="dateStore">Select Date:</label>
                                             <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
@@ -240,6 +252,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         <div class="oTime_range">
                                             <label for="timeRangeStore">Time Range:</label>
                                             <select id="timeRangeStore" name="timeRange" class="form-select" required>
+                                                <option value="" disabled <?php echo empty($defaultTimeRange) ? 'selected' : ''; ?>>Select Time Range</option>
                                                 <?php foreach ($timeRanges as $range): ?>
                                                     <option value="<?php echo htmlspecialchars($range); ?>" <?php echo ($range === $defaultTimeRange) ? 'selected' : ''; ?>>
                                                         <?php echo htmlspecialchars($range); ?>
@@ -251,13 +264,18 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                                     <div class="flex_box_between">
                                         <div class="oPersonnel">
-                                            <label for="oPersonnel">Choose Personnel</label>
-                                            <input type="text" id="nameStore" name="name"
-                                                oninput="this.value = this.value.toUpperCase()"
-                                                style="text-transform: uppercase;" required>
+                                            <label for="nameStore">Choose Personnel</label>
+                                            <select id="nameStore" name="name" class="form-select" required>
+                                                <option value="" disabled selected>Select Personnel</option>
+                                                <?php foreach ($activePersonnelList as $personnel): ?>
+                                                    <option value="<?php echo htmlspecialchars($personnel); ?>">
+                                                        <?php echo htmlspecialchars($personnel); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                         <div class="oTraffic">
-                                            <label for="otraffic">Input Traffic</label>
+                                            <label for="countStore">Input Traffic</label>
                                             <input class="form_input" type="number" id="countStore" name="count" min="1" required>
                                         </div>
                                     </div>
@@ -365,10 +383,9 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     <input type="hidden" name="type" value="parking">
 
                                     <div class="flex_box_between">
-                                        <!-- ADDED: Date Field -->
                                         <div class="oDate_range">
-                                            <label for="dateStore">Select Date:</label>
-                                            <input type="date" id="dateStore" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                            <label for="dateParking">Select Date:</label>
+                                            <input type="date" id="dateParking" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
                                         </div>
 
                                         <div class="oTime_range">
@@ -386,13 +403,18 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                                     <div class="flex_box_between">
                                         <div class="oPersonnel">
-                                            <label for="oPersonnel">Choose Personnel</label>
-                                            <input type="text" id="nameParking" name="name"
-                                                oninput="this.value = this.value.toUpperCase()"
-                                                style="text-transform: uppercase;" required>
+                                            <label for="nameParking">Choose Personnel</label>
+                                            <select id="nameParking" name="name" class="form-select" required>
+                                                <option value="" disabled selected>Select Personnel</option>
+                                                <?php foreach ($activePersonnelList as $personnel): ?>
+                                                    <option value="<?php echo htmlspecialchars($personnel); ?>">
+                                                        <?php echo htmlspecialchars($personnel); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                         <div class="oTraffic">
-                                            <label for="otraffic">Input Traffic</label>
+                                            <label for="countParking">Input Traffic</label>
                                             <input type="number" id="countParking" name="count" min="1" required>
                                         </div>
                                     </div>
