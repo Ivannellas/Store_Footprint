@@ -17,11 +17,11 @@ $isSuperAdmin = $isLoggedIn && isset($_SESSION['is_super_admin']) && $_SESSION['
 date_default_timezone_set('Asia/Manila');
 $hour = (int)date('G');
 if ($hour >= 5 && $hour < 12) {
-    $timeContext = "Good Morning";
+    $timeContext = "Morning";
 } elseif ($hour >= 12 && $hour < 18) {
-    $timeContext = "Good Afternoon";
+    $timeContext = "Afternoon";
 } else {
-    $timeContext = "Good Evening";
+    $timeContext = "Evening";
 }
 
 // Fixed time ranges list
@@ -220,7 +220,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                 <div class="index_flexbox">
                     <div class="landing_date_info index_title">
                         <h1 class="text-capitalize">
-                            Atlantic, <?php echo $timeContext; ?>, <?php echo htmlspecialchars($userName); ?>
+                            Atlantic <?php echo $timeContext; ?>, <?php echo htmlspecialchars($userName); ?>
                         </h1>
                         <p class="mb-1 text-muted">
                             <?php echo date('l, F j, Y'); ?>
@@ -264,15 +264,32 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                                     <div class="flex_box_between">
                                         <div class="oPersonnel">
-                                            <label for="nameStore">Choose Personnel</label>
-                                            <select id="nameStore" name="name" class="form-select" required>
-                                                <option value="" disabled selected>Select Personnel</option>
-                                                <?php foreach ($activePersonnelList as $personnel): ?>
-                                                    <option value="<?php echo htmlspecialchars($personnel); ?>">
-                                                        <?php echo htmlspecialchars($personnel); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
+                                            <label for="personnelInput">Choose Personnel</label>
+                                            <div class="personnel-select-wrapper" id="personnelWrapper">
+                                                <input
+                                                    type="text"
+                                                    id="personnelInput"
+                                                    class="personnel-search-input"
+                                                    placeholder="Select Personnel"
+                                                    autocomplete="off"
+                                                    required>
+                                                <!-- Modern Chevron SVG Icon -->
+                                                <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#495057" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+
+                                                <!-- Hidden input for form submission -->
+                                                <input type="hidden" id="nameStore" name="name" required>
+
+                                                <!-- Dropdown menu -->
+                                                <div class="personnel-dropdown-list" id="personnelDropdown">
+                                                    <?php foreach ($activePersonnelList as $personnel): ?>
+                                                        <div class="personnel-dropdown-item" data-value="<?php echo htmlspecialchars($personnel); ?>">
+                                                            <?php echo htmlspecialchars($personnel); ?>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="oTraffic">
                                             <label for="countStore">Input Traffic</label>
@@ -321,7 +338,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     </table>
                                 </div>
 
-                                <div class="modal_btn" >
+                                <div class="modal_btn">
                                     <a id="footModalBtn" class="primary_btn" href="#">Foot Traffic History</a>
                                 </div>
 
@@ -411,15 +428,31 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                                     <div class="flex_box_between">
                                         <div class="oPersonnel">
-                                            <label for="nameParking">Choose Personnel</label>
-                                            <select id="nameParking" name="name" class="form-select" required>
-                                                <option value="" disabled selected>Select Personnel</option>
-                                                <?php foreach ($activePersonnelList as $personnel): ?>
-                                                    <option value="<?php echo htmlspecialchars($personnel); ?>">
-                                                        <?php echo htmlspecialchars($personnel); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
+                                            <label for="parkingPersonnelInput">Choose Personnel</label>
+                                            <div class="personnel-select-wrapper" id="parkingPersonnelWrapper">
+                                                <input
+                                                    type="text"
+                                                    id="parkingPersonnelInput"
+                                                    class="personnel-search-input"
+                                                    placeholder="Search or select..."
+                                                    autocomplete="off"
+                                                    required>
+                                                <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#495057" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+
+                                                <!-- Hidden input storing value for form submission -->
+                                                <input type="hidden" id="nameParking" name="name" required>
+
+                                                <!-- Dropdown menu -->
+                                                <div class="personnel-dropdown-list" id="parkingPersonnelDropdown">
+                                                    <?php foreach ($activePersonnelList as $personnel): ?>
+                                                        <div class="personnel-dropdown-item" data-value="<?php echo htmlspecialchars($personnel); ?>">
+                                                            <?php echo htmlspecialchars($personnel); ?>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="oTraffic">
                                             <label for="countParking">Input Traffic</label>
@@ -469,7 +502,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 </div>
 
                                 <div class="modal_btn">
-                                    <a  id="vehicleModalBtn" class="primary_btn" href="#">Vehicle History</a>
+                                    <a id="vehicleModalBtn" class="primary_btn" href="#">Vehicle History</a>
                                 </div>
 
                                 <!-- Modal Overlay Window -->

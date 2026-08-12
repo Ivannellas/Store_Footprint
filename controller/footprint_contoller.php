@@ -37,7 +37,7 @@ class FootprintController
         if ($this->footprintModel->HasExistingLog($tableName, $personnel, $date, $timeRange)) {
             return [
                 'success' => false,
-                'message' => "'" . htmlspecialchars($personnel) . "' has already logged for time range: " . htmlspecialchars($timeRange) . "."
+                'message' => "'" . htmlspecialchars($personnel) . "' has already logged for: " . htmlspecialchars($timeRange) . "."
             ];
         }
 

@@ -833,7 +833,6 @@ footer.footer_intro {
   gap: 20px;
 }
 
-
 .tab_parent {
   padding: 40px 35px;
   background: #eee;
@@ -869,8 +868,12 @@ footer.footer_intro {
 .tab button:hover {
   cursor: pointer;
 }
-.tab button.active { background: var(--secondaryColor); color: #fff; opacity: 1; transform: scale(1);}
-
+.tab button.active {
+  background: var(--secondaryColor);
+  color: #fff;
+  opacity: 1;
+  transform: scale(1);
+}
 
 .tabcontent {
   display: none;
@@ -881,13 +884,15 @@ footer.footer_intro {
   text-align: center;
 }
 
-.form_store, .form_parking{
+.form_store,
+.form_parking {
   width: 100%;
   max-width: 500px;
 }
 
-.form_store_history, .form_parking_history{
-  width: 100%
+.form_store_history,
+.form_parking_history {
+  width: 100%;
 }
 
 .form_store,
@@ -910,11 +915,11 @@ footer.footer_intro {
   box-shadow: 5px 5px 5px rgba(0 0 0/0.2);
 }
 
-.form_store, .form_parking {
+.form_store,
+.form_parking {
   display: grid;
   place-items: center;
 }
-
 
 .traffic_form {
   background-color: #ffffff;
@@ -943,7 +948,9 @@ footer.footer_intro {
   color: #2b2b2b;
   font-weight: 500;
   box-sizing: border-box; /* Ensures padding doesn't break input widths */
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   outline: none;
 }
 
@@ -955,7 +962,7 @@ footer.footer_intro {
 .traffic_form .oDate_range,
 .traffic_form .oTime_range,
 .traffic_form .oTraffic,
-.traffic_form .oPersonnel{
+.traffic_form .oPersonnel {
   width: 49%;
 }
 
@@ -963,72 +970,160 @@ footer.footer_intro {
 .oDate_range,
 .oTime_range,
 .oTraffic,
-.oPersonnel{
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    text-align: left;
+.oPersonnel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  text-align: left;
 }
 
 /* Label styling - gamit ang Heading font & Secondary color */
 .traffic_form label {
-    font-family: var(--headingTxt);
-    font-size: 0.875rem; /* 14px */
-    font-weight: 600;
-    color: var(--secondaryColor);
-    letter-spacing: 0.02em;
-    text-align: left;
-    width: 100%;
+  font-family: var(--headingTxt);
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  color: var(--secondaryColor);
+  letter-spacing: 0.02em;
+  text-align: left;
+  width: 100%;
 }
-
 
 /* Input (Date) ug Select (Time Range) styling - gamit ang Paragraph font */
 .oDate_range .form-control,
 .oTime_range .form-select,
-.oTraffic .form_input{
-    width: 100%;
-    padding: 10px 14px;
-    font-family: var(--parag);
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #2b2b2b;
-    background-color: #ffffff;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    transition: all 0.2s ease-in-out;
-    outline: none;
-    box-sizing: border-box;
+.oTraffic .form_input {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: var(--parag);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2b2b2b;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  box-sizing: border-box;
 }
 
 /* Hover State - slight accent using primary color border */
 .oDate_range .form-control:hover,
 .oTime_range .form-select:hover,
 .oTraffic .form_input:hover {
-    border-color: var(--primaryColor);
+  border-color: var(--primaryColor);
 }
 
 /* Focus State - Primary Color ring/glow when active */
 .oDate_range .form-control:focus,
 .oTime_range .form-select:focus {
-    border-color: var(--primaryColor);
-    /* Converting primary green (#218c3c) to RGBA glow (33, 140, 60) */
-    box-shadow: 0 0 0 3px rgba(33, 140, 60, 0.18); 
+  border-color: var(--primaryColor);
+  /* Converting primary green (#218c3c) to RGBA glow (33, 140, 60) */
+  box-shadow: 0 0 0 3px rgba(33, 140, 60, 0.18);
 }
 
 /* Custom icon styling for Date picker calendar */
 .oDate_range .form-control::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    filter: invert(30%) sepia(85%) saturate(450%) hue-rotate(95deg) brightness(90%); /* Colors calendar icon to match Primary Green */
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
+  cursor: pointer;
+  filter: invert(30%) sepia(85%) saturate(450%) hue-rotate(95deg)
+    brightness(90%); /* Colors calendar icon to match Primary Green */
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
 .oDate_range .form-control::-webkit-calendar-picker-indicator:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
+/* Ensure the wrapper is the relative parent */
+.personnel-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Styled search input to match your form controls */
+.personnel-search-input {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  font-size: 14px;
+  color: #333333;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  box-sizing: border-box;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.personnel-search-input:focus {
+  border-color: #003366;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.15);
+}
+
+/* Dropdown Arrow Icon */
+.dropdown-chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+/* Floating Dropdown List */
+.personnel-dropdown-list {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 180px; /* Displays ~5 items */
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  z-index: 9999;
+  padding: 4px 0;
+}
+
+.personnel-dropdown-list.show {
+  display: block;
+}
+
+/* Options */
+.personnel-dropdown-item {
+  padding: 8px 14px;
+  font-size: 14px;
+  color: #212529;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.personnel-dropdown-item.active,
+.personnel-dropdown-item:hover {
+  background-color: #003366;
+  color: #ffffff;
+}
+
+/* Scrollbar Styling */
+.personnel-dropdown-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.personnel-dropdown-list::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 3px;
+}
+
+.personnel-dropdown-list::-webkit-scrollbar-thumb:hover {
+  background-color: #999999;
+}
 
 .flex_box_between {
   display: flex;
@@ -1058,7 +1153,9 @@ footer.footer_intro {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .submit_btn .primary_btn:hover {
@@ -1314,7 +1411,7 @@ footer.index_footer {
 
 .modal_btn .primary_btn {
   width: max-content;
-  margin:0 auto;
+  margin: 0 auto;
   padding: 12px;
   background-color: #1e8e3e;
   color: #ffffff;
@@ -1323,7 +1420,9 @@ footer.index_footer {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .modal_btn .primary_btn:hover {
@@ -1834,7 +1933,6 @@ footer.footer_intro {
 }
 .sidebar li .add_personnel:before {
   content: url(../images/icon/add_person.png);
-
 }
 .sidebar li .sidebar_logout:before {
   content: url(../images/icon/logout.png);
@@ -1897,7 +1995,7 @@ footer.footer_intro {
   margin-bottom: 0 !important;
 }
 
-.navbar .primary_btn{
+.navbar .primary_btn {
   width: 115px !important;
 }
 
@@ -2182,37 +2280,34 @@ footer.footer_intro {
 
 .header_controls {
   display: flex;
-  justify-content: space-between; 
-  align-items: center;            
+  justify-content: space-between;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 1.5rem;          
+  margin-bottom: 1.5rem;
   padding: 4px 0;
 }
 
-
-.header_controls h3, 
+.header_controls h3,
 .header_controls .m-0 {
   font-family: var(--headingTxt);
-  color: #1c251e;               
-  font-size: 1.35rem;             
+  color: #1c251e;
+  font-size: 1.35rem;
   font-weight: 700;
   letter-spacing: -0.3px;
   line-height: 1.2;
-  margin: 0;                     
+  margin: 0;
 }
-
 
 .header_controls h3::before {
   content: "";
   display: inline-block;
   width: 4px;
   height: 1.1em;
-  background-color: #218c3c;    
+  background-color: #218c3c;
   border-radius: 2px;
   margin-right: 10px;
   vertical-align: middle;
 }
-
 
 /* Container Box Customization */
 .table-responsive.bg-white {
@@ -2226,7 +2321,9 @@ footer.footer_intro {
 .table-responsive .table thead.table-light tr th {
   background-color: #218c3c !important;
   color: #ffffff !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   letter-spacing: 0.5px;
@@ -2333,7 +2430,9 @@ footer.footer_intro {
 .custom-table-shadow table thead tr th {
   background-color: #218c3c !important;
   color: #ffffff !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
   font-weight: 600;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
