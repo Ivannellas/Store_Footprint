@@ -412,7 +412,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <input
                                                                 type="text"
                                                                 id="date-range-picker"
-                                                                class="custom-input"
+                                                                class="filter-custom-input"
                                                                 placeholder="Choose date range..."
                                                                 readonly />
                                                         </div>
@@ -424,11 +424,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                                                     <!-- Action Buttons -->
                                                     <div class="filter-actions">
-                                                        <button type="button" onclick="applyFilter('foot')" class="custom-btn btn-primary">
+                                                        <button type="button" onclick="applyFilter('foot')" class="filter-custom-btn btn-primary">
                                                             <figure><img src="assets/images/icon/filter.png" alt="filter"></figure>
                                                             Filter
                                                         </button>
-                                                        <button type="button" onclick="clearFilter('foot')" class="custom-btn btn-secondary">
+                                                        <button type="button" onclick="clearFilter('foot')" class="filter-custom-btn btn-secondary">
                                                             <figure><img src="assets/images/icon/reset.png" alt="filter"></figure>
                                                             Reset
                                                         </button>
@@ -441,7 +441,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <input
                                                                 type="text"
                                                                 id="table-search-input"
-                                                                class="custom-input"
+                                                                class="filter-custom-input"
                                                                 placeholder="Search... "
                                                                 onkeyup="applyFilter('foot')" />
                                                         </div>
@@ -652,7 +652,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <input
                                                                 type="text"
                                                                 id="vehicle-date-range-picker"
-                                                                class="custom-input"
+                                                                class="filter-custom-input"
                                                                 placeholder="Choose date range..."
                                                                 readonly />
                                                         </div>
@@ -664,11 +664,11 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                                                     <!-- Action Buttons -->
                                                     <div class="filter-actions">
-                                                        <button type="button" onclick="applyFilter('vehicle')" class="custom-btn btn-primary">
+                                                        <button type="button" onclick="applyFilter('vehicle')" class="filter-custom-btn btn-primary">
                                                             <figure><img src="assets/images/icon/filter.png" alt="filter"></figure>
                                                             Filter
                                                         </button>
-                                                        <button type="button" onclick="clearFilter('vehicle')" class="custom-btn btn-secondary">
+                                                        <button type="button" onclick="clearFilter('vehicle')" class="filter-custom-btn btn-secondary">
                                                             <figure><img src="assets/images/icon/reset.png" alt="reset"></figure>
                                                             Reset
                                                         </button>
@@ -681,7 +681,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <input
                                                                 type="text"
                                                                 id="vehicle-table-search-input"
-                                                                class="custom-input"
+                                                                class="filter-custom-input"
                                                                 placeholder="Search..."
                                                                 onkeyup="applyFilter('vehicle')" />
                                                         </div>
