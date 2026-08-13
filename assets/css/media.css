@@ -316,10 +316,17 @@ padding: 0 20px;
   padding: 12px 8px;
 }
 
+.filter-search {
+margin-left: 0;
+}
+
 
 }
 
 @media only screen and (max-width: 800px) {
+  .filter-card-group {
+flex: unset;
+}
 }
 
 @media only screen and (max-width: 600px) {
@@ -360,5 +367,9 @@ padding: 0 20px;
     align-items: flex-start;
     gap: 12px;
   }
+
+  .filter-date-range {
+width: 49%;
+}
 
 }

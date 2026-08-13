@@ -401,44 +401,53 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <button class="close-btn" id="closeFootTrafficModal">&times;</button>
                                         </div>
 
-                                        <div class="filter-card mb-4">
-                                            <div class="d-flex flex-wrap align-items-center gap-3">
+                                        <div class="filter-card">
+                                            <div class="filter-card-body">
+                                                <div class="filter-card-grid">
 
-                                                <!-- Live Search Input -->
-                                                <div class="input-group filter-input-group" style="max-width: 280px;">
-                                                    <span class="input-group-text">
-                                                        <i class="bi bi-search text-success"></i>
-                                                    </span>
-                                                    <input
-                                                        type="text"
-                                                        id="table-search-input"
-                                                        class="form-control"
-                                                        placeholder="Search personnel, added by..."
-                                                        onkeyup="applyFilter('foot')" />
+                                                    <!-- Date Range Picker -->
+                                                    <div class="filter-card-group filter-date-range">
+                                                        <div class="input-wrapper">
+                                                            <span class="input-icon-box"></span>
+                                                            <input
+                                                                type="text"
+                                                                id="date-range-picker"
+                                                                class="custom-input"
+                                                                placeholder="Choose date range..."
+                                                                readonly />
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Hidden values for Flatpickr JS binding -->
+                                                    <input type="hidden" id="fromperiod" />
+                                                    <input type="hidden" id="toperiod" />
+
+                                                    <!-- Action Buttons -->
+                                                    <div class="filter-actions">
+                                                        <button type="button" onclick="applyFilter('foot')" class="custom-btn btn-primary">
+                                                            <figure><img src="assets/images/icon/filter.png" alt="filter"></figure>
+                                                            Filter
+                                                        </button>
+                                                        <button type="button" onclick="clearFilter('foot')" class="custom-btn btn-secondary">
+                                                            <figure><img src="assets/images/icon/reset.png" alt="filter"></figure>
+                                                            Reset
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Live Search Input -->
+                                                    <div class="filter-card-group filter-search">
+                                                        <div class="input-wrapper">
+                                                            <span class="input-icon-box"></span>
+                                                            <input
+                                                                type="text"
+                                                                id="table-search-input"
+                                                                class="custom-input"
+                                                                placeholder="Search personnel, added by..."
+                                                                onkeyup="applyFilter('foot')" />
+                                                        </div>
+                                                    </div>
+
                                                 </div>
-
-                                                <!-- Date Range Picker -->
-                                                <div class="input-group filter-input-group" style="max-width: 260px;">
-                                                    <span class="input-group-text">
-                                                        <i class="bi bi-calendar-event text-success"></i>
-                                                    </span>
-                                                    <input type="text" id="date-range-picker" class="form-control" placeholder="Choose date range..." readonly />
-                                                </div>
-
-                                                <!-- Hidden values for Flatpickr JS binding -->
-                                                <input type="hidden" id="fromperiod" />
-                                                <input type="hidden" id="toperiod" />
-
-                                                <!-- Action Buttons -->
-                                                <div class="d-flex gap-2 ms-auto">
-                                                    <button type="button" onclick="applyFilter('foot')" class="btn btn-emerald">
-                                                        <i class="bi bi-funnel-fill me-1"></i> Filter
-                                                    </button>
-                                                    <button type="button" onclick="clearFilter('foot')" class="btn btn-soft-reset">
-                                                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
-                                                    </button>
-                                                </div>
-
                                             </div>
                                         </div>
 
