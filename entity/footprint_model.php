@@ -21,17 +21,18 @@ class FootprintModel
             return false;
         }
 
-        $query = "INSERT INTO {$tableName} (added_by, opersonnel, odate, otimerange, ocount) 
-                  VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO {$tableName} (added_by, opersonnel, odate, otimerange, ocount, void_status) 
+                  VALUES (?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $this->db->prepare($query)) {
             $stmt->bind_param(
-                "ssssi",
+                "ssssii",
                 $data['added_by'],
                 $data['opersonnel'],
                 $data['odate'],
                 $data['otimerange'],
-                $data['ocount']
+                $data['ocount'],
+                $data['void_status']
             );
             $result = $stmt->execute();
             $stmt->close();
@@ -63,7 +64,8 @@ class FootprintModel
                     opersonnel, 
                     odate, 
                     otimerange, 
-                    ocount 
+                    ocount,
+                    void_status
                   FROM {$tableName}";
 
         if ($hasDateFilter) {
@@ -108,7 +110,8 @@ class FootprintModel
                   FROM {$tableName} 
                   WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
                     AND odate = ? 
-                    AND otimerange = ?";
+                    AND otimerange = ?
+                    AND (void_status IS NULL OR void_status != 0)";
 
         if ($stmt = $this->db->prepare($query)) {
             $stmt->bind_param("sss", $personnel, $date, $timeRange);
@@ -120,6 +123,30 @@ class FootprintModel
             return ((int)($row['total'] ?? 0)) > 0;
         }
 
+        return false;
+    }
+
+    /*==============================================================
+    //   Void a footprint record (set void_status = 0)            //
+    ==============================================================*/
+    public function VoidFootprint(string $tableName, int $tableId): bool
+    {
+        $tableName = trim($tableName);
+
+        if (!in_array($tableName, $this->allowedTables, true) || $tableId <= 0) {
+            return false;
+        }
+
+        $query = "UPDATE {$tableName} SET void_status = 0 WHERE otableid = ?";
+
+        if ($stmt = $this->db->prepare($query)) {
+            $stmt->bind_param("i", $tableId);
+            $result = $stmt->execute();
+            $stmt->close();
+            return $result;
+        }
+
+        error_log("Failed to void footprint: " . $this->db->error);
         return false;
     }
 }
