@@ -1729,6 +1729,8 @@ footer.index_footer {
   display: flex;
   flex-direction: column;
   animation: fadeIn 0.25s ease-out;
+  max-height: 700px;
+  padding: 0 0 30px;
 }
 
 @keyframes fadeIn {
@@ -1823,7 +1825,7 @@ footer.index_footer {
 }
 
 .table-container {
-  max-height: 350px; /* Limits table height inside modal */
+  max-height: 700px;
   overflow-y: auto;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
