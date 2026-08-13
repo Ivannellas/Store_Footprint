@@ -63,6 +63,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let activeIndex = -1;
 
     function openDropdown() {
+      // FIX: Re-evaluate option visibility whenever opening the dropdown
+      const filter = personnelInput.value.trim().toLowerCase();
+      options.forEach(function (option) {
+        const text = option.textContent.trim().toLowerCase();
+        option.style.display =
+          !filter || text.includes(filter) ? "block" : "none";
+      });
+
       personnelDropdown.classList.add("show");
       if (personnelWrapper) personnelWrapper.classList.add("open");
     }
@@ -149,6 +157,11 @@ document.addEventListener("DOMContentLoaded", function () {
           personnelInput.value = "";
           if (nameStore) nameStore.value = "";
           personnelInput.setCustomValidity("");
+
+          // FIX: Reset all options back to display block when cleared
+          options.forEach(function (option) {
+            option.style.display = "block";
+          });
         }
       }, 200);
     });
@@ -238,7 +251,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Vehicle Traffic Picker
-    const vehicleRangePicker = document.getElementById("vehicle-date-range-picker");
+    const vehicleRangePicker = document.getElementById(
+      "vehicle-date-range-picker",
+    );
     if (vehicleRangePicker) {
       flatpickr(vehicleRangePicker, {
         mode: "range",
@@ -374,16 +389,15 @@ document.addEventListener("DOMContentLoaded", function () {
   window.applyFilter = function (context) {
     const isVehicle = context === "vehicle";
 
-    const searchInputId = isVehicle ? "vehicle-table-search-input" : "table-search-input";
+    const searchInputId = isVehicle
+      ? "vehicle-table-search-input"
+      : "table-search-input";
     const fromInputId = isVehicle ? "vehicle-fromperiod" : "fromperiod";
     const toInputId = isVehicle ? "vehicle-toperiod" : "toperiod";
     const tableBodyId = isVehicle ? "vehicleTableBody" : "footTableBody";
 
     const searchQuery =
-      document
-        .getElementById(searchInputId)
-        ?.value.toLowerCase()
-        .trim() || "";
+      document.getElementById(searchInputId)?.value.toLowerCase().trim() || "";
     const fromDate = document.getElementById(fromInputId)?.value || "";
     const toDate = document.getElementById(toInputId)?.value || "";
 
@@ -437,8 +451,12 @@ document.addEventListener("DOMContentLoaded", function () {
   window.clearFilter = function (context) {
     const isVehicle = context === "vehicle";
 
-    const searchInputId = isVehicle ? "vehicle-table-search-input" : "table-search-input";
-    const pickerId = isVehicle ? "vehicle-date-range-picker" : "date-range-picker";
+    const searchInputId = isVehicle
+      ? "vehicle-table-search-input"
+      : "table-search-input";
+    const pickerId = isVehicle
+      ? "vehicle-date-range-picker"
+      : "date-range-picker";
     const fromInputId = isVehicle ? "vehicle-fromperiod" : "fromperiod";
     const toInputId = isVehicle ? "vehicle-toperiod" : "toperiod";
 
