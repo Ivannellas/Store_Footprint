@@ -1395,7 +1395,7 @@ tr.row-voided td span {
 }
 
 /* Actual Input Field */
-.custom-input {
+.filter-custom-input {
   width: 100%;
   border: none !important; /* Tangtangon ang default input border kay ang wrapper naay border */
   outline: none !important;
@@ -1406,7 +1406,7 @@ tr.row-voided td span {
   background: transparent;
 }
 
-.custom-input::placeholder {
+.filter-custom-input::placeholder {
   color: var(--text-muted);
   font-weight: 500;
 }
@@ -1423,7 +1423,7 @@ tr.row-voided td span {
   filter: brightness(0) invert(1);
 }
 
-.custom-btn {
+.filter-custom-btn {
   font-family: var(--headingTxt);
   display: inline-flex;
   align-items: center;
