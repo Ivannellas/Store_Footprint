@@ -214,11 +214,12 @@ document.addEventListener("DOMContentLoaded", function () {
     wrapperId: "parkingPersonnelWrapper",
   });
 
-  // Local Flatpickr Initialization for Date Range Picker
+  // Local Flatpickr Initialization for Foot & Vehicle Date Range Pickers
   if (typeof flatpickr !== "undefined") {
-    const rangePicker = document.getElementById("date-range-picker");
-    if (rangePicker) {
-      flatpickr(rangePicker, {
+    // Foot Traffic Picker
+    const footRangePicker = document.getElementById("date-range-picker");
+    if (footRangePicker) {
+      flatpickr(footRangePicker, {
         mode: "range",
         dateFormat: "Y-m-d",
         onClose: function (selectedDates, dateStr, instance) {
@@ -228,6 +229,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const fromInput = document.getElementById("fromperiod");
             const toInput = document.getElementById("toperiod");
+
+            if (fromInput) fromInput.value = startDate;
+            if (toInput) toInput.value = endDate;
+          }
+        },
+      });
+    }
+
+    // Vehicle Traffic Picker
+    const vehicleRangePicker = document.getElementById("vehicle-date-range-picker");
+    if (vehicleRangePicker) {
+      flatpickr(vehicleRangePicker, {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        onClose: function (selectedDates, dateStr, instance) {
+          if (selectedDates.length === 2) {
+            const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
+            const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
+
+            const fromInput = document.getElementById("vehicle-fromperiod");
+            const toInput = document.getElementById("vehicle-toperiod");
 
             if (fromInput) fromInput.value = startDate;
             if (toInput) toInput.value = endDate;
@@ -348,19 +370,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // History Modal Date Range Filter
   // Combined History Table Filter (Date Range + Search Query)
   window.applyFilter = function (context) {
+    const isVehicle = context === "vehicle";
+
+    const searchInputId = isVehicle ? "vehicle-table-search-input" : "table-search-input";
+    const fromInputId = isVehicle ? "vehicle-fromperiod" : "fromperiod";
+    const toInputId = isVehicle ? "vehicle-toperiod" : "toperiod";
+    const tableBodyId = isVehicle ? "vehicleTableBody" : "footTableBody";
+
     const searchQuery =
       document
-        .getElementById("table-search-input")
+        .getElementById(searchInputId)
         ?.value.toLowerCase()
         .trim() || "";
-    const fromDate = document.getElementById("fromperiod")?.value || "";
-    const toDate = document.getElementById("toperiod")?.value || "";
+    const fromDate = document.getElementById(fromInputId)?.value || "";
+    const toDate = document.getElementById(toInputId)?.value || "";
 
-    const tableBodyId =
-      context === "foot" ? "footTableBody" : "vehicleTableBody";
     const tableBody = document.getElementById(tableBodyId);
     if (!tableBody) return;
 
@@ -407,46 +433,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  // Reset Filter Inputs
+  // Reset Filter Inputs (Foot & Vehicle Context Aware)
   window.clearFilter = function (context) {
-    const searchInput = document.getElementById("table-search-input");
+    const isVehicle = context === "vehicle";
+
+    const searchInputId = isVehicle ? "vehicle-table-search-input" : "table-search-input";
+    const pickerId = isVehicle ? "vehicle-date-range-picker" : "date-range-picker";
+    const fromInputId = isVehicle ? "vehicle-fromperiod" : "fromperiod";
+    const toInputId = isVehicle ? "vehicle-toperiod" : "toperiod";
+
+    const searchInput = document.getElementById(searchInputId);
     if (searchInput) searchInput.value = "";
 
-    const rangePicker = document.getElementById("date-range-picker");
+    const rangePicker = document.getElementById(pickerId);
     if (rangePicker && rangePicker._flatpickr) {
       rangePicker._flatpickr.clear();
     }
 
-    const fromInput = document.getElementById("fromperiod");
-    const toInput = document.getElementById("toperiod");
+    const fromInput = document.getElementById(fromInputId);
+    const toInput = document.getElementById(toInputId);
     if (fromInput) fromInput.value = "";
     if (toInput) toInput.value = "";
 
     applyFilter(context);
-  };
-
-  // Clear / Reset Date Range Filter
-  window.clearFilter = function (context) {
-    const rangePicker = document.getElementById("date-range-picker");
-    if (rangePicker && rangePicker._flatpickr) {
-      rangePicker._flatpickr.clear();
-    }
-
-    const fromInput = document.getElementById("fromperiod");
-    const toInput = document.getElementById("toperiod");
-    if (fromInput) fromInput.value = "";
-    if (toInput) toInput.value = "";
-
-    const tableBodyId =
-      context === "foot" ? "footTableBody" : "vehicleTableBody";
-    const tableBody = document.getElementById(tableBodyId);
-    if (tableBody) {
-      tableBody.querySelectorAll("tr").forEach(function (row) {
-        row.style.display = "";
-      });
-      const noResultRow = tableBody.querySelector(".no-filter-result");
-      if (noResultRow) noResultRow.style.display = "none";
-    }
   };
 
   // Void Record Handler
