@@ -243,12 +243,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                         </div>
                     <?php endif; ?>
 
-                    <?php if (!empty($errorMessage)): ?>
+                    <!-- <?php if (!empty($errorMessage)): ?>
                         <div class="custom-toast-alert toast-danger" role="alert">
                             <span><strong>Error!</strong> <?php echo htmlspecialchars($errorMessage); ?></span>
                             <button type="button" class="btn-close-toast" aria-label="Close">&times;</button>
                         </div>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
                 </div>
 
                 <!-- Title & Greeting -->
