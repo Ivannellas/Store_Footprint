@@ -96,7 +96,6 @@ $footprintController = new FootprintController($conn);
 // Track active tab dynamically
 $activeTab = $_GET['tab'] ?? 'Store';
 
-// Retrieve and clear session error message (PRG Pattern)
 $errorMessage = $_SESSION['error_message'] ?? "";
 unset($_SESSION['error_message']);
 
@@ -108,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tableId = intval($_POST['otableid'] ?? 0);
         $type    = strtolower(trim($_POST['type'] ?? 'store'));
 
-        $result      = $footprintController->HandleVoidFootprint($type, $tableId);
+        $result      = $footprintController->HandleVoidFootprint($type, $tableId, $userName);
         $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
 
         if ($result['success']) {
@@ -135,7 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'odate'       => $selectedDate,
             'otimerange'  => $timeRange,
             'ocount'      => $count,
-            'added_by'    => $userName
+            'added_by'    => $userName,
+            'voided_by'    => ''
         ];
 
         $result = $footprintController->HandleAddFootprint($type, $formData);
@@ -715,6 +715,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 Created Date <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="text-center">Void</th>
+                                                            <th class="text-center">Voided By</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
@@ -737,6 +738,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                                 onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'parking')">
                                                                                 &mdash;
                                                                             </button>
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?php if ($isVoided): ?>
+                                                                            <span class="voided-by"><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                                        <?php else: ?>
+                                                                            <span class="not-voided">-</span>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                 </tr>

@@ -26,6 +26,7 @@ class FootprintController
         $count      = (int)($data['ocount'] ?? 0);
         $addedBy    = trim($data['added_by'] ?? '');
         $voidStatus = (int)($data['void_status'] ?? 1);
+        $voidedBy   = trim($data['voided_by'] ?? '');
 
         if (empty($personnel) || empty($timeRange) || $count < 0) {
             return [
@@ -48,7 +49,8 @@ class FootprintController
             'odate'       => $date,
             'otimerange'  => $timeRange,
             'ocount'      => $count,
-            'void_status' => $voidStatus
+            'void_status' => $voidStatus,
+            'voided_by'   => $voidedBy
         ];
 
         $isSaved = $this->footprintModel->AddFootprint($tableName, $payload);
@@ -64,14 +66,15 @@ class FootprintController
     /*===========================================================
     // Void an existing footprint entry                         //
     ===========================================================*/
-    public function HandleVoidFootprint(string $type, int $tableId): array
+    public function HandleVoidFootprint(string $type, int $tableId, string $voidedBy = ''): array
     {
         if ($tableId <= 0) {
             return ['success' => false, 'message' => 'Invalid record ID for void operation.'];
         }
 
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
-        $isVoided  = $this->footprintModel->VoidFootprint($tableName, $tableId);
+
+        $isVoided = $this->footprintModel->VoidFootprint($tableName, $tableId, $voidedBy);
 
         if ($isVoided) {
             return ['success' => true, 'message' => 'Record voided successfully.'];

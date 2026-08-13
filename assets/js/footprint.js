@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let activeIndex = -1;
 
     function openDropdown() {
-      // FIX: Re-evaluate option visibility whenever opening the dropdown
       const filter = personnelInput.value.trim().toLowerCase();
       options.forEach(function (option) {
         const text = option.textContent.trim().toLowerCase();
@@ -437,8 +436,10 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!noResultRow) {
         noResultRow = document.createElement("tr");
         noResultRow.className = "no-filter-result";
+
         noResultRow.innerHTML =
-          '<td colspan="7" class="text-center text-muted py-4"><i class="bi bi-search me-1"></i> No matching records found</td>';
+          '<td colspan="8" class="text-center text-muted py-4"><i class="bi bi-search me-1"></i> No matching records found</td>';
+
         tableBody.appendChild(noResultRow);
       }
       noResultRow.style.display = "";

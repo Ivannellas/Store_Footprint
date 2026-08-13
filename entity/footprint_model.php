@@ -21,18 +21,19 @@ class FootprintModel
             return false;
         }
 
-        $query = "INSERT INTO {$tableName} (added_by, opersonnel, odate, otimerange, ocount, void_status) 
-                  VALUES (?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO {$tableName} (added_by, opersonnel, odate, otimerange, ocount, void_status, voided_by) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $this->db->prepare($query)) {
             $stmt->bind_param(
-                "ssssii",
+                "ssssiis",
                 $data['added_by'],
                 $data['opersonnel'],
                 $data['odate'],
                 $data['otimerange'],
                 $data['ocount'],
-                $data['void_status']
+                $data['void_status'],
+                $data['voided_by']
             );
             $result = $stmt->execute();
             $stmt->close();
@@ -66,7 +67,8 @@ class FootprintModel
                     odate, 
                     otimerange, 
                     ocount,
-                    void_status
+                    void_status,
+                    voided_by
                   FROM {$tableName}";
 
         if ($hasRangeFilter) {
@@ -134,7 +136,7 @@ class FootprintModel
     /*==============================================================
     //   Void a footprint record (set void_status = 0)            //
     ==============================================================*/
-    public function VoidFootprint(string $tableName, int $tableId): bool
+    public function VoidFootprint(string $tableName, int $tableId, string $voidedBy): bool
     {
         $tableName = trim($tableName);
 
@@ -142,10 +144,12 @@ class FootprintModel
             return false;
         }
 
-        $query = "UPDATE {$tableName} SET void_status = 0 WHERE otableid = ?";
+        // UPDATE both void_status and voided_by
+        $query = "UPDATE {$tableName} SET void_status = 0, voided_by = ? WHERE otableid = ?";
 
         if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("i", $tableId);
+            // "si" -> string ($voidedBy), integer ($tableId)
+            $stmt->bind_param("si", $voidedBy, $tableId);
             $result = $stmt->execute();
             $stmt->close();
             return $result;
