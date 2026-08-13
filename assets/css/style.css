@@ -13,20 +13,20 @@
     #006c88 50%,
     #00a852 90%
   );
-  --textgradientColor:
-    radial-gradient(circle at 20% 20%, rgba(0, 168, 82, 0.35), transparent 35%),
-    radial-gradient(
-      circle at 80% 30%,
-      rgba(10, 61, 128, 0.45),
-      transparent 40%
-    ),
-    radial-gradient(circle at 60% 80%, rgba(0, 168, 82, 0.25), transparent 35%),
-    linear-gradient(135deg, #0a3d80 0%, #006b7b 55%, #00a852 100%);
+
+  --bg-card: #ffffff;
+  --border-color: #d1d5db;
+  --input-bg: #f9fafb;
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+  --radius-md: 8px;
+
   --brand-slate-light: #1e293b;
   --brand-blue: #0d6efd;
   --text-muted-gray: #94a3b8;
   --headingTxt: "Inter", sans-serif;
   --parag: "Quicksand", sans-serif;
+  
 }
 
 body {
@@ -1306,101 +1306,182 @@ tr.row-voided td span {
   border-bottom: none;
 }
 
+
 /* ==========================================================
-   Cute & Modern Date Filter Controls
+   Filter Card Container
    ========================================================== */
 .filter-card {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background: var(--bg-card);
   border-radius: 12px;
-  padding: 12px 18px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
 }
 
-.filter-input-group {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  border: 1px solid #ced4da;
-  transition: all 0.2s ease;
+.filter-card-body {
+  padding: 1rem 1.25rem;
 }
 
-.filter-input-group:focus-within {
-  border-color: #198754;
-  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15);
+/* Grid Layout: Limit dynamic stretching */
+.filter-card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: 1rem;
 }
 
-.filter-input-group .input-group-text {
-  background-color: #ffffff;
-  border: none;
-  color: #198754;
-  padding-left: 14px;
+.filter-card-group {
+  flex: 1 1 250px; 
+  max-width: 320px;
 }
 
-.filter-input-group input {
-  border: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #495057;
+.filter-search{
+    margin-left: auto;
 }
 
-.filter-input-group input:focus {
-  box-shadow: none;
-}
-
-/* Custom Styled Buttons */
-.btn-emerald {
-  background-color: #198754;
-  color: #ffffff;
-  font-weight: 600;
-  border-radius: 20px;
-  padding: 6px 20px;
-  border: none;
-  box-shadow: 0 2px 5px rgba(25, 135, 84, 0.2);
-  transition: all 0.2s ease;
-}
-
-.btn-emerald:hover {
-  background-color: #146c43;
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
-}
-
-.btn-soft-reset {
-  background-color: #e9ecef;
-  color: #495057;
-  font-weight: 600;
-  border-radius: 20px;
-  padding: 6px 18px;
-  border: none;
-  transition: all 0.2s ease;
-}
-
-.btn-soft-reset:hover {
-  background-color: #dee2e6;
-  color: #212529;
+.filter-label {
+  font-family: var(--headingTxt);
+  color: var(--secondaryColor);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  display: block;
 }
 
 /* ==========================================================
-   Flatpickr Modern Custom Styling
+   Input Box with Visible Icon Field & Border
+   ========================================================== */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--input-bg);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: var(--primaryColor);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(33, 140, 60, 0.15);
+}
+
+/* Icon Box sa Left Side */
+.input-icon-box {
+  padding: 20px;
+  background-color: #ffffff;
+  border-right: 1px solid var(--border-color);
+  color: var(--primaryColor);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.filter-search .input-icon-box {
+  background-image: url(../images/icon/search.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.filter-date-range .input-icon-box {
+  background-image: url(../images/icon/calendar.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Actual Input Field */
+.custom-input {
+  width: 100%;
+  border: none !important; /* Tangtangon ang default input border kay ang wrapper naay border */
+  outline: none !important;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  background: transparent;
+}
+
+.custom-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ==========================================================
+   Buttons (Filter & Reset)
+   ========================================================== */
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-actions .btn-primary figure{
+  filter: brightness(0) invert(1);
+}
+
+.custom-btn {
+  font-family: var(--headingTxt);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primaryColor);
+  border: 1px solid var(--primaryColor);
+  color: #ffffff;
+  position: relative;
+}
+
+.btn-primary:hover {
+  background-color: #1a7231;
+  border-color: #1a7231;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  border: 1px solid var(--secondaryColor);
+  color: var(--secondaryColor);
+  position: relative;
+  
+}
+
+.btn-secondary:hover {
+  background-color: #f1f5f9;
+}
+
+/* ==========================================================
+   Flatpickr Custom Styling (Primary Theme)
    ========================================================== */
 .flatpickr-calendar {
   border-radius: 16px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 10px 25px rgba(4, 35, 90, 0.15) !important;
   border: none !important;
   padding: 10px !important;
-  font-family: inherit !important;
+  font-family: var(--parag) !important;
   margin-top: 6px !important;
 }
 
 .flatpickr-months .flatpickr-month {
-  color: #198754 !important;
-  fill: #198754 !important;
+  color: var(--secondaryColor) !important;
+  fill: var(--secondaryColor) !important;
 }
 
 .flatpickr-current-month .flatpickr-monthDropdown-months,
 .flatpickr-current-month input.cur-year {
   font-weight: 700 !important;
+  font-family: var(--headingTxt) !important;
 }
 
 .flatpickr-day {
@@ -1420,58 +1501,24 @@ tr.row-voided td span {
 .flatpickr-day.selected:hover,
 .flatpickr-day.startRange:hover,
 .flatpickr-day.endRange:hover {
-  background: #198754 !important;
-  border-color: #198754 !important;
+  background: var(--primaryColor) !important;
+  border-color: var(--primaryColor) !important;
   color: #ffffff !important;
 }
 
 .flatpickr-day.inRange {
-  background: #e8f5e9 !important;
+  background: var(--primary-light) !important;
   box-shadow:
-    -5px 0 0 #e8f5e9,
-    5px 0 0 #e8f5e9 !important;
-  color: #198754 !important;
+    -5px 0 0 var(--primary-light),
+    5px 0 0 var(--primary-light) !important;
+  color: var(--primaryColor) !important;
   border-color: transparent !important;
 }
 
 .flatpickr-day:hover {
-  background: #f1f8e9 !important;
+  background: var(--primary-light) !important;
 }
 
-/* Clickable Table Headers for Sorting */
-.sortable-table th.sortable {
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s ease;
-}
-
-.sortable-table th.sortable:hover {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-}
-
-/* Arrow indicator styling */
-.sort-icon {
-  display: inline-block;
-  margin-left: 6px;
-  font-size: 0.75rem;
-  opacity: 0.5;
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-th.sort-asc .sort-icon,
-th.sort-desc .sort-icon {
-  opacity: 1;
-}
-
-th.sort-asc .sort-icon {
-  content: "▲";
-}
-
-th.sort-desc .sort-icon {
-  content: "▼";
-}
 
 footer.index_footer {
   position: relative;
@@ -1771,7 +1818,7 @@ footer.index_footer {
        5. Scrollable Table Inside Modal
     ---------------------------------- */
 .modal-body {
-  padding: 40px 24px;
+  padding: 0 24px;
   overflow: hidden; /* Prevent body overflow, let container scroll */
 }
 
@@ -1797,6 +1844,7 @@ footer.index_footer {
   padding: 12px 16px;
   text-align: left;
   z-index: 5;
+  cursor: pointer;
 }
 
 .personnel-table td {
