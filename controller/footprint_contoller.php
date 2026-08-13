@@ -43,11 +43,11 @@ class FootprintController
         }
 
         $payload = [
-            'added_by'   => $addedBy,
-            'opersonnel' => $personnel,
-            'odate'      => $date,
-            'otimerange' => $timeRange,
-            'ocount'     => $count,
+            'added_by'    => $addedBy,
+            'opersonnel'  => $personnel,
+            'odate'       => $date,
+            'otimerange'  => $timeRange,
+            'ocount'      => $count,
             'void_status' => $voidStatus
         ];
 
@@ -62,8 +62,8 @@ class FootprintController
     }
 
     /*===========================================================
-// Void an existing footprint entry                         //
-===========================================================*/
+    // Void an existing footprint entry                         //
+    ===========================================================*/
     public function HandleVoidFootprint(string $type, int $tableId): array
     {
         if ($tableId <= 0) {
@@ -81,18 +81,18 @@ class FootprintController
     }
 
     /*===========================================================
-    // Load store footprints                                   //
+    // Load store footprints (Single Date or Date Range Filter) //
     ===========================================================*/
-    public function RenderStoreFootprints(?string $date = null): array
+    public function RenderStoreFootprints(?string $startDate = null, ?string $endDate = null): array
     {
-        return $this->footprintModel->GetFootprints('tbl_store_footprint', $date);
+        return $this->footprintModel->GetFootprints('tbl_store_footprint', $startDate, $endDate);
     }
 
     /*===========================================================
-    // Load parking footprints                                 //
+    // Load parking footprints (Single Date or Date Range Filter)//
     ===========================================================*/
-    public function RenderParkingFootprints(?string $date = null): array
+    public function RenderParkingFootprints(?string $startDate = null, ?string $endDate = null): array
     {
-        return $this->footprintModel->GetFootprints('tbl_parking_footprint', $date);
+        return $this->footprintModel->GetFootprints('tbl_parking_footprint', $startDate, $endDate);
     }
 }

@@ -47,16 +47,16 @@ function getDefaultTimeRange(): string
     $targetHour = (int)date('G', $targetTime); // 0 - 23 format
 
     if ($targetHour >= 6 && $targetHour < 8)   return "6:00 AM - 8:00 AM";
-    if ($targetHour == 8)                       return "8:01 AM - 9:00 AM";
-    if ($targetHour == 9)                       return "9:01 AM - 10:00 AM";
-    if ($targetHour == 10)                      return "10:01 AM - 11:00 AM";
-    if ($targetHour == 11)                      return "11:01 AM - 12:00 PM";
-    if ($targetHour == 12)                      return "12:01 PM - 1:00 PM";
-    if ($targetHour == 13)                      return "1:01 PM - 2:00 PM";
-    if ($targetHour == 14)                      return "2:01 PM - 3:00 PM";
-    if ($targetHour == 15)                      return "3:01 PM - 4:00 PM";
-    if ($targetHour == 16)                      return "4:01 PM - 5:00 PM";
-    if ($targetHour == 17)                      return "5:01 PM - 6:00 PM";
+    if ($targetHour == 8)                      return "8:01 AM - 9:00 AM";
+    if ($targetHour == 9)                      return "9:01 AM - 10:00 AM";
+    if ($targetHour == 10)                     return "10:01 AM - 11:00 AM";
+    if ($targetHour == 11)                     return "11:01 AM - 12:00 PM";
+    if ($targetHour == 12)                     return "12:01 PM - 1:00 PM";
+    if ($targetHour == 13)                     return "1:01 PM - 2:00 PM";
+    if ($targetHour == 14)                     return "2:01 PM - 3:00 PM";
+    if ($targetHour == 15)                     return "3:01 PM - 4:00 PM";
+    if ($targetHour == 16)                     return "4:01 PM - 5:00 PM";
+    if ($targetHour == 17)                     return "5:01 PM - 6:00 PM";
     if ($targetHour >= 18 && $targetHour < 20) return "6:01 PM - 8:00 PM";
 
     return "";
@@ -152,14 +152,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Fetch GET date range filter parameters if provided
+$fromDate = !empty($_GET['fromperiod']) ? trim($_GET['fromperiod']) : null;
+$toDate   = !empty($_GET['toperiod']) ? trim($_GET['toperiod']) : null;
+
 // Fetch today's footprints
 $todayDate         = date('Y-m-d');
 $storeFootprints   = $footprintController->RenderStoreFootprints($todayDate);
 $parkingFootprints = $footprintController->RenderParkingFootprints($todayDate);
 
-// Fetch overall footprints history
-$storeFootprintsHistory   = $footprintController->RenderStoreFootprints(null) ?? [];
-$parkingFootprintsHistory = $footprintController->RenderParkingFootprints(null) ?? [];
+// Fetch footprints history (supports optional date range parameters)
+$storeFootprintsHistory   = $footprintController->RenderStoreFootprints($fromDate, $toDate) ?? [];
+$parkingFootprintsHistory = $footprintController->RenderParkingFootprints($fromDate, $toDate) ?? [];
 
 if ($conn) {
     mysqli_close($conn);
@@ -182,6 +186,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
     <link rel="stylesheet" href="assets/css/media.css">
     <link rel="icon" href="assets/images/favicon.png">
     <script src="assets/js/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="node_modules/flatpickr/dist/flatpickr.min.css">
+    <script src="node_modules/flatpickr/dist/flatpickr.min.js"></script>
 
     <!-- Prevent Back-Button Cache View on Logout -->
     <script>
@@ -395,27 +401,71 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <button class="close-btn" id="closeFootTrafficModal">&times;</button>
                                         </div>
 
-                                        <div class="filter-bar">
-                                            <div class="filter-group">
-                                                <label for="footDate">Date</label>
-                                                <input type="date" id="footDate" />
+                                        <div class="filter-card mb-4">
+                                            <div class="d-flex flex-wrap align-items-center gap-3">
+
+                                                <!-- Live Search Input -->
+                                                <div class="input-group filter-input-group" style="max-width: 280px;">
+                                                    <span class="input-group-text">
+                                                        <i class="bi bi-search text-success"></i>
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        id="table-search-input"
+                                                        class="form-control"
+                                                        placeholder="Search personnel, added by..."
+                                                        onkeyup="applyFilter('foot')" />
+                                                </div>
+
+                                                <!-- Date Range Picker -->
+                                                <div class="input-group filter-input-group" style="max-width: 260px;">
+                                                    <span class="input-group-text">
+                                                        <i class="bi bi-calendar-event text-success"></i>
+                                                    </span>
+                                                    <input type="text" id="date-range-picker" class="form-control" placeholder="Choose date range..." readonly />
+                                                </div>
+
+                                                <!-- Hidden values for Flatpickr JS binding -->
+                                                <input type="hidden" id="fromperiod" />
+                                                <input type="hidden" id="toperiod" />
+
+                                                <!-- Action Buttons -->
+                                                <div class="d-flex gap-2 ms-auto">
+                                                    <button type="button" onclick="applyFilter('foot')" class="btn btn-emerald">
+                                                        <i class="bi bi-funnel-fill me-1"></i> Filter
+                                                    </button>
+                                                    <button type="button" onclick="clearFilter('foot')" class="btn btn-soft-reset">
+                                                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                                                    </button>
+                                                </div>
+
                                             </div>
-                                            <button class="filter-btn" onclick="applyFilter('foot')">Filter</button>
-                                            <button class="filter-btn" onclick="clearFilter('foot')" type="button">Clear</button>
                                         </div>
 
                                         <div class="modal-body">
                                             <div class="table-container">
-                                                <table class="personnel-table">
+                                                <table class="personnel-table sortable-table" id="footTrafficTable">
                                                     <thead>
                                                         <tr>
-                                                            <th>Personnel Name</th>
-                                                            <th>Date</th>
-                                                            <th>Time Range</th>
-                                                            <th>Count</th>
-                                                            <th>Created By</th>
-                                                            <th>Created Date</th>
-                                                            <th>Status</th>
+                                                            <th class="sortable" onclick="sortTable(0, 'footTrafficTable', 'string')">
+                                                                Personnel Name <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(1, 'footTrafficTable', 'string')">
+                                                                Date <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(2, 'footTrafficTable', 'string')">
+                                                                Time Range <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(3, 'footTrafficTable', 'number')">
+                                                                Count <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(4, 'footTrafficTable', 'string')">
+                                                                Created By <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(5, 'footTrafficTable', 'string')">
+                                                                Created Date <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="text-center">Void</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
@@ -431,16 +481,20 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                                     <td class="text-center">
                                                                         <?php if ($isVoided): ?>
-                                                                            <span class="void_pills void-disabled" title="Record Voided">Voided</span>
+                                                                            <span class="void_pills void-disabled" title="Record Voided">&cross; </span>
                                                                         <?php else: ?>
-                                                                            <span style="color: #28a745; font-weight: 600;">&check;</span>
+                                                                            <button type="button"
+                                                                                class="void_pills void-active"
+                                                                                onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'store')">
+                                                                                &mdash;
+                                                                            </button>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
-                                                            <tr>
-                                                                <td colspan="7" class="text-center">No data available</td>
+                                                            <tr class="no-filter-result">
+                                                                <td colspan="7" class="text-center text-muted py-4">No data available</td>
                                                             </tr>
                                                         <?php endif; ?>
                                                     </tbody>
@@ -530,7 +584,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Count</th>
                                                 <th>Created By</th>
                                                 <th>Created Date</th>
-                                                <th>Void</th> <!-- Optional: Included for parity with Store tab -->
+                                                <th>Void</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -598,7 +652,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th>Count</th>
                                                             <th>Created By</th>
                                                             <th>Created Date</th>
-                                                            <th>Status</th> <!-- Added Status header for modal parity -->
+                                                            <th>Void</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
@@ -614,9 +668,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                                     <td class="text-center">
                                                                         <?php if ($isVoided): ?>
-                                                                            <span class="void_pills void-disabled" title="Record Voided">Voided</span>
+                                                                            <span class="void_pills void-disabled" title="Record Voided">&cross; </span>
                                                                         <?php else: ?>
-                                                                            <span style="color: #28a745; font-weight: 600;">&check;</span>
+                                                                            <button type="button"
+                                                                                class="void_pills void-active"
+                                                                                onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'parking')">
+                                                                                &mdash;
+                                                                            </button>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                 </tr>

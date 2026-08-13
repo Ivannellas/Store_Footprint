@@ -44,9 +44,9 @@ class FootprintModel
     }
 
     /*==============================================================
-    //   Retrieve footprints (Filtered by date or overall history) //
+    //   Retrieve footprints (Single Date or Date Range Filtering)  //
     =============================================================*/
-    public function GetFootprints(string $tableName, ?string $date = null): array
+    public function GetFootprints(string $tableName, ?string $startDate = null, ?string $endDate = null): array
     {
         $tableName = trim($tableName);
 
@@ -55,7 +55,8 @@ class FootprintModel
         }
 
         $records = [];
-        $hasDateFilter = !empty($date);
+        $hasRangeFilter = !empty($startDate) && !empty($endDate);
+        $hasSingleDate = !empty($startDate) && empty($endDate);
 
         $query = "SELECT 
                     added_by,
@@ -68,15 +69,19 @@ class FootprintModel
                     void_status
                   FROM {$tableName}";
 
-        if ($hasDateFilter) {
+        if ($hasRangeFilter) {
+            $query .= " WHERE odate BETWEEN ? AND ?";
+        } elseif ($hasSingleDate) {
             $query .= " WHERE odate = ?";
         }
 
         $query .= " ORDER BY odate DESC, otableid DESC";
 
         if ($stmt = $this->db->prepare($query)) {
-            if ($hasDateFilter) {
-                $stmt->bind_param("s", $date);
+            if ($hasRangeFilter) {
+                $stmt->bind_param("ss", $startDate, $endDate);
+            } elseif ($hasSingleDate) {
+                $stmt->bind_param("s", $startDate);
             }
 
             $stmt->execute();
