@@ -90,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
         target.scrollIntoView({ block: "nearest" });
 
         const selectedValue = target.getAttribute("data-value");
-        if (nameStore) nameStore.value = selectedValue;
 
         if (updateInputValue) {
           personnelInput.value = selectedValue;
@@ -175,10 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (personnelDropdown.classList.contains("show") && activeIndex >= 0) {
           e.preventDefault();
           if (visibleOptions[activeIndex]) {
-            const selectedValue =
-              visibleOptions[activeIndex].getAttribute("data-value");
-            personnelInput.value = selectedValue;
-            if (nameStore) nameStore.value = selectedValue;
             validateSelection();
           }
           closeDropdown();
@@ -192,7 +187,6 @@ document.addEventListener("DOMContentLoaded", function () {
       option.addEventListener("click", function () {
         const selectedValue = option.getAttribute("data-value");
         personnelInput.value = selectedValue;
-        if (nameStore) nameStore.value = selectedValue;
         validateSelection();
         closeDropdown();
       });
@@ -203,24 +197,45 @@ document.addEventListener("DOMContentLoaded", function () {
         closeDropdown();
       }
     });
-
-    return { validateSelection, input: personnelInput };
   }
 
   // Initialize Searchable Dropdowns for both Foot Traffic and Parking
-  const footDropdown = initSearchableDropdown({
+  initSearchableDropdown({
     inputId: "personnelInput",
     hiddenId: "nameStore",
     dropdownId: "personnelDropdown",
     wrapperId: "personnelWrapper",
   });
 
-  const parkingDropdown = initSearchableDropdown({
+  initSearchableDropdown({
     inputId: "parkingPersonnelInput",
     hiddenId: "nameParking",
     dropdownId: "parkingPersonnelDropdown",
     wrapperId: "parkingPersonnelWrapper",
   });
+
+  // Local Flatpickr Initialization for Date Range Picker
+  if (typeof flatpickr !== "undefined") {
+    const rangePicker = document.getElementById("date-range-picker");
+    if (rangePicker) {
+      flatpickr(rangePicker, {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        onClose: function (selectedDates, dateStr, instance) {
+          if (selectedDates.length === 2) {
+            const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
+            const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
+
+            const fromInput = document.getElementById("fromperiod");
+            const toInput = document.getElementById("toperiod");
+
+            if (fromInput) fromInput.value = startDate;
+            if (toInput) toInput.value = endDate;
+          }
+        },
+      });
+    }
+  }
 
   // Helper function to convert time strings into total minutes from midnight
   function parseTimeToMinutes(timeStr) {
@@ -333,33 +348,48 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // History Modal Filters
+  // History Modal Date Range Filter
+  // Combined History Table Filter (Date Range + Search Query)
   window.applyFilter = function (context) {
-    const dateInputId = context === "foot" ? "footDate" : "vehicleDate";
+    const searchQuery =
+      document
+        .getElementById("table-search-input")
+        ?.value.toLowerCase()
+        .trim() || "";
+    const fromDate = document.getElementById("fromperiod")?.value || "";
+    const toDate = document.getElementById("toperiod")?.value || "";
+
     const tableBodyId =
       context === "foot" ? "footTableBody" : "vehicleTableBody";
-
-    const dateElem = document.getElementById(dateInputId);
-    if (!dateElem) return;
-
-    const selectedDate = dateElem.value;
     const tableBody = document.getElementById(tableBodyId);
     if (!tableBody) return;
 
     const rows = tableBody.querySelectorAll("tr");
 
     rows.forEach(function (row) {
-      if (!row.dataset.date) return;
+      if (row.classList.contains("no-filter-result")) return;
 
-      if (!selectedDate || row.dataset.date === selectedDate) {
+      const rowDate = row.getAttribute("data-date") || "";
+      const rowText = row.textContent.toLowerCase();
+
+      // Check date range condition
+      const matchesDate =
+        !fromDate || !toDate || (rowDate >= fromDate && rowDate <= toDate);
+
+      // Check search query condition
+      const matchesSearch = !searchQuery || rowText.includes(searchQuery);
+
+      if (matchesDate && matchesSearch) {
         row.style.display = "";
       } else {
         row.style.display = "none";
       }
     });
 
+    // Handle empty state message
     const visibleRows = Array.from(rows).filter(
-      (r) => r.style.display !== "none" && r.dataset.date,
+      (r) =>
+        r.style.display !== "none" && !r.classList.contains("no-filter-result"),
     );
     let noResultRow = tableBody.querySelector(".no-filter-result");
 
@@ -368,7 +398,7 @@ document.addEventListener("DOMContentLoaded", function () {
         noResultRow = document.createElement("tr");
         noResultRow.className = "no-filter-result";
         noResultRow.innerHTML =
-          '<td colspan="4" class="text-center text-muted">No records found for selected date</td>';
+          '<td colspan="7" class="text-center text-muted py-4"><i class="bi bi-search me-1"></i> No matching records found</td>';
         tableBody.appendChild(noResultRow);
       }
       noResultRow.style.display = "";
@@ -377,19 +407,45 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  // Reset Filter Inputs
   window.clearFilter = function (context) {
-    const dateInputId = context === "foot" ? "footDate" : "vehicleDate";
+    const searchInput = document.getElementById("table-search-input");
+    if (searchInput) searchInput.value = "";
+
+    const rangePicker = document.getElementById("date-range-picker");
+    if (rangePicker && rangePicker._flatpickr) {
+      rangePicker._flatpickr.clear();
+    }
+
+    const fromInput = document.getElementById("fromperiod");
+    const toInput = document.getElementById("toperiod");
+    if (fromInput) fromInput.value = "";
+    if (toInput) toInput.value = "";
+
+    applyFilter(context);
+  };
+
+  // Clear / Reset Date Range Filter
+  window.clearFilter = function (context) {
+    const rangePicker = document.getElementById("date-range-picker");
+    if (rangePicker && rangePicker._flatpickr) {
+      rangePicker._flatpickr.clear();
+    }
+
+    const fromInput = document.getElementById("fromperiod");
+    const toInput = document.getElementById("toperiod");
+    if (fromInput) fromInput.value = "";
+    if (toInput) toInput.value = "";
+
     const tableBodyId =
       context === "foot" ? "footTableBody" : "vehicleTableBody";
-
-    const dateElem = document.getElementById(dateInputId);
-    if (dateElem) dateElem.value = "";
-
     const tableBody = document.getElementById(tableBodyId);
     if (tableBody) {
       tableBody.querySelectorAll("tr").forEach(function (row) {
         row.style.display = "";
       });
+      const noResultRow = tableBody.querySelector(".no-filter-result");
+      if (noResultRow) noResultRow.style.display = "none";
     }
   };
 
@@ -433,5 +489,70 @@ document.addEventListener("DOMContentLoaded", function () {
         form.submit();
       }
     });
+  };
+
+  // Universal Table Column Sort
+  window.sortTable = function (columnIndex, tableId, dataType = "string") {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+
+    const tbody = table.querySelector("tbody");
+    const headers = table.querySelectorAll("th.sortable");
+    const targetHeader = headers[columnIndex];
+
+    if (!targetHeader || !tbody) return;
+
+    // Determine direction: default to ascending, toggle if already sorted
+    let isAscending = true;
+    if (targetHeader.classList.contains("sort-asc")) {
+      isAscending = false;
+    }
+
+    // Reset all headers' sort indicators
+    headers.forEach((th) => {
+      th.classList.remove("sort-asc", "sort-desc");
+      const icon = th.querySelector(".sort-icon");
+      if (icon) icon.textContent = "↕";
+    });
+
+    // Apply new sort class and icon to clicked header
+    targetHeader.classList.add(isAscending ? "sort-asc" : "sort-desc");
+    const activeIcon = targetHeader.querySelector(".sort-icon");
+    if (activeIcon) activeIcon.textContent = isAscending ? "▲" : "▼";
+
+    // Get rows excluding the 'no matching records' placeholder row
+    const rows = Array.from(tbody.querySelectorAll("tr")).filter(
+      (row) => !row.classList.contains("no-filter-result"),
+    );
+
+    // Sort rows based on column data type
+    rows.sort((rowA, rowB) => {
+      const cellA = rowA.children[columnIndex]?.textContent.trim() || "";
+      const cellB = rowB.children[columnIndex]?.textContent.trim() || "";
+
+      let comparison = 0;
+
+      if (dataType === "number") {
+        const numA = parseFloat(cellA.replace(/[^0-9.-]+/g, "")) || 0;
+        const numB = parseFloat(cellB.replace(/[^0-9.-]+/g, "")) || 0;
+        comparison = numA - numB;
+      } else {
+        comparison = cellA.localeCompare(cellB, undefined, {
+          numeric: true,
+          sensitivity: "base",
+        });
+      }
+
+      return isAscending ? comparison : -comparison;
+    });
+
+    // Re-append sorted rows to the table body
+    rows.forEach((row) => tbody.appendChild(row));
+
+    // Ensure 'No records found' stays at the bottom if present
+    const noResultRow = tbody.querySelector(".no-filter-result");
+    if (noResultRow) {
+      tbody.appendChild(noResultRow);
+    }
   };
 });
