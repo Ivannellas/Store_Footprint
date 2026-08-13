@@ -503,7 +503,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
                                                             <tr class="no-filter-result">
-                                                                <td colspan="7" class="text-center text-muted py-4">No data available</td>
+                                                                <td class="text-center text-muted py-4">No data available</td>
                                                             </tr>
                                                         <?php endif; ?>
                                                     </tbody>
@@ -622,7 +622,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="7" class="text-center">No data available for today</td> <!-- Fixed colspan from 4 to 7 -->
+                                                    <td colspan="7" class="text-center">No data available for today</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>
@@ -743,7 +743,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
                                                             <tr class="no-filter-result">
-                                                                <td colspan="7" class="text-center text-muted py-4">No data available</td>
+                                                                <td class="text-center text-muted py-4">No data available</td>
                                                             </tr>
                                                         <?php endif; ?>
                                                     </tbody>
