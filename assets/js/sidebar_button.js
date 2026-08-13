@@ -29,17 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
             'add_user_account.php', 
             'edit_user_account.php', 
             'view_user_account.php',
-            'user_permission_account.php' // <-- Gidungag nato diri imong subpage
+            'user_permission_account.php' // <-- Gidungag diri ang subpage
         ],
         'add_personnel.php': ['edit_personnel.php'],
         'my_account.php': ['edit_profile.php']
     };
 
     // 3. Extract Clean Filename (Tangtangon ang / ug ang ?id= parameters)
-    const currentPath = window.location.pathname; // Halimbawa: /Store_Footprint/views/user_permission_account.php
+    const currentPath = window.location.pathname; // Example: /Store_Footprint/views/user_permission_account.php
     
     // Ang window.location.search kay "?" ug ang padayon. 
-    // Ginahimo nato nga limpyo ang filename lang gyud: "user_permission_account.php"
     const rawFilename = currentPath.split('/').pop(); 
     const currentPage = rawFilename.split('?')[0].toLowerCase() || 'index.php';
 
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const link = item.querySelector('a');
         if (!link) return;
 
-        // Limpyohon pud nato ang href sa menu basin naa pud siyay parameters
         const href = link.getAttribute('href') || '';
         const hrefFilename = href.split('/').pop();
         const hrefPage = hrefFilename.split('?')[0].toLowerCase();
