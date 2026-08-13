@@ -358,7 +358,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <td><strong><?php echo htmlspecialchars($row['opersonnel']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
-                                                        <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                        <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                         <td class="text-center">
@@ -426,7 +426,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
-                                                                    <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                                    <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                                     <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                                     <td class="text-center">
@@ -541,7 +541,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <td><strong><?php echo htmlspecialchars($row['opersonnel']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
-                                                        <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                        <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                         <td class="text-center">
@@ -609,7 +609,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
-                                                                    <td><?php echo htmlspecialchars($row['ocount']); ?></td>
+                                                                    <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                                     <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                                                                     <td class="text-center">
