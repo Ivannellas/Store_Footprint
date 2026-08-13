@@ -39,7 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Reusable Searchable Dropdown Initializer
-  function initSearchableDropdown({ inputId, hiddenId, dropdownId, wrapperId }) {
+  function initSearchableDropdown({
+    inputId,
+    hiddenId,
+    dropdownId,
+    wrapperId,
+  }) {
     const personnelInput = document.getElementById(inputId);
     const nameStore = document.getElementById(hiddenId);
     const personnelDropdown = document.getElementById(dropdownId);
@@ -48,11 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!personnelInput || !personnelDropdown) return null;
 
     const options = Array.from(
-      personnelDropdown.querySelectorAll(".personnel-dropdown-item")
+      personnelDropdown.querySelectorAll(".personnel-dropdown-item"),
     );
 
     const validPersonnelList = options.map((opt) =>
-      opt.getAttribute("data-value")
+      opt.getAttribute("data-value"),
     );
 
     let activeIndex = -1;
@@ -97,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function validateSelection() {
       const currentText = personnelInput.value.trim();
       const matched = validPersonnelList.find(
-        (name) => name.toLowerCase() === currentText.toLowerCase()
+        (name) => name.toLowerCase() === currentText.toLowerCase(),
       );
 
       if (matched) {
@@ -108,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         if (nameStore) nameStore.value = "";
         personnelInput.setCustomValidity(
-          "Please select a valid personnel from the dropdown."
+          "Please select a valid personnel from the dropdown.",
         );
         return false;
       }
@@ -249,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const type = form.querySelector('input[name="type"]')?.value || "store";
       const nameElem = form.querySelector(
-        '[name="personnel_name"], [name="personnel"], [name="name"]'
+        '[name="personnel_name"], [name="personnel"], [name="name"]',
       );
       const name = nameElem ? nameElem.value : "";
 
@@ -354,7 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const visibleRows = Array.from(rows).filter(
-      (r) => r.style.display !== "none" && r.dataset.date
+      (r) => r.style.display !== "none" && r.dataset.date,
     );
     let noResultRow = tableBody.querySelector(".no-filter-result");
 
@@ -386,5 +391,47 @@ document.addEventListener("DOMContentLoaded", function () {
         row.style.display = "";
       });
     }
+  };
+
+  // Void Record Handler
+  window.confirmVoid = function (tableId, type = "store") {
+    Swal.fire({
+      title: "Void Record",
+      text: "Are you sure you want to void this entry?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, void it",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      reverseButtons: true,
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action =
+          "index.php?tab=" + (type === "parking" ? "Parking" : "Store");
+
+        const actionInput = document.createElement("input");
+        actionInput.type = "hidden";
+        actionInput.name = "action";
+        actionInput.value = "void_footprint";
+        form.appendChild(actionInput);
+
+        const idInput = document.createElement("input");
+        idInput.type = "hidden";
+        idInput.name = "otableid";
+        idInput.value = tableId;
+        form.appendChild(idInput);
+
+        const typeInput = document.createElement("input");
+        typeInput.type = "hidden";
+        typeInput.name = "type";
+        typeInput.value = type;
+        form.appendChild(typeInput);
+
+        document.body.appendChild(form);
+        form.submit();
+      }
+    });
   };
 });

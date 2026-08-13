@@ -20,13 +20,14 @@ class FootprintController
     {
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
 
-        $personnel = trim($data['opersonnel'] ?? '');
-        $date      = trim($data['odate'] ?? date('Y-m-d'));
-        $timeRange = trim($data['otimerange'] ?? '');
-        $count     = (int)($data['ocount'] ?? 0);
-        $addedBy   = trim($data['added_by'] ?? '');
+        $personnel  = trim($data['opersonnel'] ?? '');
+        $date       = trim($data['odate'] ?? date('Y-m-d'));
+        $timeRange  = trim($data['otimerange'] ?? '');
+        $count      = (int)($data['ocount'] ?? 0);
+        $addedBy    = trim($data['added_by'] ?? '');
+        $voidStatus = (int)($data['void_status'] ?? 1);
 
-        if (empty($personnel) || empty($timeRange) || $count <= 0) {
+        if (empty($personnel) || empty($timeRange) || $count < 0) {
             return [
                 'success' => false,
                 'message' => 'Please fill in all required fields.'
@@ -46,16 +47,37 @@ class FootprintController
             'opersonnel' => $personnel,
             'odate'      => $date,
             'otimerange' => $timeRange,
-            'ocount'     => $count
+            'ocount'     => $count,
+            'void_status' => $voidStatus
         ];
 
         $isSaved = $this->footprintModel->AddFootprint($tableName, $payload);
 
+        $label = ($type === 'parking') ? 'Vehicle Traffic' : 'Foot Traffic';
         if ($isSaved) {
-            return ['success' => true, 'message' => 'Foot Traffic added successfully.'];
+            return ['success' => true, 'message' => "{$label} added successfully."];
         }
 
         return ['success' => false, 'message' => 'Failed to save record due to a database error.'];
+    }
+
+    /*===========================================================
+// Void an existing footprint entry                         //
+===========================================================*/
+    public function HandleVoidFootprint(string $type, int $tableId): array
+    {
+        if ($tableId <= 0) {
+            return ['success' => false, 'message' => 'Invalid record ID for void operation.'];
+        }
+
+        $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
+        $isVoided  = $this->footprintModel->VoidFootprint($tableName, $tableId);
+
+        if ($isVoided) {
+            return ['success' => true, 'message' => 'Record voided successfully.'];
+        }
+
+        return ['success' => false, 'message' => 'Failed to void the record due to a database error.'];
     }
 
     /*===========================================================

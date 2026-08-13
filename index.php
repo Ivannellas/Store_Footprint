@@ -53,8 +53,8 @@ function getDefaultTimeRange(): string
     if ($targetHour == 11)                      return "11:01 AM - 12:00 PM";
     if ($targetHour == 12)                      return "12:01 PM - 1:00 PM";
     if ($targetHour == 13)                      return "1:01 PM - 2:00 PM";
-    if ($targetHour == 14)                      return "3:01 PM - 4:00 PM";
-    if ($targetHour == 15)                      return "4:01 PM - 5:00 PM";
+    if ($targetHour == 14)                      return "2:01 PM - 3:00 PM";
+    if ($targetHour == 15)                      return "3:01 PM - 4:00 PM";
     if ($targetHour == 16)                      return "4:01 PM - 5:00 PM";
     if ($targetHour == 17)                      return "5:01 PM - 6:00 PM";
     if ($targetHour >= 18 && $targetHour < 20) return "6:01 PM - 8:00 PM";
@@ -100,32 +100,55 @@ $activeTab = $_GET['tab'] ?? 'Store';
 $errorMessage = $_SESSION['error_message'] ?? "";
 unset($_SESSION['error_message']);
 
-// Handle Form Submission
+// Handle ALL POST Requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $type         = $_POST['type'] ?? 'store';
-    $name         = trim($_POST['name'] ?? '');
-    $selectedDate = trim($_POST['date'] ?? date('Y-m-d'));
-    $timeRange    = trim($_POST['timeRange'] ?? '');
-    $count        = (int)($_POST['count'] ?? 0);
+    $action = $_POST['action'] ?? 'add_footprint';
 
-    $formData = [
-        'opersonnel'  => $name,
-        'odate'       => $selectedDate,
-        'otimerange'  => $timeRange,
-        'ocount'      => $count,
-        'added_by'    => $userName
-    ];
+    if ($action === 'void_footprint') {
+        $tableId = intval($_POST['otableid'] ?? 0);
+        $type    = strtolower(trim($_POST['type'] ?? 'store'));
 
-    $result = $footprintController->HandleAddFootprint($type, $formData);
-    $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
+        $result      = $footprintController->HandleVoidFootprint($type, $tableId);
+        $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
 
-    if ($result['success']) {
-        header("Location: index.php?tab=$redirectTab&status=success");
-        exit;
-    } else {
-        $_SESSION['error_message'] = $result['message'];
-        header("Location: index.php?tab=$redirectTab");
-        exit;
+        if ($result['success']) {
+            header("Location: index.php?tab=$redirectTab&status=void_success");
+            exit;
+        } else {
+            $_SESSION['error_message'] = $result['message'];
+            header("Location: index.php?tab=$redirectTab");
+            exit;
+        }
+    }
+
+    if ($action === 'add_footprint' || !isset($_POST['action'])) {
+        $type         = $_POST['type'] ?? 'store';
+        $name         = trim($_POST['name'] ?? '');
+        $selectedDate = trim($_POST['date'] ?? date('Y-m-d'));
+        $timeRange    = trim($_POST['timeRange'] ?? '');
+
+        // Ensure 0 is captured properly when submitted
+        $count = isset($_POST['count']) && $_POST['count'] !== '' ? (int)$_POST['count'] : 0;
+
+        $formData = [
+            'opersonnel'  => $name,
+            'odate'       => $selectedDate,
+            'otimerange'  => $timeRange,
+            'ocount'      => $count,
+            'added_by'    => $userName
+        ];
+
+        $result = $footprintController->HandleAddFootprint($type, $formData);
+        $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
+
+        if ($result['success']) {
+            header("Location: index.php?tab=$redirectTab&status=success");
+            exit;
+        } else {
+            $_SESSION['error_message'] = $result['message'];
+            header("Location: index.php?tab=$redirectTab");
+            exit;
+        }
     }
 }
 
@@ -201,9 +224,21 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                 <!-- Status Alerts -->
                 <div class="toast-container-custom">
-                    <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
+                    <?php
+                    $status = $_GET['status'] ?? '';
+                    $tabLabel = (isset($_GET['tab']) && strtolower($_GET['tab']) === 'parking') ? 'Vehicle Traffic' : 'Foot Traffic';
+                    ?>
+
+                    <?php if ($status === 'success'): ?>
                         <div class="custom-toast-alert toast-success" role="alert">
-                            <span><strong>Success!</strong> Footprint added successfully.</span>
+                            <span><strong>Success!</strong> <?php echo $tabLabel; ?> added successfully.</span>
+                            <button type="button" class="btn-close-toast" aria-label="Close">&times;</button>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($status === 'void_success'): ?>
+                        <div class="custom-toast-alert toast-success" role="alert">
+                            <span><strong>Success!</strong> <?php echo $tabLabel; ?> entry voided successfully.</span>
                             <button type="button" class="btn-close-toast" aria-label="Close">&times;</button>
                         </div>
                     <?php endif; ?>
@@ -273,15 +308,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                     placeholder="Select Personnel"
                                                     autocomplete="off"
                                                     required>
-                                                <!-- Modern Chevron SVG Icon -->
                                                 <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#495057" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="6 9 12 15 18 9"></polyline>
                                                 </svg>
 
-                                                <!-- Hidden input for form submission -->
                                                 <input type="hidden" id="nameStore" name="name" required>
 
-                                                <!-- Dropdown menu -->
                                                 <div class="personnel-dropdown-list" id="personnelDropdown">
                                                     <?php foreach ($activePersonnelList as $personnel): ?>
                                                         <div class="personnel-dropdown-item" data-value="<?php echo htmlspecialchars($personnel); ?>">
@@ -293,7 +325,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         </div>
                                         <div class="oTraffic">
                                             <label for="countStore">Input Traffic</label>
-                                            <input class="form_input" type="number" id="countStore" name="count" min="1" required>
+                                            <input class="form_input" type="number" id="countStore" name="count" min="0" required>
                                         </div>
                                     </div>
 
@@ -311,27 +343,40 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Start - End (Time)</th>
+                                                <th>Time Range</th>
                                                 <th>Count</th>
                                                 <th>Created By</th>
                                                 <th>Created Date</th>
+                                                <th>Void</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php if (!empty($storeFootprints)): ?>
                                                 <?php foreach ($storeFootprints as $row): ?>
-                                                    <tr>
-                                                        <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
+                                                    <?php $isVoided = isset($row['void_status']) && (int)$row['void_status'] === 0; ?>
+                                                    <tr class="<?php echo $isVoided ? 'row-voided' : ''; ?>">
+                                                        <td><strong><?php echo htmlspecialchars($row['opersonnel']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['ocount']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span class="void_pills void-disabled" title="Record Voided">&cross; </span>
+                                                            <?php else: ?>
+                                                                <button type="button"
+                                                                    class="void_pills void-active"
+                                                                    onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'store')">
+                                                                    &mdash;
+                                                                </button>
+                                                            <?php endif; ?>
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="4" class="text-center">No data available for today</td>
+                                                    <td colspan="7" class="text-center">No data available for today</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>
@@ -342,7 +387,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     <a id="footModalBtn" class="primary_btn" href="#">Foot Traffic History</a>
                                 </div>
 
-                                <!-- Modal Overlay Window -->
+                                <!-- Foot Traffic Modal -->
                                 <div class="modal-overlay" id="footTrafficModal">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -366,27 +411,36 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <tr>
                                                             <th>Personnel Name</th>
                                                             <th>Date</th>
-                                                            <th>Start - End (Time)</th>
+                                                            <th>Time Range</th>
                                                             <th>Count</th>
                                                             <th>Created By</th>
                                                             <th>Created Date</th>
+                                                            <th>Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
                                                         <?php if (!empty($storeFootprintsHistory)): ?>
                                                             <?php foreach ($storeFootprintsHistory as $row): ?>
-                                                                <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
+                                                                <?php $isVoided = isset($row['void_status']) && (int)$row['void_status'] === 0; ?>
+                                                                <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>" class="<?php echo $isVoided ? 'row-voided' : ''; ?>">
                                                                     <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['ocount']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                                                                    <td class="text-center">
+                                                                        <?php if ($isVoided): ?>
+                                                                            <span class="void_pills void-disabled" title="Record Voided">Voided</span>
+                                                                        <?php else: ?>
+                                                                            <span style="color: #28a745; font-weight: 600;">&check;</span>
+                                                                        <?php endif; ?>
+                                                                    </td>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
                                                             <tr>
-                                                                <td colspan="4" class="text-center">No data available</td>
+                                                                <td colspan="7" class="text-center">No data available</td>
                                                             </tr>
                                                         <?php endif; ?>
                                                     </tbody>
@@ -441,10 +495,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                     <polyline points="6 9 12 15 18 9"></polyline>
                                                 </svg>
 
-                                                <!-- Hidden input storing value for form submission -->
                                                 <input type="hidden" id="nameParking" name="name" required>
 
-                                                <!-- Dropdown menu -->
                                                 <div class="personnel-dropdown-list" id="parkingPersonnelDropdown">
                                                     <?php foreach ($activePersonnelList as $personnel): ?>
                                                         <div class="personnel-dropdown-item" data-value="<?php echo htmlspecialchars($personnel); ?>">
@@ -456,7 +508,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         </div>
                                         <div class="oTraffic">
                                             <label for="countParking">Input Traffic</label>
-                                            <input type="number" id="countParking" name="count" min="1" required>
+                                            <input type="number" id="countParking" name="count" min="0" required>
                                         </div>
                                     </div>
 
@@ -474,27 +526,40 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Start - End (Time)</th>
+                                                <th>Time Range</th>
                                                 <th>Count</th>
                                                 <th>Created By</th>
                                                 <th>Created Date</th>
+                                                <th>Void</th> <!-- Optional: Included for parity with Store tab -->
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php if (!empty($parkingFootprints)): ?>
                                                 <?php foreach ($parkingFootprints as $row): ?>
-                                                    <tr>
-                                                        <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
+                                                    <?php $isVoided = isset($row['void_status']) && (int)$row['void_status'] === 0; ?>
+                                                    <tr class="<?php echo $isVoided ? 'row-voided' : ''; ?>">
+                                                        <td><strong><?php echo htmlspecialchars($row['opersonnel']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['ocount']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span class="void_pills void-disabled" title="Record Voided">&cross; </span>
+                                                            <?php else: ?>
+                                                                <button type="button"
+                                                                    class="void_pills void-active"
+                                                                    onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'parking')">
+                                                                    &mdash;
+                                                                </button>
+                                                            <?php endif; ?>
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="4" class="text-center">No data available for today</td>
+                                                    <td colspan="7" class="text-center">No data available for today</td> <!-- Fixed colspan from 4 to 7 -->
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>
@@ -505,7 +570,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                     <a id="vehicleModalBtn" class="primary_btn" href="#">Vehicle History</a>
                                 </div>
 
-                                <!-- Modal Overlay Window -->
+                                <!-- Vehicle Traffic Modal -->
                                 <div class="modal-overlay" id="vehicleTrafficModal">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -529,27 +594,36 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <tr>
                                                             <th>Personnel Name</th>
                                                             <th>Date</th>
-                                                            <th>Start - End (Time)</th>
+                                                            <th>Time Range</th>
                                                             <th>Count</th>
                                                             <th>Created By</th>
                                                             <th>Created Date</th>
+                                                            <th>Status</th> <!-- Added Status header for modal parity -->
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
                                                         <?php if (!empty($parkingFootprintsHistory)): ?>
                                                             <?php foreach ($parkingFootprintsHistory as $row): ?>
-                                                                <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>">
+                                                                <?php $isVoided = isset($row['void_status']) && (int)$row['void_status'] === 0; ?>
+                                                                <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>" class="<?php echo $isVoided ? 'row-voided' : ''; ?>">
                                                                     <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['ocount']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                                                                    <td class="text-center">
+                                                                        <?php if ($isVoided): ?>
+                                                                            <span class="void_pills void-disabled" title="Record Voided">Voided</span>
+                                                                        <?php else: ?>
+                                                                            <span style="color: #28a745; font-weight: 600;">&check;</span>
+                                                                        <?php endif; ?>
+                                                                    </td>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
                                                             <tr>
-                                                                <td colspan="4" class="text-center">No data available</td>
+                                                                <td colspan="7" class="text-center">No data available</td> <!-- Fixed colspan from 4 to 7 -->
                                                             </tr>
                                                         <?php endif; ?>
                                                     </tbody>
@@ -601,7 +675,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         </div>
     </footer>
 
-    
+
     <!-- External script for time autofill and alert dismissal -->
     <script src="assets/js/footprint.js"></script>
 
@@ -658,6 +732,21 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                 vehiclemodalOverlay.classList.remove('active');
             }
         });
+    </script>
+
+    <!-- Hidden Form for Void Submission -->
+    <form id="voidForm" action="index.php" method="POST" style="display: none;">
+        <input type="hidden" name="action" value="void_footprint">
+        <input type="hidden" name="otableid" id="voidTableId">
+    </form>
+
+    <script>
+        function confirmVoid(tableId) {
+            if (confirm("Are you sure you want to void this foot traffic entry?")) {
+                document.getElementById('voidTableId').value = tableId;
+                document.getElementById('voidForm').submit();
+            }
+        }
     </script>
 </body>
 
