@@ -442,7 +442,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 type="text"
                                                                 id="table-search-input"
                                                                 class="custom-input"
-                                                                placeholder="Search personnel, added by..."
+                                                                placeholder="Search... "
                                                                 onkeyup="applyFilter('foot')" />
                                                         </div>
                                                     </div>
@@ -641,27 +641,80 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <button class="close-btn" id="closevehicleTrafficModal">&times;</button>
                                         </div>
 
-                                        <div class="filter-bar">
-                                            <div class="filter-group">
-                                                <label for="vehicleDate">Date</label>
-                                                <input type="date" id="vehicleDate" />
+                                        <div class="filter-card">
+                                            <div class="filter-card-body">
+                                                <div class="filter-card-grid">
+
+                                                    <!-- Date Range Picker -->
+                                                    <div class="filter-card-group filter-date-range">
+                                                        <div class="input-wrapper">
+                                                            <span class="input-icon-box"></span>
+                                                            <input
+                                                                type="text"
+                                                                id="vehicle-date-range-picker"
+                                                                class="custom-input"
+                                                                placeholder="Choose date range..."
+                                                                readonly />
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Hidden values for Flatpickr JS binding -->
+                                                    <input type="hidden" id="vehicle-fromperiod" />
+                                                    <input type="hidden" id="vehicle-toperiod" />
+
+                                                    <!-- Action Buttons -->
+                                                    <div class="filter-actions">
+                                                        <button type="button" onclick="applyFilter('vehicle')" class="custom-btn btn-primary">
+                                                            <figure><img src="assets/images/icon/filter.png" alt="filter"></figure>
+                                                            Filter
+                                                        </button>
+                                                        <button type="button" onclick="clearFilter('vehicle')" class="custom-btn btn-secondary">
+                                                            <figure><img src="assets/images/icon/reset.png" alt="reset"></figure>
+                                                            Reset
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Live Search Input -->
+                                                    <div class="filter-card-group filter-search">
+                                                        <div class="input-wrapper">
+                                                            <span class="input-icon-box"></span>
+                                                            <input
+                                                                type="text"
+                                                                id="vehicle-table-search-input"
+                                                                class="custom-input"
+                                                                placeholder="Search..."
+                                                                onkeyup="applyFilter('vehicle')" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                             </div>
-                                            <button class="filter-btn" onclick="applyFilter('vehicle')">Filter</button>
-                                            <button class="filter-btn" onclick="clearFilter('vehicle')" type="button">Clear</button>
                                         </div>
 
                                         <div class="modal-body">
                                             <div class="table-container">
-                                                <table class="personnel-table">
+                                                <table class="personnel-table sortable-table" id="vehicleTrafficTable">
                                                     <thead>
                                                         <tr>
-                                                            <th>Personnel Name</th>
-                                                            <th>Date</th>
-                                                            <th>Time Range</th>
-                                                            <th>Count</th>
-                                                            <th>Created By</th>
-                                                            <th>Created Date</th>
-                                                            <th>Void</th>
+                                                            <th class="sortable" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">
+                                                                Personnel Name <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">
+                                                                Date <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">
+                                                                Time Range <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(3, 'vehicleTrafficTable', 'number')">
+                                                                Count <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(4, 'vehicleTrafficTable', 'string')">
+                                                                Created By <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="sortable" onclick="sortTable(5, 'vehicleTrafficTable', 'string')">
+                                                                Created Date <span class="sort-icon">↕</span>
+                                                            </th>
+                                                            <th class="text-center">Void</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
@@ -689,8 +742,8 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
-                                                            <tr>
-                                                                <td colspan="7" class="text-center">No data available</td> <!-- Fixed colspan from 4 to 7 -->
+                                                            <tr class="no-filter-result">
+                                                                <td colspan="7" class="text-center text-muted py-4">No data available</td>
                                                             </tr>
                                                         <?php endif; ?>
                                                     </tbody>
