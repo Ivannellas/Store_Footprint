@@ -20,6 +20,17 @@ if (empty($userId)) {
 
 $conn = getDBConnection();
 $editController = new EditUserAccountController($conn);
+
+// AJAX endpoint to verify postcode availability
+if (isset($_GET['action']) && $_GET['action'] === 'verify_postcode') {
+    $code = isset($_GET['code']) ? (int)$_GET['code'] : 0;
+    $isAvailable = $editController->isPostcodeAvailable($code, $userId);
+
+    echo $isAvailable ? 'available' : 'taken';
+    mysqli_close($conn);
+    exit;
+}
+
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -108,6 +119,7 @@ if (!$user) {
                                 <button type="button" id="generatePostcode" class="btn btn-link p-0 text-decoration-none small fw-bold text-dark" style="font-size: 1rem;">Generate</button>
                             </div>
                             <input type="number" id="postcode" name="postcode" class="form-control form-control-sm custom-input" value="<?php echo htmlspecialchars($user['oPostcode'] ?? '0'); ?>">
+                            <div id="postcode-alert" style="display: none; font-size: 0.85rem; font-weight: bold; margin-top: 5px;"></div>
                         </div>
 
                         <div class="mb-2">
@@ -165,9 +177,42 @@ if (!$user) {
     </footer>
 
     <script>
-        document.getElementById('generatePostcode').addEventListener('click', function() {
-            const code = Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('postcode').value = code;
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generatePostcode');
+            const postcodeInput = document.getElementById('postcode');
+            const postcodeAlert = document.getElementById('postcode-alert');
+            const currentUserId = "<?php echo htmlspecialchars($userId); ?>";
+
+            function verifyPostcode(code) {
+                if (!code || code <= 0) {
+                    postcodeAlert.style.display = 'none';
+                    return;
+                }
+
+                fetch(`edit_user_account.php?id=${currentUserId}&action=verify_postcode&code=${code}`)
+                    .then(response => response.text())
+                    .then(status => {
+                        if (status.trim() === 'taken') {
+                            postcodeAlert.style.display = 'block';
+                            postcodeAlert.style.color = '#dc3545';
+                            postcodeAlert.innerText = 'Used';
+                        } else {
+                            // Hide alert if the passcode is available
+                            postcodeAlert.style.display = 'none';
+                        }
+                    })
+                    .catch(error => console.error('Error verifying postcode:', error));
+            }
+
+            generateBtn.addEventListener('click', function() {
+                const code = Math.floor(1000 + Math.random() * 9000);
+                postcodeInput.value = code;
+                verifyPostcode(code);
+            });
+
+            postcodeInput.addEventListener('input', function() {
+                verifyPostcode(this.value);
+            });
         });
     </script>
 </body>

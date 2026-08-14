@@ -4,6 +4,8 @@ require_once __DIR__ . '/../entity/footprint_model.php';
 
 class FootprintController
 {
+    private const FOOTPRINT_MODULE_ID = '14';
+
     private mysqli $dbConn;
     private FootprintModel $footprintModel;
 
@@ -66,10 +68,22 @@ class FootprintController
     /*===========================================================
     // Void an existing footprint entry                         //
     ===========================================================*/
-    public function HandleVoidFootprint(string $type, int $tableId, string $voidedBy = ''): array
-    {
+    public function HandleVoidFootprint(
+        string $type,
+        int $tableId,
+        string $voidedBy = '',
+        string $initiatorUserId = '',
+        string $approverPostcode = ''
+    ): array {
         if ($tableId <= 0) {
             return ['success' => false, 'message' => 'Invalid record ID for void operation.'];
+        }
+
+        if (!$this->HasAuthorizedVoidApprover($initiatorUserId, $approverPostcode)) {
+            return [
+                'success' => false,
+                'message' => 'You need another admin postcode.'
+            ];
         }
 
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
@@ -81,6 +95,43 @@ class FootprintController
         }
 
         return ['success' => false, 'message' => 'Failed to void the record due to a database error.'];
+    }
+
+    /**
+     * A void must be approved by another active user with a matching postcode
+     * and Supervisor or Manager permission.
+     */
+    private function HasAuthorizedVoidApprover(string $initiatorUserId, string $approverPostcode): bool
+    {
+        $initiatorUserId = trim($initiatorUserId);
+        $approverPostcode = trim($approverPostcode);
+
+        if ($initiatorUserId === '' || $approverPostcode === '') {
+            return false;
+        }
+
+        $query = 'SELECT 1
+                  FROM tbl_user u
+                  INNER JOIN tbl_access a ON a.oUserid = u.oUserid
+                  WHERE u.oUserid <> ?
+                    AND u.oPostcode = ?
+                    AND u.oActive = 1
+                    AND a.oModuleid = ?
+                    AND (a.oSupervisor = 1 OR a.oManager = 1)
+                  LIMIT 1';
+
+        if (!$stmt = $this->dbConn->prepare($query)) {
+            error_log('Failed to prepare void approver validation: ' . $this->dbConn->error);
+            return false;
+        }
+
+        $moduleId = self::FOOTPRINT_MODULE_ID;
+        $stmt->bind_param('sss', $initiatorUserId, $approverPostcode, $moduleId);
+        $stmt->execute();
+        $isAuthorized = $stmt->get_result()->num_rows === 1;
+        $stmt->close();
+
+        return $isAuthorized;
     }
 
     /*===========================================================

@@ -22,7 +22,7 @@ async function checkPostcode(code) {
 
     if (status.trim() === "taken") {
       alertBox.textContent = `Used`;
-      alertBox.style.color = "black";
+      alertBox.style.color = "red";
       alertBox.style.display = "inline-block";
       return;
     }
