@@ -358,7 +358,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         <thead>
                                             <tr>
                                                 <th>Personnel Name</th>
-                                                <th>Date</th>
+                                                <th class="s_width">Date</th>
                                                 <th class="s_width">Time Range</th>
                                                 <th>Count</th>
                                                 <th>Created By</th>
@@ -501,7 +501,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable" onclick="sortTable(0, 'footTrafficTable', 'string')">
                                                                 Personnel Name <span class="sort-icon">↕</span>
                                                             </th>
-                                                            <th class="sortable" onclick="sortTable(1, 'footTrafficTable', 'string')">
+                                                            <th class="sortable" s_width onclick="sortTable(1, 'footTrafficTable', 'string')">
                                                                 Date <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(2, 'footTrafficTable', 'string')">
@@ -662,7 +662,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         <thead>
                                             <tr>
                                                 <th>Personnel Name</th>
-                                                <th>Date</th>
+                                                <th class="s_width">Date</th>
                                                 <th class="s_width">Time Range</th>
                                                 <th>Count</th>
                                                 <th>Created By</th>
@@ -805,7 +805,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">
                                                                 Personnel Name <span class="sort-icon">↕</span>
                                                             </th>
-                                                            <th class="sortable" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">
+                                                            <th class="sortable" s_width onclick="sortTable(1, 'vehicleTrafficTable', 'string')">
                                                                 Date <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable  s_width" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">
