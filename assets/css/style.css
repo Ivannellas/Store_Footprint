@@ -1300,7 +1300,7 @@ tr.row-voided td span {
 }
 
 .form_history_table th.s_width {
-  padding: 12px 60px;
+  width: 235px;
 }
 
 /* Right-align numeric columns like "Count" for better readability */
@@ -1314,7 +1314,7 @@ tr.row-voided td span {
   padding: 12px 16px;
   border-bottom: 1px solid #eef2ef;
   transition: background-color 0.2s ease;
-  white-space: normal;
+  white-space: nowrap;
 }
 
 /* Zebra striping (alternating row backgrounds) */
@@ -1851,8 +1851,9 @@ footer.index_footer {
 }
 
 .table-container {
-  max-height: 700px;
+  max-height: 500px;
   overflow-y: auto;
+  overflow-x: auto;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
 }
@@ -1862,6 +1863,7 @@ footer.index_footer {
   border-collapse: collapse;
   text-align: center;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .personnel-table th {
@@ -1874,14 +1876,20 @@ footer.index_footer {
   cursor: pointer;
 }
 
-.personnel-table th.s_width{
-   padding: 12px 60px;
+.personnel-table th.s_width {
+  width: 235px;
 }
+
+.personnel-table th span{
+  margin-left: 5px;
+}
+
 
 .personnel-table td {
   padding: 12px 16px;
   border-bottom: 1px solid #f0f0f0;
   color: #333;
+  white-space: nowrap;
 }
 
 .personnel-table tbody tr:nth-child(even) {

@@ -97,6 +97,10 @@
   padding: 40px 0 0;
 }
 
+.form_store_history, .form_parking_history {
+  width: 100%;
+}
+
 }
 
 @media only screen and (max-width :1300px) {
@@ -214,9 +218,6 @@ object-position: 33px 0;
   width: 100%;
 }
 
-.form_store, .form_store_history {
-  width: 100%;
-}
 
 /* Index */
 
