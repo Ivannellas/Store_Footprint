@@ -835,7 +835,15 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
                                                                     <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                                     <td><?php echo htmlspecialchars($row['added_by']); ?></td>
-                                                                    <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                                                                    <td>
+                                                                        <?php
+                                                                        if (!empty($row['created_at']) && $row['created_at'] !== '0000-00-00 00:00:00') {
+                                                                            echo htmlspecialchars(date('Y-m-d h:i A', strtotime($row['created_at'])));
+                                                                        } else {
+                                                                            echo '&mdash;';
+                                                                        }
+                                                                        ?>
+                                                                    </td>
                                                                     <td class="text-center">
                                                                         <?php if ($isVoided): ?>
                                                                             <span class="void_pills void-disabled" title="Record Voided">&cross; </span>
@@ -856,9 +864,17 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     </td>
                                                                     <td class="text-center">
                                                                         <?php if ($isVoided): ?>
-                                                                            <span class="voided-date"><?php echo htmlspecialchars($row['voided_date']); ?></span>
+                                                                            <span>
+                                                                                <?php
+                                                                                if (!empty($row['voided_date']) && $row['voided_date'] !== '0000-00-00 00:00:00') {
+                                                                                    echo htmlspecialchars(date('Y-m-d h:i A', strtotime($row['voided_date'])));
+                                                                                } else {
+                                                                                    echo '&mdash;';
+                                                                                }
+                                                                                ?>
+                                                                            </span>
                                                                         <?php else: ?>
-                                                                            <span class="not-voided">-</span>
+                                                                            <span>&mdash;</span>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                 </tr>
