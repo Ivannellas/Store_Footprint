@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <button type="submit" class="login_btn btn btn-primary btn-lg w-100 fw-bold shadow-sm custom-btn">
+                    <button type="submit" class="login_btn btn-lg w-100 fw-bold shadow-sm">
                         Sign In
                     </button>
 

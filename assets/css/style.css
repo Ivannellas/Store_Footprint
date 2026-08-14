@@ -801,6 +801,23 @@ footer.footer_intro {
   cursor: pointer;
 }
 
+.login_btn {
+  background-color: #0046ab;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.login_btn:hover {
+  background-color: #081d3f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(12, 43, 92, 0.2);
+}
+
 .custom-btn {
   background-color: #0046ab;
   color: #ffffff;
@@ -817,6 +834,9 @@ footer.footer_intro {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(12, 43, 92, 0.2);
 }
+
+
+
 
 /* INDEX PAGE */
 
