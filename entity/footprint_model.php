@@ -16,13 +16,13 @@ class FootprintModel
     public function AddFootprint(string $tableName, array $data): bool
     {
         $tableName = trim($tableName);
-
         if (!in_array($tableName, $this->allowedTables, true)) {
             return false;
         }
 
-        $query = "INSERT INTO {$tableName} (added_by, opersonnel, odate, otimerange, ocount, void_status, voided_by) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO {$tableName} 
+              (added_by, opersonnel, odate, otimerange, ocount, void_status, voided_by) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $this->db->prepare($query)) {
             $stmt->bind_param(
@@ -35,12 +35,12 @@ class FootprintModel
                 $data['void_status'],
                 $data['voided_by']
             );
+
             $result = $stmt->execute();
             $stmt->close();
             return $result;
         }
 
-        error_log("Failed to add footprint: " . $this->db->error);
         return false;
     }
 
@@ -68,7 +68,8 @@ class FootprintModel
                     otimerange, 
                     ocount,
                     void_status,
-                    voided_by
+                    voided_by,
+                    voided_date
                   FROM {$tableName}";
 
         if ($hasRangeFilter) {
@@ -145,13 +146,14 @@ class FootprintModel
         }
 
         // Only an active record can be voided. This also prevents repeat requests
-        // from overwriting the original voided_by audit value.
+        // from overwriting the original voided_by and voided_date audit values.
         $query = "UPDATE {$tableName}
-                  SET void_status = 0, voided_by = ?
-                  WHERE otableid = ? AND void_status = 1";
+              SET void_status = 0, 
+                  voided_by = ?, 
+                  voided_date = NOW()
+              WHERE otableid = ? AND void_status = 1";
 
         if ($stmt = $this->db->prepare($query)) {
-            // "si" -> string ($voidedBy), integer ($tableId)
             $stmt->bind_param("si", $voidedBy, $tableId);
             $result = $stmt->execute();
             $affectedRows = $stmt->affected_rows;

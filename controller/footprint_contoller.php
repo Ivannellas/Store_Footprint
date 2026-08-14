@@ -52,7 +52,7 @@ class FootprintController
             'otimerange'  => $timeRange,
             'ocount'      => $count,
             'void_status' => $voidStatus,
-            'voided_by'   => $voidedBy
+            'voided_by'   => $voidedBy,
         ];
 
         $isSaved = $this->footprintModel->AddFootprint($tableName, $payload);
