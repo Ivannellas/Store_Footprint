@@ -479,66 +479,81 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Void Record Handler
   window.confirmVoid = function (tableId, type = "store") {
-    Swal.fire({
-      // title: "Supervisor / Manager Approval Required",
-      text: "Enter the postcode of your supervisor or manager.",
-      icon: "warning",
-      input: "password",
-      inputPlaceholder: "",
-      inputAttributes: {
-        autocomplete: "off",
-        inputmode: "numeric",
-      },
-      showCancelButton: true,
-      confirmButtonText: "Approve",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#d33",
-      reverseButtons: true,
-      preConfirm: function (postcode) {
-        const trimmedPostcode = String(postcode || "").trim();
-        if (!trimmedPostcode) {
-          Swal.showValidationMessage("An approver postcode is required.");
-          return false;
-        }
-
-        return trimmedPostcode;
-      },
-    }).then(function (result) {
-      if (result.isConfirmed) {
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action =
-          "index.php?tab=" + (type === "parking" ? "Parking" : "Store");
-
-        const actionInput = document.createElement("input");
-        actionInput.type = "hidden";
-        actionInput.name = "action";
-        actionInput.value = "void_footprint";
-        form.appendChild(actionInput);
-
-        const idInput = document.createElement("input");
-        idInput.type = "hidden";
-        idInput.name = "otableid";
-        idInput.value = tableId;
-        form.appendChild(idInput);
-
-        const typeInput = document.createElement("input");
-        typeInput.type = "hidden";
-        typeInput.name = "type";
-        typeInput.value = type;
-        form.appendChild(typeInput);
-
-        const postcodeInput = document.createElement("input");
-        postcodeInput.type = "hidden";
-        postcodeInput.name = "approver_postcode";
-        postcodeInput.value = result.value;
-        form.appendChild(postcodeInput);
-
-        document.body.appendChild(form);
-        form.submit();
+  Swal.fire({
+    // title: "Supervisor / Manager Approval Required",
+    text: "Enter the postcode of your supervisor or manager.",
+    icon: "warning",
+    input: "password",
+    inputPlaceholder: "",
+    inputAttributes: {
+      autocomplete: "off",
+      inputmode: "numeric",
+      pattern: "[0-9]*"
+    },
+    didOpen: () => {
+      const input = Swal.getInput();
+      if (input) {
+        input.addEventListener("input", (e) => {
+          e.target.value = e.target.value.replace(/\D/g, "");
+        });
       }
-    });
-  };
+    },
+    showCancelButton: true,
+    confirmButtonText: "Void",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#d33",
+    reverseButtons: true,
+    preConfirm: function (postcode) {
+      const trimmedPostcode = String(postcode || "").trim();
+
+      if (!trimmedPostcode) {
+        Swal.showValidationMessage("An approver postcode is required.");
+        return false;
+      }
+
+      if (!/^\d+$/.test(trimmedPostcode)) {
+        Swal.showValidationMessage("Postcode must contain numbers only.");
+        return false;
+      }
+
+      return trimmedPostcode;
+    },
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action =
+        "index.php?tab=" + (type === "parking" ? "Parking" : "Store");
+
+      const actionInput = document.createElement("input");
+      actionInput.type = "hidden";
+      actionInput.name = "action";
+      actionInput.value = "void_footprint";
+      form.appendChild(actionInput);
+
+      const idInput = document.createElement("input");
+      idInput.type = "hidden";
+      idInput.name = "otableid";
+      idInput.value = tableId;
+      form.appendChild(idInput);
+
+      const typeInput = document.createElement("input");
+      typeInput.type = "hidden";
+      typeInput.name = "type";
+      typeInput.value = type;
+      form.appendChild(typeInput);
+
+      const postcodeInput = document.createElement("input");
+      postcodeInput.type = "hidden";
+      postcodeInput.name = "approver_postcode";
+      postcodeInput.value = result.value;
+      form.appendChild(postcodeInput);
+
+      document.body.appendChild(form);
+      form.submit();
+    }
+  });
+};
 
   // Universal Table Column Sort
   window.sortTable = function (columnIndex, tableId, dataType = "string") {

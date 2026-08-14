@@ -363,6 +363,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Created By</th>
                                                 <th>Created Date</th>
                                                 <th>Void</th>
+                                                <th>Voided By</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -385,6 +386,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'store')">
                                                                     &mdash;
                                                                 </button>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                            <?php else: ?>
+                                                                <span>&mdash;</span>
                                                             <?php endif; ?>
                                                         </td>
                                                     </tr>
@@ -611,6 +619,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Created By</th>
                                                 <th>Created Date</th>
                                                 <th>Void</th>
+                                                <th>Voided By</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -633,6 +642,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'parking')">
                                                                     &mdash;
                                                                 </button>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                            <?php else: ?>
+                                                                <span>&mdash;</span>
                                                             <?php endif; ?>
                                                         </td>
                                                     </tr>
@@ -836,10 +852,10 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         </script>
     <?php endif; ?>
     <?php if (!empty($postcodeErrorMessage)): ?>
-         <script>
+        <script>
             Swal.fire({
                 icon: 'error',
-                title: 'Tottottt! di pwede',
+                title: 'Totoottt!',
                 text: <?php echo json_encode($postcodeErrorMessage); ?>,
                 confirmButtonColor: '#003366',
                 confirmButtonText: 'OK'
