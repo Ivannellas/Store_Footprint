@@ -320,6 +320,9 @@ padding: 0 20px;
 margin-left: 0;
 }
 
+.form_history_table th.s_width {
+  padding: 12px 60px;
+}
 
 }
 
