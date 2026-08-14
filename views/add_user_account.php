@@ -141,7 +141,7 @@ mysqli_close($conn);
                                 <button onclick="displayCode()" type="button" id="btn-generate-postcode" class="btn btn-link p-0 small text-decoration-none text-dark fw-bold" style="font-size: 1rem;">Generate</button>
                             </div>
                             <input type="number" id="postcode" name="postcode" class="form-control custom-input" min="1000" max="9999" placeholder="0000" required>
-                            <div id="postcode-alert" style="display: none; font-size: 0.85rem; font-weight: bold; margin-top: 5px;"></div>
+                            <div id="postcode-alert" style="display: none; font-size: 0.85rem; font-weight: bold; margin-top: 5px; color: red;"></div>
                         </div>
 
                         <div class="row mb-4">
@@ -163,36 +163,36 @@ mysqli_close($conn);
 
     <!-- Footer -->
     <footer class=" footer_intro">
-        <div class="footer_content">
-            <div class="wrapper">
-                <div class="footer_container">
-                    <div class="footer_img_content">
-                        <figure><img src="../assets/images/nong_atoy_head.png" alt="Footer Logo"></figure>
-                        <p>To become the customer's TOP OF MIND for building materials and home improvement needs in Cebu in 2027</p>
-                    </div>
+                            <div class="footer_content">
+                                <div class="wrapper">
+                                    <div class="footer_container">
+                                        <div class="footer_img_content">
+                                            <figure><img src="../assets/images/nong_atoy_head.png" alt="Footer Logo"></figure>
+                                            <p>To become the customer's TOP OF MIND for building materials and home improvement needs in Cebu in 2027</p>
+                                        </div>
 
-                    <div class="footer_info">
-                        <div class="footer_help">
-                            <p>Need Help? <span><a href="#">Contact IT Support</a></span></p>
-                        </div>
-                        <div class="footer_values">
-                            <figure><img src="../assets/images/footer-img.png" alt="Values"></figure>
-                        </div>
-                        <div class="copyright">
-                            &copy; Copyright
-                            <?php
-                            $start_year = '2026';
-                            $current_year = date('Y');
-                            $copyright = ($current_year == $start_year) ? $start_year : $current_year;
-                            echo $copyright; ?>
-                            <span class="company_name">Atlantic Hardware.</span>
-                            <span><br> All rights reserved.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+                                        <div class="footer_info">
+                                            <div class="footer_help">
+                                                <p>Need Help? <span><a href="#">Contact IT Support</a></span></p>
+                                            </div>
+                                            <div class="footer_values">
+                                                <figure><img src="../assets/images/footer-img.png" alt="Values"></figure>
+                                            </div>
+                                            <div class="copyright">
+                                                &copy; Copyright
+                                                <?php
+                                                $start_year = '2026';
+                                                $current_year = date('Y');
+                                                $copyright = ($current_year == $start_year) ? $start_year : $current_year;
+                                                echo $copyright; ?>
+                                                <span class="company_name">Atlantic Hardware.</span>
+                                                <span><br> All rights reserved.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </footer>
                             <script src=" ../assets/js/postcode_generator.js" defer></script>
 </body>
 

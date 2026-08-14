@@ -96,8 +96,10 @@ $footprintController = new FootprintController($conn);
 // Track active tab dynamically
 $activeTab = $_GET['tab'] ?? 'Store';
 
+$postcodeErrorMessage = $_SESSION['postcode_error'] ?? "";
 $errorMessage = $_SESSION['error_message'] ?? "";
 unset($_SESSION['error_message']);
+unset($_SESSION['postcode_error']);
 
 // Handle ALL POST Requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -107,14 +109,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tableId = intval($_POST['otableid'] ?? 0);
         $type    = strtolower(trim($_POST['type'] ?? 'store'));
 
-        $result      = $footprintController->HandleVoidFootprint($type, $tableId, $userName);
+        $approverPostcode = trim($_POST['approver_postcode'] ?? '');
+        $result      = $footprintController->HandleVoidFootprint(
+            $type,
+            $tableId,
+            $userName,
+            (string)$userId,
+            $approverPostcode
+        );
         $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
 
         if ($result['success']) {
             header("Location: index.php?tab=$redirectTab&status=void_success");
             exit;
         } else {
-            $_SESSION['error_message'] = $result['message'];
+            $_SESSION['postcode_error'] = $result['message'];
             header("Location: index.php?tab=$redirectTab");
             exit;
         }
@@ -475,6 +484,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 Created Date <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="text-center">Void</th>
+                                                            <th>Voided By</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
@@ -497,6 +507,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                                 onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'store')">
                                                                                 &mdash;
                                                                             </button>
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?php if ($isVoided): ?>
+                                                                            <span class="voided-by"><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                                        <?php else: ?>
+                                                                            <span class="not-voided">-</span>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                 </tr>
@@ -818,6 +835,17 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
             });
         </script>
     <?php endif; ?>
+    <?php if (!empty($postcodeErrorMessage)): ?>
+         <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Tottottt! di pwede',
+                text: <?php echo json_encode($postcodeErrorMessage); ?>,
+                confirmButtonColor: '#003366',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    <?php endif; ?>
 
     <!-- MODAL JAVASCRIPT -->
     <script>
@@ -862,20 +890,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         });
     </script>
 
-    <!-- Hidden Form for Void Submission -->
-    <form id="voidForm" action="index.php" method="POST" style="display: none;">
-        <input type="hidden" name="action" value="void_footprint">
-        <input type="hidden" name="otableid" id="voidTableId">
-    </form>
-
-    <script>
-        function confirmVoid(tableId) {
-            if (confirm("Are you sure you want to void this foot traffic entry?")) {
-                document.getElementById('voidTableId').value = tableId;
-                document.getElementById('voidForm').submit();
-            }
-        }
-    </script>
 </body>
 
 </html>

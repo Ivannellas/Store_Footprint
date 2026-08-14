@@ -1,5 +1,5 @@
 <?php
-require_once '../entity/edit_user_account_model.php';
+require_once __DIR__ . '/../entity/edit_user_account_model.php';
 
 class EditUserAccountController
 {
@@ -20,7 +20,6 @@ class EditUserAccountController
         return $this->userModel->getUserById($userId);
     }
 
-
 /*============================================================
 // update user profile                                      //
 =========================================================== */
@@ -32,4 +31,11 @@ class EditUserAccountController
         return $this->userModel->updateProfile($formData, $userId);
     }
 
+/*============================================================
+// check if postcode is available                            //
+=========================================================== */
+    public function isPostcodeAvailable(int $code, string $currentUserId): bool
+    {
+        return $this->userModel->isPostcodeAvailable($code, $currentUserId);
+    }
 }

@@ -144,15 +144,19 @@ class FootprintModel
             return false;
         }
 
-        // UPDATE both void_status and voided_by
-        $query = "UPDATE {$tableName} SET void_status = 0, voided_by = ? WHERE otableid = ?";
+        // Only an active record can be voided. This also prevents repeat requests
+        // from overwriting the original voided_by audit value.
+        $query = "UPDATE {$tableName}
+                  SET void_status = 0, voided_by = ?
+                  WHERE otableid = ? AND void_status = 1";
 
         if ($stmt = $this->db->prepare($query)) {
             // "si" -> string ($voidedBy), integer ($tableId)
             $stmt->bind_param("si", $voidedBy, $tableId);
             $result = $stmt->execute();
+            $affectedRows = $stmt->affected_rows;
             $stmt->close();
-            return $result;
+            return $result && $affectedRows === 1;
         }
 
         error_log("Failed to void footprint: " . $this->db->error);

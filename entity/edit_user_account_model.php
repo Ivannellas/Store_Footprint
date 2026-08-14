@@ -12,16 +12,16 @@ class EditUserModel
 /*==============================================================
 //   Retrieve user by ID                                      //
 =============================================================*/   
-public function getUserById(string $userId)
+    public function getUserById(string $userId)
     {
         $id = mysqli_real_escape_string($this->db, $userId);
         
         $query = "SELECT oUserid, 
-                        oUsername, 
-                        oFullname, 
-                        oPosition, 
-                        oPostcode, 
-                        oActive 
+                         oUsername, 
+                         oFullname, 
+                         oPosition, 
+                         oPostcode, 
+                         oActive 
                     FROM tbl_user 
                     WHERE oUserid = '$id' 
                     LIMIT 1";
@@ -36,7 +36,7 @@ public function getUserById(string $userId)
 /*==============================================================
 //   Update user profile                                      //
 =============================================================*/       
-public function updateProfile(array $data, string $userId): bool
+    public function updateProfile(array $data, string $userId): bool
     {
         $id = mysqli_real_escape_string($this->db, $userId);
         $fullname = mysqli_real_escape_string($this->db, $data['fullname'] ?? '');
@@ -66,5 +66,26 @@ public function updateProfile(array $data, string $userId): bool
         }
 
         return (bool)mysqli_query($this->db, $query);
+    }
+
+/*==============================================================
+//   Check if postcode is available (excluding current user)  //
+=============================================================*/
+    public function isPostcodeAvailable(int $code, string $currentUserId): bool
+    {
+        if ($code <= 0) {
+            return true;
+        }
+
+        $id = mysqli_real_escape_string($this->db, $currentUserId);
+        $query = "SELECT 1 
+                  FROM tbl_user 
+                  WHERE oPostcode = $code 
+                    AND oUserid != '$id' 
+                  LIMIT 1";
+
+        $result = mysqli_query($this->db, $query);
+
+        return ($result && mysqli_num_rows($result) === 0);
     }
 }
