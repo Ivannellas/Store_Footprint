@@ -488,7 +488,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable" onclick="sortTable(1, 'footTrafficTable', 'string')">
                                                                 Date <span class="sort-icon">↕</span>
                                                             </th>
-                                                            <th class="sortable" onclick="sortTable(2, 'footTrafficTable', 'string')">
+                                                            <th class="sortable s_width" onclick="sortTable(2, 'footTrafficTable', 'string')">
                                                                 Time Range <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable" onclick="sortTable(3, 'footTrafficTable', 'number')">
@@ -497,12 +497,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable" onclick="sortTable(4, 'footTrafficTable', 'string')">
                                                                 Created By <span class="sort-icon">↕</span>
                                                             </th>
-                                                            <th class="sortable" onclick="sortTable(5, 'footTrafficTable', 'string')">
+                                                            <th class="sortable s_width" onclick="sortTable(5, 'footTrafficTable', 'string')">
                                                                 Created Date <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="text-center">Void</th>
                                                             <th>Voided By</th>
-                                                            <th>Voided Date</th>
+                                                            <th class="s_width">Voided Date</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
@@ -760,7 +760,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">
                                                                 Date <span class="sort-icon">↕</span>
                                                             </th>
-                                                            <th class="sortable" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">
+                                                            <th class="sortable  s_width" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">
                                                                 Time Range <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable" onclick="sortTable(3, 'vehicleTrafficTable', 'number')">
@@ -769,12 +769,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable" onclick="sortTable(4, 'vehicleTrafficTable', 'string')">
                                                                 Created By <span class="sort-icon">↕</span>
                                                             </th>
-                                                            <th class="sortable" onclick="sortTable(5, 'vehicleTrafficTable', 'string')">
+                                                            <th class="sortable s_width" onclick="sortTable(5, 'vehicleTrafficTable', 'string')">
                                                                 Created Date <span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="text-center">Void</th>
                                                             <th class="text-center">Voided By</th>
-                                                            <th class="text-center">Voided Date</th>
+                                                            <th class="text-center s_width">Voided Date</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
