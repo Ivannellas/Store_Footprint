@@ -134,6 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name         = trim($_POST['name'] ?? '');
         $selectedDate = trim($_POST['date'] ?? date('Y-m-d'));
         $timeRange    = trim($_POST['timeRange'] ?? '');
+        $voidedDate  = ''; 
 
         // Ensure 0 is captured properly when submitted
         $count = isset($_POST['count']) && $_POST['count'] !== '' ? (int)$_POST['count'] : 0;
@@ -144,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'otimerange'  => $timeRange,
             'ocount'      => $count,
             'added_by'    => $userName,
-            'voided_by'    => ''
+            'voided_by'    => '',
         ];
 
         $result = $footprintController->HandleAddFootprint($type, $formData);
@@ -358,12 +359,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Time Range</th>
+                                                <th class="s_width">Time Range</th>
                                                 <th>Count</th>
-                                                <th>Created By</th>
-                                                <th>Created Date</th>
+                                                <th >Created By</th>
+                                                <th class="s_width">Created Date</th>
                                                 <th>Void</th>
                                                 <th>Voided By</th>
+                                                <th class="s_width">Voided Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -391,6 +393,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <td class="text-center">
                                                             <?php if ($isVoided): ?>
                                                                 <span><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                            <?php else: ?>
+                                                                <span>&mdash;</span>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span><?php echo htmlspecialchars($row['voided_date']); ?></span>
                                                             <?php else: ?>
                                                                 <span>&mdash;</span>
                                                             <?php endif; ?>
@@ -493,6 +502,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             </th>
                                                             <th class="text-center">Void</th>
                                                             <th>Voided By</th>
+                                                            <th>Voided Date</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
@@ -520,6 +530,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td class="text-center">
                                                                         <?php if ($isVoided): ?>
                                                                             <span class="voided-by"><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                                        <?php else: ?>
+                                                                            <span class="not-voided">-</span>
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?php if ($isVoided): ?>
+                                                                            <span class="voided-date"><?php echo htmlspecialchars($row['voided_date']); ?></span>
                                                                         <?php else: ?>
                                                                             <span class="not-voided">-</span>
                                                                         <?php endif; ?>
@@ -614,12 +631,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <tr>
                                                 <th>Personnel Name</th>
                                                 <th>Date</th>
-                                                <th>Time Range</th>
+                                                <th class="s_width">Time Range</th>
                                                 <th>Count</th>
                                                 <th>Created By</th>
-                                                <th>Created Date</th>
+                                                <th class="s_width">Created Date</th>
                                                 <th>Void</th>
                                                 <th>Voided By</th>
+                                                <th class="s_width">Voided Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -647,6 +665,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <td class="text-center">
                                                             <?php if ($isVoided): ?>
                                                                 <span><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                            <?php else: ?>
+                                                                <span>&mdash;</span>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span><?php echo htmlspecialchars($row['voided_date']); ?></span>
                                                             <?php else: ?>
                                                                 <span>&mdash;</span>
                                                             <?php endif; ?>
@@ -749,6 +774,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             </th>
                                                             <th class="text-center">Void</th>
                                                             <th class="text-center">Voided By</th>
+                                                            <th class="text-center">Voided Date</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="vehicleTableBody">
@@ -776,6 +802,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                     <td class="text-center">
                                                                         <?php if ($isVoided): ?>
                                                                             <span class="voided-by"><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                                        <?php else: ?>
+                                                                            <span class="not-voided">-</span>
+                                                                        <?php endif; ?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?php if ($isVoided): ?>
+                                                                            <span class="voided-date"><?php echo htmlspecialchars($row['voided_date']); ?></span>
                                                                         <?php else: ?>
                                                                             <span class="not-voided">-</span>
                                                                         <?php endif; ?>
