@@ -501,9 +501,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable s_width" onclick="sortTable(0, 'footTrafficTable', 'string')">Personnel Name<span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(1, 'footTrafficTable', 'string')">Date<span class="sort-icon">↕</span>
-                                                            <th class="sortable" s_width onclick="sortTable(1, 'footTrafficTable', 'string')">
-                                                                Date <span class="sort-icon">↕</span>
-                                                            </th>
                                                             <th class="sortable s_width" onclick="sortTable(2, 'footTrafficTable', 'string')">Time Range<span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(3, 'footTrafficTable', 'number')">Count<span class="sort-icon">↕</span>
@@ -658,7 +655,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         <thead>
                                             <tr>
                                                 <th class="s_width">Personnel Name</th>
-                                                <th>Personnel Name</th>
                                                 <th class="s_width">Date</th>
                                                 <th class="s_width">Time Range</th>
                                                 <th>Count</th>
@@ -802,9 +798,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable s_width" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">Personnel Name<span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">Date<span class="sort-icon">↕</span>
-                                                            <th class="sortable" s_width onclick="sortTable(1, 'vehicleTrafficTable', 'string')">
-                                                                Date <span class="sort-icon">↕</span>
-                                                            </th>
+                                                            
                                                             <th class="sortable  s_width" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">Time Range<span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(3, 'vehicleTrafficTable', 'number')">Count<span class="sort-icon">↕</span>
@@ -945,7 +939,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
         <script>
             Swal.fire({
                 icon: 'error',
-                title: 'Totoottt!',
+                title: 'Access Denied',
                 text: <?php echo json_encode($postcodeErrorMessage); ?>,
                 confirmButtonColor: '#003366',
                 confirmButtonText: 'OK'
