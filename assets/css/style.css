@@ -1141,6 +1141,7 @@ tr.row-voided td span {
 
 /* Styled search input to match your form controls */
 .personnel-search-input {
+  text-transform: uppercase;
   width: 100%;
   padding: 8px 32px 8px 12px;
   font-size: 14px;
