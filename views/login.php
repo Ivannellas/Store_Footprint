@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="card login-card ">
+            <div class="store_title">TDIY</div>
 
             <div class="card-body card_box">
 
