@@ -642,6 +642,14 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         </div>
                                     </div>
 
+                                    <div class="oVehicle">
+                                        <label for="Vehicle">Choose Vehicle</label>
+                                        <select name="vehicle" id="vehicle" required>
+                                        <option name="4wheels" value="4wheels">4-Wheels</option>
+                                        <option name="motorcycle" value="motorcycle">Motorcycle</option>
+                                        </select>
+                                    </div>
+
                                     <div class="submit_btn">
                                         <button class="primary_btn" type="submit" name="submit">Submit</button>
                                     </div>
@@ -798,7 +806,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="sortable s_width" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">Personnel Name<span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">Date<span class="sort-icon">↕</span>
-                                                            
+
                                                             <th class="sortable  s_width" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">Time Range<span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(3, 'vehicleTrafficTable', 'number')">Count<span class="sort-icon">↕</span>

@@ -1223,6 +1223,47 @@ tr.row-voided td span {
   background-color: #999999;
 }
 
+/* Container layout */
+.oVehicle {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  font-size: 14px;
+  font-family: var(--parag);
+}
+
+/* Header Label Styling */
+.oVehicle label {
+  color: #0b3175;
+  font-weight: 700;
+}
+
+/* Custom Styled Select Input */
+.oVehicle select {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  font-size: 14px;
+  color: #333333;
+  background-color: #ffffff;
+  border: 1px solid #c8d0d8;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  text-transform: uppercase;
+}
+
+/* Hover and Focus States */
+.oVehicle select:hover {
+  border-color: #a0aab5;
+}
+
+.oVehicle select:focus {
+  border-color: var(--primaryColor);
+  box-shadow: 0 0 0 2px rgba(11, 49, 117, 0.15);
+}
+
 .flex_box_between {
   display: flex;
   gap: 12px;
