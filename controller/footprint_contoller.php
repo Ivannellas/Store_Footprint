@@ -55,6 +55,21 @@ class FootprintController
             'voided_by'   => $voidedBy,
         ];
 
+        // Specific payload handling for parking vehicle types
+        if ($type === 'parking') {
+            $rawVehicleType = strtolower(trim($data['vehicle_type'] ?? ''));
+            $allowedTypes   = ['4wheels', 'motorcycle'];
+
+            if (!in_array($rawVehicleType, $allowedTypes, true)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please select a valid vehicle type (4 Wheels or Motorcycle).'
+                ];
+            }
+
+            $payload['vehicle_type'] = $rawVehicleType;
+        }
+
         $isSaved = $this->footprintModel->AddFootprint($tableName, $payload);
 
         $label = ($type === 'parking') ? 'Vehicle Traffic' : 'Foot Traffic';
@@ -73,10 +88,15 @@ class FootprintController
         int $tableId,
         string $voidedBy = '',
         string $initiatorUserId = '',
-        string $approverPostcode = ''
+        string $approverPostcode = '',
+        string $voidReason = '' // Added param
     ): array {
         if ($tableId <= 0) {
             return ['success' => false, 'message' => 'Invalid record ID for void operation.'];
+        }
+
+        if (empty(trim($voidReason))) {
+            return ['success' => false, 'message' => 'A valid reason is required to void this record.'];
         }
 
         if (!$this->HasAuthorizedVoidApprover($initiatorUserId, $approverPostcode)) {
@@ -88,7 +108,8 @@ class FootprintController
 
         $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
 
-        $isVoided = $this->footprintModel->VoidFootprint($tableName, $tableId, $voidedBy);
+        // Pass $voidReason to your FootprintModel implementation
+        $isVoided = $this->footprintModel->VoidFootprint($tableName, $tableId, $voidedBy, $voidReason);
 
         if ($isVoided) {
             return ['success' => true, 'message' => 'Record voided successfully.'];

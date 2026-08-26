@@ -137,7 +137,7 @@ class FootprintModel
     /*==============================================================
     //   Void a footprint record (set void_status = 0)            //
     ==============================================================*/
-    public function VoidFootprint(string $tableName, int $tableId, string $voidedBy): bool
+    public function VoidFootprint(string $tableName, int $tableId, string $voidedBy, string $voidReason): bool
     {
         $tableName = trim($tableName);
 
@@ -145,16 +145,15 @@ class FootprintModel
             return false;
         }
 
-        // Only an active record can be voided. This also prevents repeat requests
-        // from overwriting the original voided_by and voided_date audit values.
         $query = "UPDATE {$tableName}
               SET void_status = 0, 
                   voided_by = ?, 
+                  void_reason = ?, 
                   voided_date = NOW()
               WHERE otableid = ? AND void_status = 1";
 
         if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("si", $voidedBy, $tableId);
+            $stmt->bind_param("ssi", $voidedBy, $voidReason, $tableId);
             $result = $stmt->execute();
             $affectedRows = $stmt->affected_rows;
             $stmt->close();
