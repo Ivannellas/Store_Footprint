@@ -480,74 +480,71 @@ document.addEventListener("DOMContentLoaded", function () {
   // Void Record Handler
   window.confirmVoid = function (tableId, type = "store") {
   Swal.fire({
-    // title: "Supervisor / Manager Approval Required",
-    text: "Enter the postcode of your supervisor or manager.",
+    title: "Void Record",
+    html:
+      '<div class="text-start mb-2"><label class="form-label small fw-bold">Reason for Voiding</label>' +
+      '<textarea id="swal-void-reason" class="swal2-textarea m-0 w-100" placeholder="Enter reason" rows="2"></textarea></div>' +
+      '<div class="text-start"><label class="form-label small fw-bold">Approver Postcode</label>' +
+      '<input id="swal-approver-postcode" type="password" class="swal2-input m-0 w-100" placeholder="Enter postcode" inputmode="numeric" pattern="[0-9]*" autocomplete="off"></div>',
     icon: "warning",
-    input: "password",
-    inputPlaceholder: "",
-    inputAttributes: {
-      autocomplete: "off",
-      inputmode: "numeric",
-      pattern: "[0-9]*"
-    },
+    showCancelButton: true,
+    confirmButtonText: "Void Record",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#d33",
+    reverseButtons: true,
     didOpen: () => {
-      const input = Swal.getInput();
-      if (input) {
-        input.addEventListener("input", (e) => {
+      const postcodeInput = document.getElementById("swal-approver-postcode");
+      if (postcodeInput) {
+        postcodeInput.addEventListener("input", (e) => {
           e.target.value = e.target.value.replace(/\D/g, "");
         });
       }
     },
-    showCancelButton: true,
-    confirmButtonText: "Void",
-    cancelButtonText: "Cancel",
-    confirmButtonColor: "#d33",
-    reverseButtons: true,
-    preConfirm: function (postcode) {
-      const trimmedPostcode = String(postcode || "").trim();
+    preConfirm: function () {
+      const reason = document.getElementById("swal-void-reason").value.trim();
+      const postcode = document.getElementById("swal-approver-postcode").value.trim();
 
-      if (!trimmedPostcode) {
+      if (!reason) {
+        Swal.showValidationMessage("Please provide a reason for voiding.");
+        return false;
+      }
+
+      if (!postcode) {
         Swal.showValidationMessage("An approver postcode is required.");
         return false;
       }
 
-      if (!/^\d+$/.test(trimmedPostcode)) {
+      if (!/^\d+$/.test(postcode)) {
         Swal.showValidationMessage("Postcode must contain numbers only.");
         return false;
       }
 
-      return trimmedPostcode;
+      return {
+        postcode: postcode,
+        reason: reason
+      };
     },
   }).then(function (result) {
     if (result.isConfirmed) {
       const form = document.createElement("form");
       form.method = "POST";
-      form.action =
-        "index.php?tab=" + (type === "parking" ? "Parking" : "Store");
+      form.action = "index.php?tab=" + (type === "parking" ? "Parking" : "Store");
 
-      const actionInput = document.createElement("input");
-      actionInput.type = "hidden";
-      actionInput.name = "action";
-      actionInput.value = "void_footprint";
-      form.appendChild(actionInput);
+      const fields = {
+        action: "void_footprint",
+        otableid: tableId,
+        type: type,
+        approver_postcode: result.value.postcode,
+        void_reason: result.value.reason
+      };
 
-      const idInput = document.createElement("input");
-      idInput.type = "hidden";
-      idInput.name = "otableid";
-      idInput.value = tableId;
-      form.appendChild(idInput);
-
-      const typeInput = document.createElement("input");
-      typeInput.type = "hidden";
-      typeInput.name = "type";
-      typeInput.value = type;
-      form.appendChild(typeInput);
-
-      const postcodeInput = document.createElement("input");
-      postcodeInput.type = "hidden";
-      postcodeInput.name = "approver_postcode";
-      postcodeInput.value = result.value;
-      form.appendChild(postcodeInput);
+      for (const [key, value] of Object.entries(fields)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      }
 
       document.body.appendChild(form);
       form.submit();

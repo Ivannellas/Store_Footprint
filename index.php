@@ -110,12 +110,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $type    = strtolower(trim($_POST['type'] ?? 'store'));
 
         $approverPostcode = trim($_POST['approver_postcode'] ?? '');
+        $voidReason = trim($_POST['void_reason'] ?? '');
         $result      = $footprintController->HandleVoidFootprint(
             $type,
             $tableId,
             $userName,
             (string)$userId,
-            $approverPostcode
+            $approverPostcode,
+            $voidReason
         );
         $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
 
@@ -146,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'ocount'      => $count,
             'added_by'    => $userName,
             'voided_by'    => '',
+            'void_reason' => $voidReason ?? ''
         ];
 
         $result = $footprintController->HandleAddFootprint($type, $formData);
