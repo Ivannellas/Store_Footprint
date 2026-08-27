@@ -30,6 +30,7 @@ class FootprintController
         $voidStatus = (int)($data['void_status'] ?? 1);
         $voidedBy   = trim($data['voided_by'] ?? '');
 
+
         // Prevent submission if personnel is empty or placeholder is selected
         if (empty($personnel) || $personnel === 'SELECT PERSONNEL' || empty($timeRange) || $count < 0) {
             return [
