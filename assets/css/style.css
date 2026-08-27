@@ -1223,43 +1223,6 @@ tr.row-voided td span {
   background-color: #999999;
 }
 
-/* VEHICLE VIEWING EYE ICON */
-
-/* Eye Action Button */
-.view_btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-}
-
-.view_btn:hover {
-    background-color: rgba(4, 35, 90, 0.08);
-}
-
-.eye_icon {
-    width: 20px;
-    height: 20px;
-}
-
-.eye_close img {
-  filter: invert(10%) sepia(87%) saturate(2250%) hue-rotate(205deg) brightness(91%) contrast(106%);
-}
-
-
-.eye_open {
-    stroke: var(--primaryColor);
-}
-
-.eye_closed {
-    stroke: #888888;
-}
-
 /* Modal Table Styling */
 .traffic_modal_table {
     width: 100%;
