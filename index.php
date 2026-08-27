@@ -748,7 +748,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Void</th>
                                                 <th>Voided By</th>
                                                 <th class="s_width">Voided Date</th>
-                                                <th class="text-center">View</th> 
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -805,21 +804,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <?php endif; ?>
                                                         </td>
 
-                                                        <!-- NEW ACTION VIEW BUTTON -->
-                                                        <td class="text-center">
-                                                            <button type="button" class="view_btn"
-                                                                data-timerange="<?php echo htmlspecialchars($row['otimerange']); ?>"
-                                                                data-details='<?php echo json_encode(isset($row['vehicle_breakdown']) ? $row['vehicle_breakdown'] : []); ?>'
-                                                                onclick="openTrafficModal(this)">
-                                                                <?php if ($isVoided): ?>
-                                                                    <figure class="eye_icon eye_close"><img src="assets/images/eyeclose.png" alt="eyesclose"></figure>
-                                                                <?php else: ?>
-                                                                    <!-- Changed default active state to eyeclose.png -->
-                                                                    <figure class="eye_icon eye_close"><img src="assets/images/eyeclose.png" alt="eyesclose"></figure>
-                                                                <?php endif; ?>
-                                                            </button>
-                                                        </td>
-
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
@@ -833,30 +817,6 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                 </div>
                                 <div class="modal_btn">
                                     <a id="vehicleModalBtn" class="primary_btn" href="#">Vehicle History</a>
-                                </div>
-                            </div>
-
-                            <!-- TRAFFIC DETAILS MODAL -->
-                            <div class="vehicle_modal_overlay" id="trafficDetailModal">
-                                <div class="vehicle_modal_content">
-                                    <div class="vehicle_modal_header">
-                                        <h2 id="modalTimeRange">Time Range: --:--</h2>
-                                        <button type="button" class="vehicle_close_btn" id="closeTrafficModalBtn">&times;</button>
-                                    </div>
-
-                                    <div class="vehicle_modal_body">
-                                        <table class="traffic_modal_table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Vehicle Type</th>
-                                                    <th class="text-center">Count</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="modalTableBody">
-                                                <!-- Dynamic rows inserted via JavaScript -->
-                                            </tbody>
-                                        </table>
-                                    </div>
                                 </div>
                             </div>
 
