@@ -145,8 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($vehicleCounts as $vehicleType => $countVal) {
                 $count = (int)$countVal;
 
-                // Don't skip zero and empty vehicle inputs
-                if ($count == 0 || $countVal === '') {
+                // Don't skip zero
+                if ($count < 0) {
                     continue;
                 }
 
@@ -158,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'added_by'     => $userName,
                     'voided_by'    => '',
                     'vehicle_type' => $vehicleType,
+                    'void_reason'  => ''
                 ];
 
                 $result = $footprintController->HandleAddFootprint('parking', $formData);
@@ -190,6 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'ocount'     => $count,
                 'added_by'   => $userName,
                 'voided_by'  => '',
+                'void_reason' => ''
             ];
 
             $result = $footprintController->HandleAddFootprint('store', $formData);
@@ -410,6 +412,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Void</th>
                                                 <th>Voided By</th>
                                                 <th class="s_width">Voided Date</th>
+                                                <th>Void Reason</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -462,6 +465,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 </span>
                                                             <?php else: ?>
                                                                 <span>&mdash;</span>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span class="voided-by"><?php echo htmlspecialchars($row['void_reason']); ?></span>
+                                                            <?php else: ?>
+                                                                <span class="not-voided">-</span>
                                                             <?php endif; ?>
                                                         </td>
                                                     </tr>
@@ -556,6 +566,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                             <th class="text-center">Void</th>
                                                             <th>Voided By</th>
                                                             <th class="s_width">Voided Date</th>
+                                                            <th>Void Reason</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="footTableBody">
@@ -610,6 +621,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                             <span>&mdash;</span>
                                                                         <?php endif; ?>
                                                                     </td>
+                                                                    <td class="text-center">
+                                                                        <?php if ($isVoided): ?>
+                                                                            <span class="voided-by"><?php echo htmlspecialchars($row['void_reason']); ?></span>
+                                                                        <?php else: ?>
+                                                                            <span class="not-voided">-</span>
+                                                                        <?php endif; ?>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
@@ -748,6 +765,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th>Void</th>
                                                 <th>Voided By</th>
                                                 <th class="s_width">Voided Date</th>
+                                                <th>Void Reason</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -803,7 +821,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 <span>&mdash;</span>
                                                             <?php endif; ?>
                                                         </td>
-
+                                                        <td class="text-center">
+                                                            <?php if ($isVoided): ?>
+                                                                <span class="voided-by"><?php echo htmlspecialchars($row['void_reason']); ?></span>
+                                                            <?php else: ?>
+                                                                <span class="not-voided">-</span>
+                                                            <?php endif; ?>
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
@@ -900,6 +924,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <th class="text-center">Void</th>
                                                         <th class="text-center">Voided By</th>
                                                         <th class="text-center s_width">Voided Date</th>
+                                                        <th class="text-center s_width">Void Reason</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="vehicleTableBody">
@@ -953,6 +978,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                         </span>
                                                                     <?php else: ?>
                                                                         <span>&mdash;</span>
+                                                                    <?php endif; ?>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <?php if ($isVoided): ?>
+                                                                        <span class="voided-by"><?php echo htmlspecialchars($row['void_reason']); ?></span>
+                                                                    <?php else: ?>
+                                                                        <span class="not-voided">-</span>
                                                                     <?php endif; ?>
                                                                 </td>
                                                             </tr>

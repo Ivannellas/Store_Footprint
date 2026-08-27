@@ -93,7 +93,8 @@ class FootprintModel
                     void_status,
                     voided_by,
                     voided_date,
-                    vehicle_type
+                    vehicle_type,
+                    void_reason
                   FROM {$tableName}";
         } else {
             $query = "SELECT 
@@ -106,7 +107,8 @@ class FootprintModel
                     ocount,
                     void_status,
                     voided_by,
-                    voided_date
+                    voided_date,
+                    void_reason
                   FROM {$tableName}";
         }
 
