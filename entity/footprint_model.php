@@ -201,22 +201,58 @@ class FootprintModel
             return false;
         }
 
-        $query = "UPDATE {$tableName}
-              SET void_status = 0, 
-                  voided_by = ?, 
-                  void_reason = ?, 
-                  voided_date = NOW()
-              WHERE otableid = ? 
-              AND void_status = 1
-              AND DATE (odate) = CURDATE()";
+        if($tableName === 'tbl_parking_footprint') {
+            $query = "UPDATE {$tableName}
+                      SET void_status = 0, 
+                          voided_by = ?, 
+                          void_reason = ?, 
+                          voided_date = NOW()
+                      WHERE otableid = ? 
+                      AND void_status = 1
+                      AND DATE (odate) = CURDATE()
+                      AND vehicle_type IS NOT NULL";
 
-        if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("sssi", $voidedBy, $voidReason, $tableId);
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("ssi", $voidedBy, $voidReason, $tableId);
+            $result = $stmt->execute();
+            $affectedRows = $stmt->affected_rows;     
+            $stmt->close();
+            return $result && $affectedRows === 1;
+            
+        } else {
+            $query = "UPDATE {$tableName}
+                      SET void_status = 0, 
+                          voided_by = ?, 
+                          void_reason = ?, 
+                          voided_date = NOW()
+                      WHERE otableid = ? 
+                      AND void_status = 1
+                      AND DATE (odate) = CURDATE()";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("ssi", $voidedBy, $voidReason, $tableId);
             $result = $stmt->execute();
             $affectedRows = $stmt->affected_rows;
             $stmt->close();
             return $result && $affectedRows === 1;
         }
+
+        // $query = "UPDATE {$tableName}
+        //       SET void_status = 0, 
+        //           voided_by = ?, 
+        //           void_reason = ?, 
+        //           voided_date = NOW()
+        //       WHERE otableid = ? 
+        //       AND void_status = 1
+        //       AND DATE (odate) = CURDATE()";
+
+        // if ($stmt = $this->db->prepare($query)) {
+        //     $stmt->bind_param("sssi", $voidedBy, $voidReason, $tableId);
+        //     $result = $stmt->execute();
+        //     $affectedRows = $stmt->affected_rows;
+        //     $stmt->close();
+        //     return $result && $affectedRows === 1;
+        // }
 
         error_log("Failed to void footprint: " . $this->db->error);
         return false;
