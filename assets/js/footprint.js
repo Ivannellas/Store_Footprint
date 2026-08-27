@@ -314,7 +314,10 @@ document.addEventListener("DOMContentLoaded", function () {
         ? timeRangeElem.options[timeRangeElem.selectedIndex]?.text ||
           timeRangeElem.value
         : "";
-      const count = form.querySelector('input[name="count"]')?.value || "0";
+      const twowheelsCount = form.querySelector('input[name="vehicle_counts[2wheels]"')?.value || "0"; 
+      const threewheelsCount = form.querySelector('input[name="vehicle_counts[3wheels]"')?.value || "0"; 
+      const fourwheelsCount = form.querySelector('input[name="vehicle_counts[4wheels]"')?.value || "0"; 
+      const sixheelsCount = form.querySelector('input[name="vehicle_counts[6wheels]"')?.value || "0"; 
 
       const selectedDate =
         form.querySelector('input[name="date"]')?.value || "";
@@ -366,8 +369,17 @@ document.addEventListener("DOMContentLoaded", function () {
           "<p><strong>Time Range:</strong> " +
           timeRangeText +
           "</p>" +
-          "<p><strong>Count:</strong> " +
-          count +
+          "<p><strong>2-Wheels:</strong> " +
+          twowheelsCount +
+          "</p>" +
+          "<p><strong>3-Wheels:</strong> " +
+          threewheelsCount +
+          "</p>" +
+          "<p><strong>4-Wheels:</strong> " +
+          fourwheelsCount +
+          "</p>" +
+          "<p><strong>6-Wheels:</strong> " +
+          sixheelsCount +
           "</p>" +
           "</div>",
         icon: "question",
