@@ -1056,10 +1056,6 @@ tr.row-voided td span {
   box-shadow: 0 0 0 3px rgba(30, 142, 62, 0.2);
 }
 
-.oTraffic{
-  pointer-events: none;
-}
-
 .traffic_form .oDate_range,
 .traffic_form .oTime_range,
 .traffic_form .oTraffic,

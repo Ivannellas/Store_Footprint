@@ -20,25 +20,47 @@ class FootprintModel
             return false;
         }
 
-        $query = "INSERT INTO {$tableName} 
-              (added_by, opersonnel, odate, otimerange, ocount, void_status, voided_by) 
-              VALUES (?, ?, ?, ?, ?, ?, ?)";
+        if ($tableName === 'tbl_parking_footprint') {
+            $query = "INSERT INTO {$tableName} 
+                      (added_by, opersonnel, odate, otimerange, ocount, void_status, voided_by, vehicle_type) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param(
-                "ssssiis",
-                $data['added_by'],
-                $data['opersonnel'],
-                $data['odate'],
-                $data['otimerange'],
-                $data['ocount'],
-                $data['void_status'],
-                $data['voided_by']
-            );
+            if ($stmt = $this->db->prepare($query)) {
+                $stmt->bind_param(
+                    "ssssiiss",
+                    $data['added_by'],
+                    $data['opersonnel'],
+                    $data['odate'],
+                    $data['otimerange'],
+                    $data['ocount'],
+                    $data['void_status'],
+                    $data['voided_by'],
+                    $data['vehicle_type']
+                );
+                $result = $stmt->execute();
+                $stmt->close();
+                return $result;
+            }
+        } else {
+            $query = "INSERT INTO {$tableName} 
+                      (added_by, opersonnel, odate, otimerange, ocount, void_status, voided_by) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            $result = $stmt->execute();
-            $stmt->close();
-            return $result;
+            if ($stmt = $this->db->prepare($query)) {
+                $stmt->bind_param(
+                    "ssssiis",
+                    $data['added_by'],
+                    $data['opersonnel'],
+                    $data['odate'],
+                    $data['otimerange'],
+                    $data['ocount'],
+                    $data['void_status'],
+                    $data['voided_by']
+                );
+                $result = $stmt->execute();
+                $stmt->close();
+                return $result;
+            }
         }
 
         return false;
@@ -59,7 +81,22 @@ class FootprintModel
         $hasRangeFilter = !empty($startDate) && !empty($endDate);
         $hasSingleDate = !empty($startDate) && empty($endDate);
 
-        $query = "SELECT 
+        if ($tableName === 'tbl_parking_footprint') {
+            $query = "SELECT 
+                    added_by,
+                    created_at,
+                    otableid, 
+                    opersonnel, 
+                    odate, 
+                    otimerange, 
+                    ocount,
+                    void_status,
+                    voided_by,
+                    voided_date,
+                    vehicle_type
+                  FROM {$tableName}";
+        } else {
+            $query = "SELECT 
                     added_by,
                     created_at,
                     otableid, 
@@ -71,6 +108,7 @@ class FootprintModel
                     voided_by,
                     voided_date
                   FROM {$tableName}";
+        }
 
         if ($hasRangeFilter) {
             $query .= " WHERE odate BETWEEN ? AND ?";
@@ -106,7 +144,7 @@ class FootprintModel
     /*==============================================================
     //   Check if personnel already logged for this time range     //
     =============================================================*/
-    public function HasExistingLog(string $tableName, string $personnel, string $date, string $timeRange): bool
+    public function HasExistingLog(string $tableName, string $personnel, string $date, string $timeRange, string $vehicleType = ''): bool
     {
         $tableName = trim($tableName);
 
@@ -114,21 +152,39 @@ class FootprintModel
             return false;
         }
 
-        $query = "SELECT COUNT(*) AS total 
-                  FROM {$tableName} 
-                  WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
-                    AND odate = ? 
-                    AND otimerange = ?
-                    AND (void_status IS NULL OR void_status != 0)";
+        if ($tableName === 'tbl_parking_footprint') {
+            $query = "SELECT COUNT(*) AS total 
+                      FROM {$tableName} 
+                      WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
+                        AND odate = ? 
+                        AND otimerange = ?
+                        AND (void_status IS NULL OR void_status != 0)
+                        AND vehicle_type = ?";
 
-        if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("sss", $personnel, $date, $timeRange);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result ? $result->fetch_assoc() : null;
-            $stmt->close();
+            if ($stmt = $this->db->prepare($query)) {
+                $stmt->bind_param("ssss", $personnel, $date, $timeRange, $vehicleType);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result ? $result->fetch_assoc() : null;
+                $stmt->close();
+                return ((int)($row['total'] ?? 0));
+            }
+        } else {
+            $query = "SELECT COUNT(*) AS total 
+                      FROM {$tableName} 
+                      WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
+                        AND odate = ? 
+                        AND otimerange = ?
+                        AND (void_status IS NULL OR void_status != 0)";
 
-            return ((int)($row['total'] ?? 0)) > 0;
+            if ($stmt = $this->db->prepare($query)) {
+                $stmt->bind_param("sss", $personnel, $date, $timeRange);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result ? $result->fetch_assoc() : null;
+                $stmt->close();
+                return ((int)($row['total'] ?? 0));
+            }
         }
 
         return false;
@@ -150,10 +206,12 @@ class FootprintModel
                   voided_by = ?, 
                   void_reason = ?, 
                   voided_date = NOW()
-              WHERE otableid = ? AND void_status = 1";
+              WHERE otableid = ? 
+              AND void_status = 1
+              AND DATE (odate) = CURDATE()";
 
         if ($stmt = $this->db->prepare($query)) {
-            $stmt->bind_param("ssi", $voidedBy, $voidReason, $tableId);
+            $stmt->bind_param("sssi", $voidedBy, $voidReason, $tableId);
             $result = $stmt->execute();
             $affectedRows = $stmt->affected_rows;
             $stmt->close();

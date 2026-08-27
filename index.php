@@ -132,35 +132,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'add_footprint' || !isset($_POST['action'])) {
-        $type         = $_POST['type'] ?? 'store';
+        $type         = strtolower(trim($_POST['type'] ?? 'store'));
         $name         = trim($_POST['name'] ?? '');
         $selectedDate = trim($_POST['date'] ?? date('Y-m-d'));
         $timeRange    = trim($_POST['timeRange'] ?? '');
-        $voidedDate  = '';
 
-        // Ensure 0 is captured properly when submitted
-        $count = isset($_POST['count']) && $_POST['count'] !== '' ? (int)$_POST['count'] : 0;
+        if ($type === 'parking') {
+            $vehicleCounts = $_POST['vehicle_counts'] ?? [];
+            $hasSavedAny   = false;
+            $errors        = [];
 
-        $formData = [
-            'opersonnel'  => $name,
-            'odate'       => $selectedDate,
-            'otimerange'  => $timeRange,
-            'ocount'      => $count,
-            'added_by'    => $userName,
-            'voided_by'    => '',
-            'void_reason' => $voidReason ?? ''
-        ];
+            foreach ($vehicleCounts as $vehicleType => $countVal) {
+                $count = (int)$countVal;
 
-        $result = $footprintController->HandleAddFootprint($type, $formData);
-        $redirectTab = ($type === 'parking') ? 'Parking' : 'Store';
+                // Don't skip zero and empty vehicle inputs
+                if ($count == 0 || $countVal === '') {
+                    continue;
+                }
 
-        if ($result['success']) {
-            header("Location: index.php?tab=$redirectTab&status=success");
-            exit;
+                $formData = [
+                    'opersonnel'   => $name,
+                    'odate'        => $selectedDate,
+                    'otimerange'   => $timeRange,
+                    'ocount'       => $count,
+                    'added_by'     => $userName,
+                    'voided_by'    => '',
+                    'vehicle_type' => $vehicleType,
+                ];
+
+                $result = $footprintController->HandleAddFootprint('parking', $formData);
+
+                if ($result['success']) {
+                    $hasSavedAny = true;
+                } else {
+                    $errors[] = $result['message'];
+                }
+            }
+
+            if ($hasSavedAny) {
+                header("Location: index.php?tab=Parking&status=success");
+                exit;
+            } else {
+                $_SESSION['error_message'] = !empty($errors)
+                    ? implode(' ', array_unique($errors))
+                    : 'Please input a traffic count for at least one vehicle category.';
+                header("Location: index.php?tab=Parking");
+                exit;
+            }
         } else {
-            $_SESSION['error_message'] = $result['message'];
-            header("Location: index.php?tab=$redirectTab");
-            exit;
+            // Standard Store Footprint
+            $count = isset($_POST['count']) && $_POST['count'] !== '' ? (int)$_POST['count'] : 0;
+
+            $formData = [
+                'opersonnel' => $name,
+                'odate'      => $selectedDate,
+                'otimerange' => $timeRange,
+                'ocount'     => $count,
+                'added_by'   => $userName,
+                'voided_by'  => '',
+            ];
+
+            $result = $footprintController->HandleAddFootprint('store', $formData);
+
+            if ($result['success']) {
+                header("Location: index.php?tab=Store&status=success");
+                exit;
+            } else {
+                $_SESSION['error_message'] = $result['message'];
+                header("Location: index.php?tab=Store");
+                exit;
+            }
         }
     }
 }
@@ -663,22 +704,22 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                             <div class="vehicle_modal_body">
                                                 <div class="vehicle_form_group">
                                                     <label for="category_2wheels">2-Wheels</label>
-                                                    <input type="text" id="category_2wheels" name="2wheels" placeholder="Enter Traffic for 2-Wheels" required>
+                                                    <input type="number" min="0" id="category_2wheels" name="vehicle_counts[2wheels]" min="0" placeholder="Enter Traffic for 2-Wheels">
                                                 </div>
 
                                                 <div class="vehicle_form_group">
                                                     <label for="category_3wheels">3-Wheels</label>
-                                                    <input type="text" id="category_3wheels" name="3wheels" placeholder="Enter Traffic for 3-Wheels" required>
+                                                    <input type="number" min="0" id="category_3wheels" name="vehicle_counts[3wheels]" min="0" placeholder="Enter Traffic for 3-Wheels">
                                                 </div>
 
                                                 <div class="vehicle_form_group">
                                                     <label for="category_4wheels">4-Wheels</label>
-                                                    <input type="text" id="category_4wheels" name="4wheels" placeholder="Enter Traffic for 4-Wheels" required>
+                                                    <input type="number" min="0" id="category_4wheels" name="vehicle_counts[4wheels]" min="0" placeholder="Enter Traffic for 4-Wheels">
                                                 </div>
 
                                                 <div class="vehicle_form_group">
                                                     <label for="category_6wheels">6-Wheels</label>
-                                                    <input type="text" id="category_6wheels" name="6wheels" placeholder="Enter Traffic for 6-Wheels" required>
+                                                    <input type="number" min="0" id="category_6wheels" name="vehicle_counts[6wheels]" min="0" placeholder="Enter Traffic for 6-Wheels">
                                                 </div>
                                             </div>
 
@@ -700,13 +741,14 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th class="s_width">Personnel Name</th>
                                                 <th class="s_width">Date</th>
                                                 <th class="s_width">Time Range</th>
+                                                <th class="s_width">Vehicle Type</th>
                                                 <th>Count</th>
                                                 <th>Created By</th>
                                                 <th class="s_width">Created Date</th>
                                                 <th>Void</th>
                                                 <th>Voided By</th>
                                                 <th class="s_width">Voided Date</th>
-                                                <th class="text-center">View</th> <!-- NEW VIEW COLUMN -->
+                                                <th class="text-center">View</th> 
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -717,6 +759,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                         <td><strong><?php echo htmlspecialchars($row['opersonnel']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                         <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
+                                                        <td><strong><?php echo htmlspecialchars($row['vehicle_type']); ?></strong></td>
                                                         <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                         <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                         <td>
@@ -886,11 +929,13 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
 
                                                         <th class="sortable  s_width" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">Time Range<span class="sort-icon">↕</span>
                                                         </th>
-                                                        <th class="sortable s_width" onclick="sortTable(3, 'vehicleTrafficTable', 'number')">Count<span class="sort-icon">↕</span>
+                                                        <th class="sortable  s_width" onclick="sortTable(3, 'vehicleTrafficTable', 'string')">Vehicle Type<span class="sort-icon">↕</span>
                                                         </th>
-                                                        <th class="sortable s_width" onclick="sortTable(4, 'vehicleTrafficTable', 'string')">Created By<span class="sort-icon">↕</span>
+                                                        <th class="sortable s_width" onclick="sortTable(4, 'vehicleTrafficTable', 'number')">Count<span class="sort-icon">↕</span>
                                                         </th>
-                                                        <th class="sortable s_width" onclick="sortTable(5, 'vehicleTrafficTable', 'string')">Created Date<span class="sort-icon">↕</span>
+                                                        <th class="sortable s_width" onclick="sortTable(5, 'vehicleTrafficTable', 'string')">Created By<span class="sort-icon">↕</span>
+                                                        </th>
+                                                        <th class="sortable s_width" onclick="sortTable(6, 'vehicleTrafficTable', 'string')">Created Date<span class="sort-icon">↕</span>
                                                         </th>
                                                         <th class="text-center">Void</th>
                                                         <th class="text-center">Voided By</th>
@@ -905,6 +950,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                                 <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                 <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
+                                                                <td><strong><?php echo htmlspecialchars($row['vehicle_type']); ?></strong></td>
                                                                 <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                                 <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                                 <td>
