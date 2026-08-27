@@ -641,21 +641,53 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                         </div>
                                         <div class="oTraffic">
                                             <label for="countParking">Input Traffic</label>
-                                            <input type="number" id="countParking" name="count" min="0" required>
+                                            <input type="number" id="countParking" name="count" min="0" disabled placeholder="Disabled">
                                         </div>
                                     </div>
 
-                                    <div class="oVehicle">
-                                        <label for="Vehicle">Choose Vehicle</label>
-                                        <select name="vehicle" id="vehicle" required>
-                                        <option name="4wheels" value="4wheels">4-Wheels</option>
-                                        <option name="motorcycle" value="motorcycle">Motorcycle</option>
-                                        </select>
+                                    <!-- Trigger Button -->
+                                    <div class="submit_btn">
+                                        <button class="primary_btn vehicle_modal" type="button" id="openVehicleModalBtn">
+                                            Input Vehicle Traffic
+                                        </button>
                                     </div>
 
-                                    <div class="submit_btn">
-                                        <button class="primary_btn" type="submit" name="submit">Submit</button>
+                                    <!-- Modal Structure -->
+                                    <div class="vehicle_modal_overlay" id="vehicleModal">
+                                        <div class="vehicle_modal_content">
+                                            <div class="vehicle_modal_header">
+                                                <h2>Vehicle Categories</h2>
+                                                <button type="button" class="vehicle_close_btn" id="closeVehicleModalBtn">&times;</button>
+                                            </div>
+
+                                            <div class="vehicle_modal_body">
+                                                <div class="vehicle_form_group">
+                                                    <label for="category_2wheels">2-Wheels</label>
+                                                    <input type="text" id="category_2wheels" name="2wheels" placeholder="Enter Traffic for 2-Wheels" required>
+                                                </div>
+
+                                                <div class="vehicle_form_group">
+                                                    <label for="category_3wheels">3-Wheels</label>
+                                                    <input type="text" id="category_3wheels" name="3wheels" placeholder="Enter Traffic for 3-Wheels" required>
+                                                </div>
+
+                                                <div class="vehicle_form_group">
+                                                    <label for="category_4wheels">4-Wheels</label>
+                                                    <input type="text" id="category_4wheels" name="4wheels" placeholder="Enter Traffic for 4-Wheels" required>
+                                                </div>
+
+                                                <div class="vehicle_form_group">
+                                                    <label for="category_6wheels">6-Wheels</label>
+                                                    <input type="text" id="category_6wheels" name="6wheels" placeholder="Enter Traffic for 6-Wheels" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="vehicle_modal_footer">
+                                                <button class="primary_btn" type="submit" name="submit">Submit</button>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </form>
                             </div>
 
@@ -669,11 +701,12 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 <th class="s_width">Date</th>
                                                 <th class="s_width">Time Range</th>
                                                 <th>Count</th>
-                                                <th> Created By </th>
+                                                <th>Created By</th>
                                                 <th class="s_width">Created Date</th>
                                                 <th>Void</th>
                                                 <th>Voided By</th>
                                                 <th class="s_width">Voided Date</th>
+                                                <th class="text-center">View</th> <!-- NEW VIEW COLUMN -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -728,163 +761,203 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 <span>&mdash;</span>
                                                             <?php endif; ?>
                                                         </td>
+
+                                                        <!-- NEW ACTION VIEW BUTTON -->
+                                                        <td class="text-center">
+                                                            <button type="button" class="view_btn"
+                                                                data-timerange="<?php echo htmlspecialchars($row['otimerange']); ?>"
+                                                                data-details='<?php echo json_encode(isset($row['vehicle_breakdown']) ? $row['vehicle_breakdown'] : []); ?>'
+                                                                onclick="openTrafficModal(this)">
+                                                                <?php if ($isVoided): ?>
+                                                                    <figure class="eye_icon eye_close"><img src="assets/images/eyeclose.png" alt="eyesclose"></figure>
+                                                                <?php else: ?>
+                                                                    <!-- Changed default active state to eyeclose.png -->
+                                                                    <figure class="eye_icon eye_close"><img src="assets/images/eyeclose.png" alt="eyesclose"></figure>
+                                                                <?php endif; ?>
+                                                            </button>
+                                                        </td>
+
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="7" class="text-center">No data available for today</td>
+                                                    <td colspan="10" class="text-center">No data available for today</td>
                                                 </tr>
                                             <?php endif; ?>
+
                                         </tbody>
                                     </table>
                                 </div>
-
                                 <div class="modal_btn">
                                     <a id="vehicleModalBtn" class="primary_btn" href="#">Vehicle History</a>
                                 </div>
+                            </div>
 
-                                <!-- Vehicle Traffic Modal -->
-                                <div class="modal-overlay" id="vehicleTrafficModal">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h3>Vehicle Traffic History Log</h3>
-                                            <button class="close-btn" id="closevehicleTrafficModal">&times;</button>
-                                        </div>
+                            <!-- TRAFFIC DETAILS MODAL -->
+                            <div class="vehicle_modal_overlay" id="trafficDetailModal">
+                                <div class="vehicle_modal_content">
+                                    <div class="vehicle_modal_header">
+                                        <h2 id="modalTimeRange">Time Range: --:--</h2>
+                                        <button type="button" class="vehicle_close_btn" id="closeTrafficModalBtn">&times;</button>
+                                    </div>
 
-                                        <div class="filter-card">
-                                            <div class="filter-card-body">
-                                                <div class="filter-card-grid">
+                                    <div class="vehicle_modal_body">
+                                        <table class="traffic_modal_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Vehicle Type</th>
+                                                    <th class="text-center">Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="modalTableBody">
+                                                <!-- Dynamic rows inserted via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
 
-                                                    <!-- Date Range Picker -->
-                                                    <div class="filter-card-group filter-date-range">
-                                                        <div class="input-wrapper">
-                                                            <span class="input-icon-box"></span>
-                                                            <input
-                                                                type="text"
-                                                                id="vehicle-date-range-picker"
-                                                                class="filter-custom-input"
-                                                                placeholder="Choose date range..."
-                                                                readonly />
-                                                        </div>
+                            <!-- Vehicle Traffic Modal -->
+                            <div class="modal-overlay" id="vehicleTrafficModal">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3>Vehicle Traffic History Log</h3>
+                                        <button class="close-btn" id="closevehicleTrafficModal">&times;</button>
+                                    </div>
+
+                                    <div class="filter-card">
+                                        <div class="filter-card-body">
+                                            <div class="filter-card-grid">
+
+                                                <!-- Date Range Picker -->
+                                                <div class="filter-card-group filter-date-range">
+                                                    <div class="input-wrapper">
+                                                        <span class="input-icon-box"></span>
+                                                        <input
+                                                            type="text"
+                                                            id="vehicle-date-range-picker"
+                                                            class="filter-custom-input"
+                                                            placeholder="Choose date range..."
+                                                            readonly />
                                                     </div>
-
-                                                    <!-- Hidden values for Flatpickr JS binding -->
-                                                    <input type="hidden" id="vehicle-fromperiod" />
-                                                    <input type="hidden" id="vehicle-toperiod" />
-
-                                                    <!-- Action Buttons -->
-                                                    <div class="filter-actions">
-                                                        <button type="button" onclick="applyFilter('vehicle')" class="filter-custom-btn btn-primary">
-                                                            <figure><img src="assets/images/icon/filter.png" alt="filter"></figure>
-                                                            Filter
-                                                        </button>
-                                                        <button type="button" onclick="clearFilter('vehicle')" class="filter-custom-btn btn-secondary">
-                                                            <figure><img src="assets/images/icon/reset.png" alt="reset"></figure>
-                                                            Reset
-                                                        </button>
-                                                    </div>
-
-                                                    <!-- Live Search Input -->
-                                                    <div class="filter-card-group filter-search">
-                                                        <div class="input-wrapper">
-                                                            <span class="input-icon-box"></span>
-                                                            <input
-                                                                type="text"
-                                                                id="vehicle-table-search-input"
-                                                                class="filter-custom-input"
-                                                                placeholder="Search..."
-                                                                onkeyup="applyFilter('vehicle')" />
-                                                        </div>
-                                                    </div>
-
                                                 </div>
+
+                                                <!-- Hidden values for Flatpickr JS binding -->
+                                                <input type="hidden" id="vehicle-fromperiod" />
+                                                <input type="hidden" id="vehicle-toperiod" />
+
+                                                <!-- Action Buttons -->
+                                                <div class="filter-actions">
+                                                    <button type="button" onclick="applyFilter('vehicle')" class="filter-custom-btn btn-primary">
+                                                        <figure><img src="assets/images/icon/filter.png" alt="filter"></figure>
+                                                        Filter
+                                                    </button>
+                                                    <button type="button" onclick="clearFilter('vehicle')" class="filter-custom-btn btn-secondary">
+                                                        <figure><img src="assets/images/icon/reset.png" alt="reset"></figure>
+                                                        Reset
+                                                    </button>
+                                                </div>
+
+                                                <!-- Live Search Input -->
+                                                <div class="filter-card-group filter-search">
+                                                    <div class="input-wrapper">
+                                                        <span class="input-icon-box"></span>
+                                                        <input
+                                                            type="text"
+                                                            id="vehicle-table-search-input"
+                                                            class="filter-custom-input"
+                                                            placeholder="Search..."
+                                                            onkeyup="applyFilter('vehicle')" />
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="modal-body">
-                                            <div class="table-container">
-                                                <table class="personnel-table sortable-table" id="vehicleTrafficTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="sortable s_width" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">Personnel Name<span class="sort-icon">↕</span>
-                                                            </th>
-                                                            <th class="sortable s_width" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">Date<span class="sort-icon">↕</span>
+                                    <div class="modal-body">
+                                        <div class="table-container">
+                                            <table class="personnel-table sortable-table" id="vehicleTrafficTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="sortable s_width" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">Personnel Name<span class="sort-icon">↕</span>
+                                                        </th>
+                                                        <th class="sortable s_width" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">Date<span class="sort-icon">↕</span>
 
-                                                            <th class="sortable  s_width" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">Time Range<span class="sort-icon">↕</span>
-                                                            </th>
-                                                            <th class="sortable s_width" onclick="sortTable(3, 'vehicleTrafficTable', 'number')">Count<span class="sort-icon">↕</span>
-                                                            </th>
-                                                            <th class="sortable s_width" onclick="sortTable(4, 'vehicleTrafficTable', 'string')">Created By<span class="sort-icon">↕</span>
-                                                            </th>
-                                                            <th class="sortable s_width" onclick="sortTable(5, 'vehicleTrafficTable', 'string')">Created Date<span class="sort-icon">↕</span>
-                                                            </th>
-                                                            <th class="text-center">Void</th>
-                                                            <th class="text-center">Voided By</th>
-                                                            <th class="text-center s_width">Voided Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="vehicleTableBody">
-                                                        <?php if (!empty($parkingFootprintsHistory)): ?>
-                                                            <?php foreach ($parkingFootprintsHistory as $row): ?>
-                                                                <?php $isVoided = isset($row['void_status']) && (int)$row['void_status'] === 0; ?>
-                                                                <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>" class="<?php echo $isVoided ? 'row-voided' : ''; ?>">
-                                                                    <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
-                                                                    <td><?php echo htmlspecialchars($row['odate']); ?></td>
-                                                                    <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
-                                                                    <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
-                                                                    <td><?php echo htmlspecialchars($row['added_by']); ?></td>
-                                                                    <td>
-                                                                        <?php
-                                                                        if (!empty($row['created_at']) && $row['created_at'] !== '0000-00-00 00:00:00') {
-                                                                            echo htmlspecialchars(date('Y-m-d h:i A', strtotime($row['created_at'])));
-                                                                        } else {
-                                                                            echo '&mdash;';
-                                                                        }
-                                                                        ?>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <?php if ($isVoided): ?>
-                                                                            <span class="void_pills void-disabled" title="Record Voided">&cross; </span>
-                                                                        <?php else: ?>
-                                                                            <button type="button"
-                                                                                class="void_pills void-active"
-                                                                                onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'parking')">
-                                                                                &mdash;
-                                                                            </button>
-                                                                        <?php endif; ?>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <?php if ($isVoided): ?>
-                                                                            <span class="voided-by"><?php echo htmlspecialchars($row['voided_by']); ?></span>
-                                                                        <?php else: ?>
-                                                                            <span class="not-voided">-</span>
-                                                                        <?php endif; ?>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <?php if ($isVoided): ?>
-                                                                            <span>
-                                                                                <?php
-                                                                                if (!empty($row['voided_date']) && $row['voided_date'] !== '0000-00-00 00:00:00') {
-                                                                                    echo htmlspecialchars(date('Y-m-d h:i A', strtotime($row['voided_date'])));
-                                                                                } else {
-                                                                                    echo '&mdash;';
-                                                                                }
-                                                                                ?>
-                                                                            </span>
-                                                                        <?php else: ?>
-                                                                            <span>&mdash;</span>
-                                                                        <?php endif; ?>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php endforeach; ?>
-                                                        <?php else: ?>
-                                                            <tr class="no-filter-result">
-                                                                <td class="text-center text-muted py-4">No data available</td>
+                                                        <th class="sortable  s_width" onclick="sortTable(2, 'vehicleTrafficTable', 'string')">Time Range<span class="sort-icon">↕</span>
+                                                        </th>
+                                                        <th class="sortable s_width" onclick="sortTable(3, 'vehicleTrafficTable', 'number')">Count<span class="sort-icon">↕</span>
+                                                        </th>
+                                                        <th class="sortable s_width" onclick="sortTable(4, 'vehicleTrafficTable', 'string')">Created By<span class="sort-icon">↕</span>
+                                                        </th>
+                                                        <th class="sortable s_width" onclick="sortTable(5, 'vehicleTrafficTable', 'string')">Created Date<span class="sort-icon">↕</span>
+                                                        </th>
+                                                        <th class="text-center">Void</th>
+                                                        <th class="text-center">Voided By</th>
+                                                        <th class="text-center s_width">Voided Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="vehicleTableBody">
+                                                    <?php if (!empty($parkingFootprintsHistory)): ?>
+                                                        <?php foreach ($parkingFootprintsHistory as $row): ?>
+                                                            <?php $isVoided = isset($row['void_status']) && (int)$row['void_status'] === 0; ?>
+                                                            <tr data-date="<?php echo htmlspecialchars($row['odate']); ?>" class="<?php echo $isVoided ? 'row-voided' : ''; ?>">
+                                                                <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
+                                                                <td><?php echo htmlspecialchars($row['odate']); ?></td>
+                                                                <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
+                                                                <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
+                                                                <td><?php echo htmlspecialchars($row['added_by']); ?></td>
+                                                                <td>
+                                                                    <?php
+                                                                    if (!empty($row['created_at']) && $row['created_at'] !== '0000-00-00 00:00:00') {
+                                                                        echo htmlspecialchars(date('Y-m-d h:i A', strtotime($row['created_at'])));
+                                                                    } else {
+                                                                        echo '&mdash;';
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <?php if ($isVoided): ?>
+                                                                        <span class="void_pills void-disabled" title="Record Voided">&cross; </span>
+                                                                    <?php else: ?>
+                                                                        <button type="button"
+                                                                            class="void_pills void-active"
+                                                                            onclick="confirmVoid(<?php echo (int)$row['otableid']; ?>, 'parking')">
+                                                                            &mdash;
+                                                                        </button>
+                                                                    <?php endif; ?>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <?php if ($isVoided): ?>
+                                                                        <span class="voided-by"><?php echo htmlspecialchars($row['voided_by']); ?></span>
+                                                                    <?php else: ?>
+                                                                        <span class="not-voided">-</span>
+                                                                    <?php endif; ?>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <?php if ($isVoided): ?>
+                                                                        <span>
+                                                                            <?php
+                                                                            if (!empty($row['voided_date']) && $row['voided_date'] !== '0000-00-00 00:00:00') {
+                                                                                echo htmlspecialchars(date('Y-m-d h:i A', strtotime($row['voided_date'])));
+                                                                            } else {
+                                                                                echo '&mdash;';
+                                                                            }
+                                                                            ?>
+                                                                        </span>
+                                                                    <?php else: ?>
+                                                                        <span>&mdash;</span>
+                                                                    <?php endif; ?>
+                                                                </td>
                                                             </tr>
-                                                        <?php endif; ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                        <?php endforeach; ?>
+                                                    <?php else: ?>
+                                                        <tr class="no-filter-result">
+                                                            <td class="text-center text-muted py-4">No data available</td>
+                                                        </tr>
+                                                    <?php endif; ?>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -892,9 +965,10 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
+    </div>
     </div>
 
 
