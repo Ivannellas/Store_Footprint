@@ -616,5 +616,113 @@ document.addEventListener("DOMContentLoaded", function () {
       tbody.appendChild(noResultRow);
     }
   };
+
+
+// VEHICLE MODAL
+  const vehicleModal = document.getElementById('vehicleModal');
+  const openVehicleBtn = document.getElementById('openVehicleModalBtn');
+  const closeVehicleBtn = document.getElementById('closeVehicleModalBtn');
+
+  if (openVehicleBtn && vehicleModal) {
+    openVehicleBtn.addEventListener('click', () => vehicleModal.classList.add('active'));
+  }
+
+  if (closeVehicleBtn && vehicleModal) {
+    closeVehicleBtn.addEventListener('click', () => vehicleModal.classList.remove('active'));
+  }
+
+  // Close vehicle modal when clicking outside the content box
+  window.addEventListener('click', (e) => {
+    if (vehicleModal && e.target === vehicleModal) {
+      vehicleModal.classList.remove('active');
+    }
+  });
+
+  // VIEWING EYE ICON MODAL (Exposed globally to support inline onclick attribute)
+  window.openTrafficModal = function (button) {
+  const trafficModal = document.getElementById('trafficDetailModal');
+  const modalTimeRange = document.getElementById('modalTimeRange');
+  const modalTableBody = document.getElementById('modalTableBody');
+
+  if (!trafficModal) return;
+
+  // 1. Reset all view buttons back to closed eye state
+  document.querySelectorAll('.view_btn img').forEach((img) => {
+    img.src = 'assets/images/eyeclose.png';
+    img.alt = 'eyesclose';
+  });
+
+  // 2. Change the clicked button's image to eyeopen
+  const activeImg = button.querySelector('img');
+  if (activeImg) {
+    activeImg.src = 'assets/images/eyeopen.png';
+    activeImg.alt = 'eyesopen';
+  }
+
+  // Populate modal data
+  const timeRange = button.getAttribute('data-timerange') || '';
+  let details = [];
+
+  try {
+    details = JSON.parse(button.getAttribute('data-details')) || [];
+  } catch (e) {
+    details = [];
+  }
+
+  if (modalTimeRange) {
+    modalTimeRange.textContent = `Time Range: ${timeRange}`;
+  }
+
+  if (modalTableBody) {
+    modalTableBody.innerHTML = '';
+
+    if (details.length > 0) {
+      details.forEach((item) => {
+        const row = `
+          <tr>
+            <td>${item.type}</td>
+            <td class="text-center"><strong>${item.count}</strong></td>
+          </tr>
+        `;
+        modalTableBody.innerHTML += row;
+      });
+    } else {
+      modalTableBody.innerHTML = `
+        <tr><td>2-Wheels</td><td class="text-center">&mdash;</td></tr>
+        <tr><td>3-Wheels</td><td class="text-center">&mdash;</td></tr>
+        <tr><td>4-Wheels</td><td class="text-center">&mdash;</td></tr>
+        <tr><td>6-Wheels</td><td class="text-center">&mdash;</td></tr>
+      `;
+    }
+  }
+
+  trafficModal.classList.add('active');
+};
+
+// Helper function to reset all icons when modal closes
+function resetEyeIcons() {
+  document.querySelectorAll('.view_btn img').forEach((img) => {
+    img.src = 'assets/images/eyeclose.png';
+    img.alt = 'eyesclose';
+  });
+}
+
+// 3. Attach reset handler to close button and backdrop click
+const trafficModal = document.getElementById('trafficDetailModal');
+const closeTrafficBtn = document.getElementById('closeTrafficModalBtn');
+
+if (closeTrafficBtn && trafficModal) {
+  closeTrafficBtn.addEventListener('click', () => {
+    trafficModal.classList.remove('active');
+    resetEyeIcons();
+  });
+}
+
+window.addEventListener('click', (e) => {
+  if (trafficModal && e.target === trafficModal) {
+    trafficModal.classList.remove('active');
+    resetEyeIcons();
+  }
 });
- 
+
+});

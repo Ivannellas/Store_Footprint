@@ -1056,6 +1056,10 @@ tr.row-voided td span {
   box-shadow: 0 0 0 3px rgba(30, 142, 62, 0.2);
 }
 
+.oTraffic{
+  pointer-events: none;
+}
+
 .traffic_form .oDate_range,
 .traffic_form .oTime_range,
 .traffic_form .oTraffic,
@@ -1223,46 +1227,191 @@ tr.row-voided td span {
   background-color: #999999;
 }
 
-/* Container layout */
-.oVehicle {
+/* VEHICLE VIEWING EYE ICON */
+
+/* Eye Action Button */
+.view_btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.view_btn:hover {
+    background-color: rgba(4, 35, 90, 0.08);
+}
+
+.eye_icon {
+    width: 20px;
+    height: 20px;
+}
+
+.eye_close img {
+  filter: invert(10%) sepia(87%) saturate(2250%) hue-rotate(205deg) brightness(91%) contrast(106%);
+}
+
+
+.eye_open {
+    stroke: var(--primaryColor);
+}
+
+.eye_closed {
+    stroke: #888888;
+}
+
+/* Modal Table Styling */
+.traffic_modal_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--parag);
+}
+
+.traffic_modal_table th {
+    background-color: #f1f5f9;
+    color: var(--secondaryColor);
+    font-family: var(--headingTxt);
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.traffic_modal_table td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #333;
+}
+
+.traffic_modal_table .text-center {
+    text-align: center;
+}
+
+/* END OF VIEWING EYE ICON CSS */
+
+/* VEHICLE MODAL CSS */
+
+/* Modal Overlay Background */
+.vehicle_modal_overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(4, 35, 90, 0.5); /* Styled using --secondaryColor with opacity */
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.vehicle_modal_overlay.active {
+  display: flex;
+}
+
+/* Modal Card Box */
+.vehicle_modal_content {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 480px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: vehicleModalFadeIn 0.25s ease-out;
+}
+
+@keyframes vehicleModalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Sections */
+.vehicle_modal_header {
+  background-color: var(--primaryColor);
+  color: #ffffff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vehicle_modal_header h2 {
+  font-size: 22px !important;
+  margin: 0 !important;
+  line-height: 22px !important;
+}
+
+.vehicle_close_btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.vehicle_modal_body {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  font-size: 14px;
+  gap: 16px;
+}
+
+.vehicle_form_group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vehicle_form_group label {
+  font-family: var(--headingTxt);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--secondaryColor);
+}
+
+.vehicle_form_group input {
   font-family: var(--parag);
-}
-
-/* Header Label Styling */
-.oVehicle label {
-  color: #0b3175;
-  font-weight: 700;
-}
-
-/* Custom Styled Select Input */
-.oVehicle select {
-  width: 100%;
-  padding: 12px 40px 12px 16px;
-  font-size: 14px;
-  color: #333333;
-  background-color: #ffffff;
-  border: 1px solid #c8d0d8;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   outline: none;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  text-transform: uppercase;
+  transition: border-color 0.2s ease;
 }
 
-/* Hover and Focus States */
-.oVehicle select:hover {
-  border-color: #a0aab5;
-}
-
-.oVehicle select:focus {
+.vehicle_form_group input:focus {
   border-color: var(--primaryColor);
-  box-shadow: 0 0 0 2px rgba(11, 49, 117, 0.15);
 }
+
+.vehicle_modal_footer {
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+.vehicle_modal_footer .primary_btn {
+  background-color: var(--primaryColor);
+  color: #ffffff;
+  font-family: var(--parag);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+/* END VEHICLE MODAL CSS */
 
 .flex_box_between {
   display: flex;
