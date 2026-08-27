@@ -16,7 +16,7 @@ class FootprintController
     }
 
     /*===========================================================
-    // Add a new footprint entry                                //
+    // Add a new footprint entry                                 //
     ===========================================================*/
     public function HandleAddFootprint(string $type, array $data): array
     {
@@ -30,44 +30,51 @@ class FootprintController
         $voidStatus = (int)($data['void_status'] ?? 1);
         $voidedBy   = trim($data['voided_by'] ?? '');
 
-        if (empty($personnel) || empty($timeRange) || $count < 0) {
+        // Prevent submission if personnel is empty or placeholder is selected
+        if (empty($personnel) || $personnel === 'SELECT PERSONNEL' || empty($timeRange) || $count < 0) {
             return [
                 'success' => false,
-                'message' => 'Please fill in all required fields.'
-            ];
-        }
-
-        // Duplicate log check for exact personnel, date, and time range
-        if ($this->footprintModel->HasExistingLog($tableName, $personnel, $date, $timeRange)) {
-            return [
-                'success' => false,
-                'message' => "'" . htmlspecialchars($personnel) . "' has already logged for: " . htmlspecialchars($timeRange) . "."
+                'message' => 'Please select a personnel and fill in all required fields.'
             ];
         }
 
         $payload = [
-            'added_by'    => $addedBy,
-            'opersonnel'  => $personnel,
-            'odate'       => $date,
-            'otimerange'  => $timeRange,
-            'ocount'      => $count,
-            'void_status' => $voidStatus,
-            'voided_by'   => $voidedBy,
+            'added_by'     => $addedBy,
+            'opersonnel'   => $personnel,
+            'odate'        => $date,
+            'otimerange'   => $timeRange,
+            'ocount'       => $count,
+            'void_status'  => $voidStatus,
+            'voided_by'    => $voidedBy,
+            'vehicle_type' => $data['vehicle_type'] ?? ''
         ];
 
-        // Specific payload handling for parking vehicle types
         if ($type === 'parking') {
-            $rawVehicleType = strtolower(trim($data['vehicle_type'] ?? ''));
-            $allowedTypes   = ['4wheels', 'motorcycle'];
+            $rawVehicleType = strtoupper(trim($data['vehicle_type'] ?? ''));
+            $allowedTypes   = ['2WHEELS', '3WHEELS', '4WHEELS', '6WHEELS'];
 
             if (!in_array($rawVehicleType, $allowedTypes, true)) {
                 return [
                     'success' => false,
-                    'message' => 'Please select a valid vehicle type (4 Wheels or Motorcycle).'
+                    'message' => 'Please specify a valid vehicle category.'
                 ];
             }
 
             $payload['vehicle_type'] = $rawVehicleType;
+
+            if ($this->footprintModel->HasExistingLog($tableName, $personnel, $date, $timeRange, $rawVehicleType)) {
+                return [
+                    'success' => false,
+                    'message' => "'" . htmlspecialchars($personnel) . "' has already logged entries for " . $rawVehicleType . " during " . htmlspecialchars($timeRange) . "."
+                ];
+            }
+        } else {
+            if ($this->footprintModel->HasExistingLog($tableName, $personnel, $date, $timeRange)) {
+                return [
+                    'success' => false,
+                    'message' => "'" . htmlspecialchars($personnel) . "' has already logged for: " . htmlspecialchars($timeRange) . "."
+                ];
+            }
         }
 
         $isSaved = $this->footprintModel->AddFootprint($tableName, $payload);
@@ -89,7 +96,7 @@ class FootprintController
         string $voidedBy = '',
         string $initiatorUserId = '',
         string $approverPostcode = '',
-        string $voidReason = '' // Added param
+        string $voidReason = ''
     ): array {
         if ($tableId <= 0) {
             return ['success' => false, 'message' => 'Invalid record ID for void operation.'];
@@ -99,6 +106,17 @@ class FootprintController
             return ['success' => false, 'message' => 'A valid reason is required to void this record.'];
         }
 
+        $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
+
+        // Verify entry creation date is today
+        if (!$this->IsCreatedToday($tableName, $tableId)) {
+            return [
+                'success' => false,
+                'message' => 'Records can only be voided on the same date they were created.'
+            ];
+        }
+
+        // Validate Supervisor or Manager approval code
         if (!$this->HasAuthorizedVoidApprover($initiatorUserId, $approverPostcode)) {
             return [
                 'success' => false,
@@ -106,9 +124,6 @@ class FootprintController
             ];
         }
 
-        $tableName = ($type === 'parking') ? 'tbl_parking_footprint' : 'tbl_store_footprint';
-
-        // Pass $voidReason to your FootprintModel implementation
         $isVoided = $this->footprintModel->VoidFootprint($tableName, $tableId, $voidedBy, $voidReason);
 
         if ($isVoided) {
@@ -116,6 +131,25 @@ class FootprintController
         }
 
         return ['success' => false, 'message' => 'Failed to void the record due to a database error.'];
+    }
+
+    /**
+     * Verifies that a record was created on the current calendar date.
+     */
+    private function IsCreatedToday(string $tableName, int $tableId): bool
+    {
+        // Adjust created_at to created_date or odate if necessary based on your database column
+        $query = "SELECT 1 FROM {$tableName} WHERE otableid = ? AND DATE(created_at) = CURDATE() LIMIT 1";
+
+        if ($stmt = $this->dbConn->prepare($query)) {
+            $stmt->bind_param('i', $tableId);
+            $stmt->execute();
+            $isToday = $stmt->get_result()->num_rows === 1;
+            $stmt->close();
+            return $isToday;
+        }
+
+        return false;
     }
 
     /**
