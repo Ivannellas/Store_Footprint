@@ -314,6 +314,9 @@ document.addEventListener("DOMContentLoaded", function () {
         ? timeRangeElem.options[timeRangeElem.selectedIndex]?.text ||
           timeRangeElem.value
         : "";
+
+      const storeCount = form.querySelector('input[name="count"')?.value || "0"; 
+
       const twowheelsCount = form.querySelector('input[name="vehicle_counts[2wheels]"')?.value || "0"; 
       const threewheelsCount = form.querySelector('input[name="vehicle_counts[3wheels]"')?.value || "0"; 
       const fourwheelsCount = form.querySelector('input[name="vehicle_counts[4wheels]"')?.value || "0"; 
@@ -359,7 +362,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const label = type === "parking" ? "Vehicle Traffic" : "Foot Traffic";
 
-      Swal.fire({
+      if(type == 'parking'){
+          Swal.fire({
         title: "Confirm " + label + " Entry",
         html:
           '<div style="text-align:left; font-size:14px; line-height:1.6;">' +
@@ -393,6 +397,35 @@ document.addEventListener("DOMContentLoaded", function () {
           HTMLFormElement.prototype.submit.call(form);
         }
       });
+      }else{
+        Swal.fire({
+        title: "Confirm " + label + " Entry",
+        html:
+          '<div style="text-align:left; font-size:14px; line-height:1.6;">' +
+          "<p><strong>Personnel:</strong> " +
+          name +
+          "</p>" +
+          "<p><strong>Time Range:</strong> " +
+          timeRangeText +
+          "</p>" +
+          "<p><strong>Count:</strong> " +
+          storeCount +
+          "</p>" +
+          "</div>",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Submit",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#003366",
+        reverseButtons: true,
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          HTMLFormElement.prototype.submit.call(form);
+        }
+      });
+      }
+      
+
     });
   });
 
