@@ -315,12 +315,12 @@ document.addEventListener("DOMContentLoaded", function () {
           timeRangeElem.value
         : "";
 
-      const storeCount = form.querySelector('input[name="count"')?.value || "0"; 
+      const storeCount = form.querySelector('input[name="count"]')?.value || "0"; 
 
-      const twowheelsCount = form.querySelector('input[name="vehicle_counts[2wheels]"')?.value || "0"; 
-      const threewheelsCount = form.querySelector('input[name="vehicle_counts[3wheels]"')?.value || "0"; 
-      const fourwheelsCount = form.querySelector('input[name="vehicle_counts[4wheels]"')?.value || "0"; 
-      const sixheelsCount = form.querySelector('input[name="vehicle_counts[6wheels]"')?.value || "0"; 
+      const twowheelsCount = form.querySelector('input[name="vehicle_counts[2wheels]"]')?.value || "0"; 
+      const threewheelsCount = form.querySelector('input[name="vehicle_counts[3wheels]"]')?.value || "0"; 
+      const fourwheelsCount = form.querySelector('input[name="vehicle_counts[4wheels]"]')?.value || "0"; 
+      const sixheelsCount = form.querySelector('input[name="vehicle_counts[6wheels]"]')?.value || "0"; 
 
       const selectedDate =
         form.querySelector('input[name="date"]')?.value || "";
@@ -662,25 +662,90 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  // VEHICLE MODAL LOGIC WITH DYNAMIC DISABLING
+  const vehicleModal = document.getElementById("vehicleModal");
+  const openVehicleBtn = document.getElementById("openVehicleModalBtn");
+  const closeVehicleBtn = document.getElementById("closeVehicleModalBtn");
 
-// VEHICLE MODAL
-  const vehicleModal = document.getElementById('vehicleModal');
-  const openVehicleBtn = document.getElementById('openVehicleModalBtn');
-  const closeVehicleBtn = document.getElementById('closeVehicleModalBtn');
+  const modalVehicleInputs = {
+    "2wheels": document.getElementById("category_2wheels"),
+    "3wheels": document.getElementById("category_3wheels"),
+    "4wheels": document.getElementById("category_4wheels"),
+    "6wheels": document.getElementById("category_6wheels"),
+  };
 
   if (openVehicleBtn && vehicleModal) {
-    openVehicleBtn.addEventListener('click', () => vehicleModal.classList.add('active'));
+    openVehicleBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const nameInput = document.getElementById("nameParking");
+      const searchInput = document.getElementById("parkingPersonnelInput");
+      const dateInput = document.getElementById("dateParking");
+      const timeSelect = document.getElementById("timeRangeParking");
+
+      const personnel = nameInput ? nameInput.value.trim() : "";
+      const date = dateInput ? dateInput.value.trim() : "";
+      const timeRange = timeSelect ? timeSelect.value.trim() : "";
+
+      // Require personnel selection before opening
+      if (!personnel) {
+        Swal.fire({
+          title: "Select Personnel",
+          text: "Please select a personnel first.",
+          icon: "warning",
+          confirmButtonColor: "#003366",
+        });
+        if (searchInput) searchInput.focus();
+        return;
+      }
+
+      // Check existing logs via AJAX
+      const params = new URLSearchParams({
+        action: "check_parking_entries",
+        personnel: personnel,
+        date: date,
+        timeRange: timeRange,
+      });
+
+      fetch("index.php?" + params.toString())
+        .then((res) => res.json())
+        .then((data) => {
+          const existing = data.existing_types || [];
+
+          Object.keys(modalVehicleInputs).forEach((type) => {
+            const input = modalVehicleInputs[type];
+            if (!input) return;
+
+            if (existing.includes(type)) {
+              input.disabled = true;
+              input.value = "";
+              input.placeholder = "Disabled ";
+            } else {
+              input.disabled = false;
+              input.placeholder =
+                "Enter Traffic for " + type.replace("wheels", "-Wheels");
+            }
+          });
+
+          vehicleModal.classList.add("active");
+        })
+        .catch((err) => {
+          console.error("Error checking existing entries:", err);
+          vehicleModal.classList.add("active");
+        });
+    });
   }
 
   if (closeVehicleBtn && vehicleModal) {
-    closeVehicleBtn.addEventListener('click', () => vehicleModal.classList.remove('active'));
+    closeVehicleBtn.addEventListener("click", () =>
+      vehicleModal.classList.remove("active"),
+    );
   }
 
   // Close vehicle modal when clicking outside the content box
-  window.addEventListener('click', (e) => {
+  window.addEventListener("click", (e) => {
     if (vehicleModal && e.target === vehicleModal) {
-      vehicleModal.classList.remove('active');
+      vehicleModal.classList.remove("active");
     }
   });
-
 });

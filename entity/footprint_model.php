@@ -144,8 +144,8 @@ class FootprintModel
     }
 
     /*==============================================================
-    //   Check if personnel already logged for this time range     //
-    =============================================================*/
+//   Check if personnel already logged for this time range     //
+=============================================================*/
     public function HasExistingLog(string $tableName, string $personnel, string $date, string $timeRange, string $vehicleType = ''): bool
     {
         $tableName = trim($tableName);
@@ -156,12 +156,12 @@ class FootprintModel
 
         if ($tableName === 'tbl_parking_footprint') {
             $query = "SELECT COUNT(*) AS total 
-                      FROM {$tableName} 
-                      WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
-                        AND odate = ? 
-                        AND otimerange = ?
-                        AND (void_status IS NULL OR void_status != 0)
-                        AND vehicle_type = ?";
+                  FROM {$tableName} 
+                  WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
+                    AND odate = ? 
+                    AND otimerange = ?
+                    AND (void_status IS NULL OR void_status != 0)
+                    AND vehicle_type = ?";
 
             if ($stmt = $this->db->prepare($query)) {
                 $stmt->bind_param("ssss", $personnel, $date, $timeRange, $vehicleType);
@@ -169,15 +169,15 @@ class FootprintModel
                 $result = $stmt->get_result();
                 $row = $result ? $result->fetch_assoc() : null;
                 $stmt->close();
-                return ((int)($row['total'] ?? 0));
+                return ((int)($row['total'] ?? 0)) > 0;
             }
         } else {
             $query = "SELECT COUNT(*) AS total 
-                      FROM {$tableName} 
-                      WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
-                        AND odate = ? 
-                        AND otimerange = ?
-                        AND (void_status IS NULL OR void_status != 0)";
+                  FROM {$tableName} 
+                  WHERE LOWER(TRIM(opersonnel)) = LOWER(TRIM(?)) 
+                    AND odate = ? 
+                    AND otimerange = ?
+                    AND (void_status IS NULL OR void_status != 0)";
 
             if ($stmt = $this->db->prepare($query)) {
                 $stmt->bind_param("sss", $personnel, $date, $timeRange);
@@ -185,7 +185,7 @@ class FootprintModel
                 $result = $stmt->get_result();
                 $row = $result ? $result->fetch_assoc() : null;
                 $stmt->close();
-                return ((int)($row['total'] ?? 0));
+                return ((int)($row['total'] ?? 0)) > 0;
             }
         }
 
@@ -203,7 +203,7 @@ class FootprintModel
             return false;
         }
 
-        if($tableName === 'tbl_parking_footprint') {
+        if ($tableName === 'tbl_parking_footprint') {
             $query = "UPDATE {$tableName}
                       SET void_status = 0, 
                           voided_by = ?, 
@@ -217,10 +217,9 @@ class FootprintModel
             $stmt = $this->db->prepare($query);
             $stmt->bind_param("ssi", $voidedBy, $voidReason, $tableId);
             $result = $stmt->execute();
-            $affectedRows = $stmt->affected_rows;     
+            $affectedRows = $stmt->affected_rows;
             $stmt->close();
             return $result && $affectedRows === 1;
-            
         } else {
             $query = "UPDATE {$tableName}
                       SET void_status = 0, 

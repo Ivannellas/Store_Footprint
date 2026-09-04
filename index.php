@@ -92,6 +92,28 @@ if ($resultPersonnel = $conn->query($queryPersonnel)) {
 }
 
 $footprintController = new FootprintController($conn);
+$footprintModel      = new FootprintModel($conn);
+
+// AJAX Check Endpoint for Existing Parking Entries
+if (isset($_GET['action']) && $_GET['action'] === 'check_parking_entries') {
+    header('Content-Type: application/json');
+
+    $personnel = $_GET['personnel'] ?? '';
+    $date      = $_GET['date'] ?? '';
+    $timeRange = $_GET['timeRange'] ?? '';
+
+    $vehicleTypes  = ['2wheels', '3wheels', '4wheels', '6wheels'];
+    $existingTypes = [];
+
+    foreach ($vehicleTypes as $type) {
+        if ($footprintModel->HasExistingLog('tbl_parking_footprint', $personnel, $date, $timeRange, $type)) {
+            $existingTypes[] = $type;
+        }
+    }
+
+    echo json_encode(['existing_types' => $existingTypes]);
+    exit;
+}
 
 // Track active tab dynamically
 $activeTab = $_GET['tab'] ?? 'Store';
@@ -649,7 +671,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                         <div class="tab_flex">
                             <div class="form_parking">
                                 <h2>Vehicle Traffic</h2>
-                                <form class="traffic_form" action="index.php" method="POST">
+                                <form class="traffic_form" action="index.php" method="POST" id="parkingTrafficForm">
                                     <input type="hidden" name="type" value="parking">
 
                                     <div class="flex_box_between">
@@ -697,6 +719,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="oTraffic">
                                             <label for="countParking">Input Traffic</label>
                                             <input type="number" id="countParking" name="count" min="0" disabled placeholder="Disabled">
@@ -935,7 +958,7 @@ function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bo
                                                                 <td><?php echo htmlspecialchars($row['opersonnel']); ?></td>
                                                                 <td><?php echo htmlspecialchars($row['odate']); ?></td>
                                                                 <td><?php echo htmlspecialchars($row['otimerange']); ?></td>
-                                                                <td><strong><?php echo htmlspecialchars($row['vehicle_type']); ?></strong></td>
+                                                                <td class><strong><?php echo htmlspecialchars($row['vehicle_type']); ?></strong></td>
                                                                 <td><strong><?php echo htmlspecialchars($row['ocount']); ?></strong></td>
                                                                 <td><?php echo htmlspecialchars($row['added_by']); ?></td>
                                                                 <td>
