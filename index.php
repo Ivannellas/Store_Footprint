@@ -13,6 +13,8 @@ $userName     = $isLoggedIn ? ($_SESSION['user_name'] ?? 'User') : 'Guest';
 $userId       = $_SESSION['user_id'] ?? '';
 $isSuperAdmin = $isLoggedIn && isset($_SESSION['is_super_admin']) && $_SESSION['is_super_admin'] === true;
 
+
+
 // Time & greeting context
 date_default_timezone_set('Asia/Manila');
 $hour = (int)date('G');
@@ -67,6 +69,31 @@ $defaultTimeRange = getDefaultTimeRange();
 // Open DB Connection
 $conn = getDBConnection();
 $allowedModules = [];
+
+if ($isLoggedIn && !$isSuperAdmin) {
+    $queryAllowed = "SELECT oModuleid FROM tbl_access WHERE oUserid = ? AND oMain = 1";
+    if ($stmt = $conn->prepare($queryAllowed)) {
+        $stmt->bind_param("s", $userId);
+        $stmt->execute();
+        $resultAllowed = $stmt->get_result();
+        while ($row = $resultAllowed->fetch_assoc()) {
+            $allowedModules[] = (int)$row['oModuleid'];
+        }
+        $stmt->close();
+    }
+}
+
+/* ==============================================================
+   FOOT TRAFFIC ACCESS GUARD (MODULE ID: 14)
+   ============================================================= */
+if (!hasAccess(14, $isSuperAdmin, $allowedModules)) {
+    if ($conn) {
+        mysqli_close($conn);
+    }
+    header('HTTP/1.1 403 Forbidden');
+    header("Location: " . $base_path . "403.php");
+    exit();
+}
 
 if ($isLoggedIn && !$isSuperAdmin) {
     $queryAllowed = "SELECT oModuleid FROM tbl_access WHERE oUserid = ? AND oMain = 1";
@@ -247,10 +274,6 @@ if ($conn) {
     mysqli_close($conn);
 }
 
-function hasAccess(int $moduleId, bool $isSuperAdmin, array $allowedModules): bool
-{
-    return $isSuperAdmin || in_array($moduleId, $allowedModules);
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
