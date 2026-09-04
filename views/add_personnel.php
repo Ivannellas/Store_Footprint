@@ -6,12 +6,55 @@ $base_path = "../";
 require_once $base_path . 'includes/auth_check.php';
 require_once $base_path . 'config/db.php';
 require_once $base_path . 'controller/personnel_controller.php';
-require_once __DIR__ . '/../includes/auth_check.php';
+
+// Base Authentication Check
+if (!isset($_SESSION['user_id'])) {
+    header("Location: " . $base_path . "login.php");
+    exit();
+}
 
 $conn = getDBConnection();
 
 if (!$conn) {
     die("Database connection failed.");
+}
+
+/* ==============================================================
+   MODULE ACCESS GUARD (MODULE ID: 15)
+   ============================================================= */
+$userId = $_SESSION['user_id'] ?? '';
+$isSuperAdmin = $_SESSION['is_super_admin'] ?? false;
+$allowedModules = [];
+
+if (!$isSuperAdmin) {
+    $queryAllowed = "SELECT oModuleid FROM tbl_access WHERE oUserid = ? AND oMain = 1";
+    if ($stmt = $conn->prepare($queryAllowed)) {
+        $stmt->bind_param("s", $userId);
+        $stmt->execute();
+        $resultAllowed = $stmt->get_result();
+        while ($row = $resultAllowed->fetch_assoc()) {
+            $allowedModules[] = (int)$row['oModuleid'];
+        }
+        $stmt->close();
+    }
+}
+
+$targetModuleId = 15;
+
+if (!hasAccess($targetModuleId, $isSuperAdmin, $allowedModules)) {
+    mysqli_close($conn);
+
+    // Handle AJAX request access rejection
+    if (isset($_GET['action'])) {
+        header('Content-Type: application/json');
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Unauthorized access.']);
+        exit;
+    }
+
+    header('HTTP/1.1 403 Forbidden');
+    header("Location: ../403.php");
+    exit();
 }
 
 // Handle AJAX Status Toggle Request
@@ -107,7 +150,7 @@ mysqli_close($conn);
                     <h3 class="m-0">Personnel Management</h3>
                     <div>
                         <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
-                        Add Personnel
+                            Add Personnel
                         </button>
                     </div>
                 </div>
