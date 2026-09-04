@@ -107,7 +107,7 @@ mysqli_close($conn);
                     <h3 class="m-0">Personnel Management</h3>
                     <div>
                         <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
-                            + Add Personnel
+                        Add Personnel
                         </button>
                     </div>
                 </div>

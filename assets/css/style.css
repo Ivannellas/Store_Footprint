@@ -26,7 +26,6 @@
   --text-muted-gray: #94a3b8;
   --headingTxt: "Inter", sans-serif;
   --parag: "Quicksand", sans-serif;
-  
 }
 
 body {
@@ -836,7 +835,6 @@ footer.footer_intro {
   box-shadow: 0 4px 12px rgba(12, 43, 92, 0.2);
 }
 
-
 .store_title {
   position: absolute;
   left: -2px;
@@ -853,7 +851,7 @@ footer.footer_intro {
 }
 
 .store_title:before {
-  content: '';
+  content: "";
   position: absolute;
   top: 49%;
   right: 100%;
@@ -863,8 +861,6 @@ footer.footer_intro {
   transform: translateY(-50%);
   border-radius: 110vw 0 0 110vw;
 }
-
-
 
 /* INDEX PAGE */
 
@@ -1000,6 +996,10 @@ tr.row-voided td span {
   padding: 40px 25px;
   border-radius: 8px;
   box-shadow: 5px 5px 5px rgba(0 0 0/0.2);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .form_parking,
@@ -1010,6 +1010,10 @@ tr.row-voided td span {
   padding: 40px 25px;
   border-radius: 8px;
   box-shadow: 5px 5px 5px rgba(0 0 0/0.2);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .form_store,
@@ -1225,28 +1229,28 @@ tr.row-voided td span {
 
 /* Modal Table Styling */
 .traffic_modal_table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: var(--parag);
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--parag);
 }
 
 .traffic_modal_table th {
-    background-color: #f1f5f9;
-    color: var(--secondaryColor);
-    font-family: var(--headingTxt);
-    padding: 10px;
-    text-align: left;
-    border-bottom: 2px solid #e2e8f0;
+  background-color: #f1f5f9;
+  color: var(--secondaryColor);
+  font-family: var(--headingTxt);
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .traffic_modal_table td {
-    padding: 10px;
-    border-bottom: 1px solid #e2e8f0;
-    color: #333;
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #333;
 }
 
 .traffic_modal_table .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 /* END OF VIEWING EYE ICON CSS */
@@ -1261,7 +1265,12 @@ tr.row-voided td span {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(4, 35, 90, 0.5); /* Styled using --secondaryColor with opacity */
+  background-color: rgba(
+    4,
+    35,
+    90,
+    0.5
+  ); /* Styled using --secondaryColor with opacity */
   z-index: 1000;
   align-items: center;
   justify-content: center;
@@ -1368,7 +1377,6 @@ tr.row-voided td span {
   border-radius: 6px;
   cursor: pointer;
 }
-
 
 /* END VEHICLE MODAL CSS */
 
@@ -1510,7 +1518,6 @@ tr.row-voided td span {
   border-bottom: none;
 }
 
-
 /* ==========================================================
    Filter Card Container
    ========================================================== */
@@ -1535,12 +1542,12 @@ tr.row-voided td span {
 }
 
 .filter-card-group {
-  flex: 1 1 250px; 
+  flex: 1 1 250px;
   max-width: 320px;
 }
 
-.filter-search{
-    margin-left: auto;
+.filter-search {
+  margin-left: auto;
 }
 
 .filter-label {
@@ -1585,7 +1592,6 @@ tr.row-voided td span {
   justify-content: center;
 }
 
-
 .filter-search .input-icon-box {
   background-image: url(../images/icon/search.png);
   background-repeat: no-repeat;
@@ -1623,7 +1629,7 @@ tr.row-voided td span {
   gap: 0.5rem;
 }
 
-.filter-actions .btn-primary figure{
+.filter-actions .btn-primary figure {
   filter: brightness(0) invert(1);
 }
 
@@ -1658,7 +1664,6 @@ tr.row-voided td span {
   border: 1px solid var(--secondaryColor);
   color: var(--secondaryColor);
   position: relative;
-  
 }
 
 .btn-secondary:hover {
@@ -1722,7 +1727,6 @@ tr.row-voided td span {
 .flatpickr-day:hover {
   background: var(--primary-light) !important;
 }
-
 
 footer.index_footer {
   position: relative;
@@ -1935,6 +1939,10 @@ footer.index_footer {
   animation: fadeIn 0.25s ease-out;
   max-height: 700px;
   padding: 0 0 30px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 @keyframes fadeIn {
@@ -2058,10 +2066,9 @@ footer.index_footer {
   width: 235px;
 }
 
-.personnel-table th span{
+.personnel-table th span {
   margin-left: 5px;
 }
-
 
 .personnel-table td {
   padding: 12px 16px;

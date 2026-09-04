@@ -66,7 +66,7 @@ class FootprintController
             if ($this->footprintModel->HasExistingLog($tableName, $personnel, $date, $timeRange, $rawVehicleType)) {
                 return [
                     'success' => false,
-                    'message' => "'" . htmlspecialchars($personnel) . "' has already logged entries for " . $rawVehicleType . " during " . htmlspecialchars($timeRange) . "."
+                    'message' => "'" . htmlspecialchars($personnel) . "' has existing entries for " . $rawVehicleType . " during " . htmlspecialchars($timeRange) . "." 
                 ];
             }
         } else {
@@ -139,7 +139,6 @@ class FootprintController
      */
     private function IsCreatedToday(string $tableName, int $tableId): bool
     {
-        // Adjust created_at to created_date or odate if necessary based on your database column
         $query = "SELECT 1 FROM {$tableName} WHERE otableid = ? AND DATE(created_at) = CURDATE() LIMIT 1";
 
         if ($stmt = $this->dbConn->prepare($query)) {
