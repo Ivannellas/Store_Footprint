@@ -68,14 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="card login-card ">
-            <div class="store_title">TDIY</div>
+            <div class="store_title">TDIY2</div>
 
             <div class="card-body card_box">
 
                 <div class="d-flex flex-column align-items-center gap-3 mb-5">
                     <img src="../assets/images/nong_atoy_head.png" alt="Logo" class="form-logo">
                     <div>
-                        <h2>Welcome Back! <small>Sign in to your Atlantic Hardware Account</small></h2>
+                        <h2>FOOT TRAFFIC <small>Sign in to your Atlantic Hardware Account</small></h2>
                     </div>
                 </div>
 
