@@ -130,6 +130,74 @@ ul li::marker {
   opacity: 0.8;
 }
 
+/* 403 CSS */
+.body-bg{
+  background: var(--secondaryColor);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.for03_btn.primary_btn {
+  background: var(--primaryColor) !important;
+  line-height: 45px;
+  margin: 0;
+}
+
+.main_container {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  padding: 40px 70px;
+}
+.card_flex_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  gap: 10px;
+}
+
+.card_body {
+  position: relative;
+  color: #fff;
+  width: 45%;
+  max-width: 770px;
+}
+.card_body h1 {
+  position: relative;
+  font: 800 80px/100% var(--parag);
+}
+.card_body p {
+  width: 100%;
+  max-width: 620px;
+  line-height: 27px;
+  color: inherit;
+  margin-block: 25px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.card_body p span {
+  color: inherit;
+  display: block;
+}
+
+.for03_image {
+  width: 46%;
+  position: relative;
+  max-width: 800px;
+}
+.for03_image figure {
+  width: 100%;
+  max-width: 100%;
+}
+.for03_image figure img {
+  width: 100%;
+  height: 100%;
+}
+
+/* 403 END */
+
 /* INTRO PAGE */
 
 .intro_page {
