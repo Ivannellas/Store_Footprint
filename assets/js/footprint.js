@@ -367,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
         title: "Confirm " + label + " Entry",
         html:
           '<div style="text-align:left; font-size:14px; line-height:1.6;">' +
-          "<p><strong>Personnel:</strong> " +
+          "<p><strong>Area:</strong> " +
           name +
           "</p>" +
           "<p><strong>Time Range:</strong> " +
@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", function () {
         title: "Confirm " + label + " Entry",
         html:
           '<div style="text-align:left; font-size:14px; line-height:1.6;">' +
-          "<p><strong>Personnel:</strong> " +
+          "<p><strong>Area:</strong> " +
           name +
           "</p>" +
           "<p><strong>Time Range:</strong> " +
@@ -690,8 +690,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // Require personnel selection before opening
       if (!personnel) {
         Swal.fire({
-          title: "Select Personnel",
-          text: "Please select a personnel first.",
+          title: "Select Area",
+          text: "Please select an area first.",
           icon: "warning",
           confirmButtonColor: "#003366",
         });

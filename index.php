@@ -406,13 +406,13 @@ if ($conn) {
 
                                     <div class="flex_box_between">
                                         <div class="oPersonnel">
-                                            <label for="personnelInput">Choose Personnel</label>
+                                            <label for="personnelInput">Choose Area</label>
                                             <div class="personnel-select-wrapper" id="personnelWrapper">
                                                 <input
                                                     type="text"
                                                     id="personnelInput"
                                                     class="personnel-search-input"
-                                                    placeholder="Select Personnel"
+                                                    placeholder="Select Area"
                                                     autocomplete="off"
                                                     required>
                                                 <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#495057" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -448,7 +448,7 @@ if ($conn) {
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>Personnel Name</th>
+                                                <th>Area</th>
                                                 <th class="s_width">Date</th>
                                                 <th class="s_width">Time Range</th>
                                                 <th>Count</th>
@@ -597,7 +597,7 @@ if ($conn) {
                                                 <table class="personnel-table sortable-table" id="footTrafficTable">
                                                     <thead>
                                                         <tr>
-                                                            <th class="sortable s_width" onclick="sortTable(0, 'footTrafficTable', 'string')">Personnel Name<span class="sort-icon">↕</span>
+                                                            <th class="sortable s_width" onclick="sortTable(0, 'footTrafficTable', 'string')">Area<span class="sort-icon">↕</span>
                                                             </th>
                                                             <th class="sortable s_width" onclick="sortTable(1, 'footTrafficTable', 'string')">Date<span class="sort-icon">↕</span>
                                                             <th class="sortable s_width" onclick="sortTable(2, 'footTrafficTable', 'string')">Time Range<span class="sort-icon">↕</span>
@@ -718,7 +718,7 @@ if ($conn) {
 
                                     <div class="flex_box_between">
                                         <div class="oPersonnel">
-                                            <label for="parkingPersonnelInput">Choose Personnel</label>
+                                            <label for="parkingPersonnelInput">Choose Area</label>
                                             <div class="personnel-select-wrapper" id="parkingPersonnelWrapper">
                                                 <input
                                                     type="text"
@@ -801,7 +801,7 @@ if ($conn) {
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th class="s_width">Personnel Name</th>
+                                                <th class="s_width">Area</th>
                                                 <th class="s_width">Date</th>
                                                 <th class="s_width">Time Range</th>
                                                 <th class="s_width">Vehicle Type</th>
@@ -953,7 +953,7 @@ if ($conn) {
                                             <table class="personnel-table sortable-table" id="vehicleTrafficTable">
                                                 <thead>
                                                     <tr>
-                                                        <th class="sortable s_width" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">Personnel Name<span class="sort-icon">↕</span>
+                                                        <th class="sortable s_width" onclick="sortTable(0, 'vehicleTrafficTable', 'string')">Area<span class="sort-icon">↕</span>
                                                         </th>
                                                         <th class="sortable s_width" onclick="sortTable(1, 'vehicleTrafficTable', 'string')">Date<span class="sort-icon">↕</span>
 

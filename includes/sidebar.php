@@ -70,11 +70,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
             </li>
         <?php endif; ?>
 
-        <!-- Module 15: ADD PERSONNEL -->
+        <!-- Module 15: ADD AREA -->
         <?php if (hasAccess(15, $isSuperAdmin, $allowedModules)): ?>
             <li class="menu-item current_page_item mb-2">
                 <a href="<?php echo $base_path; ?>views/add_personnel.php" class="add_personnel menu-link d-flex align-items-center justify-content-between">
-                    Add Personnel
+                    Add Area
                 </a>
             </li>
         <?php endif; ?>
