@@ -134,7 +134,7 @@ mysqli_close($conn);
     <nav class="navbar navbar-dark navbar-header px-4 py-3 mb-5 shadow-sm">
 
         <div class="navbar_title">
-            <h1 class="h1 text-uppercase mb-0">Add Personnel</h1>
+            <h1 class="h1 text-uppercase mb-0">Add Area</h1>
         </div>
 
         <div class="d-flex">
@@ -147,10 +147,10 @@ mysqli_close($conn);
             <div class="main_parent_con">
                 <!-- Header Controls -->
                 <div class="header_controls">
-                    <h3 class="m-0">Personnel Management</h3>
+                    <h3 class="m-0">Area Management</h3>
                     <div>
                         <button type="button" class="primary_btn" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
-                            Add Personnel
+                            Add Area
                         </button>
                     </div>
                 </div>
@@ -168,14 +168,14 @@ mysqli_close($conn);
                         <thead class="table-light">
                             <tr>
                                 <th class="text-center" style="width: 15%;">#</th>
-                                <th style="width: 55%;">Personnel Name</th>
+                                <th style="width: 55%;">Area</th>
                                 <th class="text-center" style="width: 30%;">Status</th>
                             </tr>
                         </thead>
                         <tbody id="personnelTableBody">
                             <?php if (empty($personnelList)): ?>
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted py-4">No personnel found.</td>
+                                    <td colspan="3" class="text-center text-muted py-4">No Areas found.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($personnelList as $index => $person): ?>
@@ -208,19 +208,19 @@ mysqli_close($conn);
                 <div class="modal-content rounded border shadow-sm">
                     <form method="POST" action="">
                         <div class="modal-header bg-light">
-                            <h5 class="modal-title fs-6 fw-bold text-dark m-0" id="addPersonnelModalLabel">Add New Personnel</h5>
+                            <h5 class="modal-title fs-6 fw-bold text-dark m-0" id="addPersonnelModalLabel">Add New Area</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body p-4 text-dark">
                             <input type="hidden" name="action" value="add">
                             <div class="mb-3">
-                                <label class="form-label fw-bold small text-muted">PERSONNEL NAME</label>
+                                <label class="form-label fw-bold small text-muted">AREA </label>
                                 <input type="text" name="personnel_name" class="form-control" required autocomplete="off">
                             </div>
                         </div>
                         <div class="modal-footer bg-light">
                             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary btn-sm">Save Personnel</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Save Area</button>
                         </div>
                     </form>
                 </div>

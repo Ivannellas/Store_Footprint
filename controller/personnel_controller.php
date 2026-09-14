@@ -16,24 +16,24 @@ class PersonnelController
         $name = trim($data['personnel_name'] ?? '');
 
         if (empty($name)) {
-            return ['success' => false, 'message' => 'Personnel name cannot be empty.'];
+            return ['success' => false, 'message' => 'Area cannot be empty.'];
         }
 
         if ($this->model->PersonnelExists($name)) {
-            return ['success' => false, 'message' => 'Personnel already exists!'];
+            return ['success' => false, 'message' => 'Area already exists!'];
         }
 
         if ($this->model->AddPersonnel($name)) {
-            return ['success' => true, 'message' => 'Personnel added successfully!'];
+            return ['success' => true, 'message' => 'Area added successfully!'];
         }
 
-        return ['success' => false, 'message' => 'Failed to add personnel.'];
+        return ['success' => false, 'message' => 'Failed to add area.'];
     }
 
     public function HandleToggleStatus(int $id, string $currentStatus): array
     {
         if ($id <= 0) {
-            return ['success' => false, 'message' => 'Invalid personnel ID.'];
+            return ['success' => false, 'message' => 'Invalid area ID.'];
         }
 
         $isActive = ($currentStatus === '1' || $currentStatus === 'Active' || $currentStatus === 1);
@@ -41,10 +41,10 @@ class PersonnelController
         $actionText = $isActive ? 'deactivated' : 'activated';
 
         if ($this->model->UpdateStatus($id, $newStatus)) {
-            return ['success' => true, 'message' => "Personnel {$actionText} successfully!"];
+            return ['success' => true, 'message' => "Area {$actionText} successfully!"];
         }
 
-        return ['success' => false, 'message' => "Failed to update personnel status."];
+        return ['success' => false, 'message' => "Failed to update area status."];
     }
 
     public function GetAllPersonnel(): array
