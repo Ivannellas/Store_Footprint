@@ -1735,7 +1735,8 @@ tr.row-voided td span {
 }
 
 .btn-secondary:hover {
-  background-color: #f1f5f9;
+  color: #fff;
+  background-color: var(--secondaryColor);
 }
 
 /* ==========================================================
