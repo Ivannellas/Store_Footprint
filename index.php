@@ -724,7 +724,7 @@ if ($conn) {
                                                     type="text"
                                                     id="parkingPersonnelInput"
                                                     class="personnel-search-input"
-                                                    placeholder="Select Personnel"
+                                                    placeholder="Select Area"
                                                     autocomplete="off"
                                                     required>
                                                 <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#495057" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
