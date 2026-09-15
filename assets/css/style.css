@@ -2489,7 +2489,7 @@ footer.footer_intro {
   left: 2px;
 }
 .sidebar li .add_personnel:before {
-  content: url(../images/icon/add_person.png);
+  content: url(../images/icon/area.png);
 }
 .sidebar li .sidebar_logout:before {
   content: url(../images/icon/logout.png);
